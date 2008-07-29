@@ -30,6 +30,7 @@ RAR:
 TAR:
   1) convertire modified in QDate
   2) forse è possibile implementare il rename
+  3) all'apertura di alcuni tar non viene resettate l'icona di tipo di archivio (verde, blu)
 
 GENERALE:
   2) conversioni tra i formati; rar -> zip; rar -> tar e così via
@@ -47,10 +48,6 @@ PROCESSING DIALOG:
   1) nell'add file, add dir, la dimensione delle cose da aggiungere è errata
   2) disabilitare la ratio bar sottostante nell'add files, add dir
   3) aggiungere timer di tempo trascorso
-
- 
-RATIOBAR:
-  PROBABILMENTE RISOLTO  1) BUG GRAVE -> crash random a causa del setRatio in rar.cpp (funzione di repaint)
 
 TIP:
   1) la barra non funziona sempre a dovere... a volte rimane bloccata a metà, a volte rimane piccolissima

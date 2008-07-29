@@ -25,14 +25,31 @@ void zipProcess::start()
 
 void zipProcess::initProcess()
 {
-  puts("Avvio del threadProcess (ZIP)...");
+  kDebug() << "Avvio del threadProcess (ZIP)...";
   thread = new threadProcess(this);
   // setUp firstTime connections
   connect(thread, SIGNAL(readyReadStandardError()), this, SLOT(getError()));
   connect(thread, SIGNAL(readyReadStandardOutput()), this, SLOT(showProgress()));
   connect(thread, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(giveOutput(int, QProcess::ExitStatus)));
   
-  if(options[0] == "-Zl") 
+  if (options.isEmpty()) {
+  //     rarprogressdialog = new akuProgressDialog(parentWidget, files.size());
+//     connect(rarprogressdialog, SIGNAL(canceled()), this, SLOT(handleCancel()));
+//     connect(rarprogressdialog, SIGNAL(paused()), this, SLOT(handlePaused()));
+//     connect(rarprogressdialog, SIGNAL(continued()), this, SLOT(handleContinued()));
+//     rarprogressdialog -> setArchiveName(archivename);
+    kDebug() << "estrazione zip";
+   
+    QStringList options;
+    options << archivename;
+    if (!files.isEmpty())
+      options << files;
+    options << "-d" << destination;
+    thread -> start(archiver, options);
+    kDebug() << options;
+  }
+
+  else if (options[0] == "-Zl") 
   { 
     thread -> start(archiver, QStringList() << options << archivename);
   }
@@ -54,9 +71,9 @@ void zipProcess::initProcess()
   else if (options[0] == "-q") {
     thread -> start(archiver, QStringList() << options << archivename << files << "-d" << destination);
     thread -> waitForFinished();
-  }
+  } 
 
-  puts("initProcess (ZIP) terminato");
+  kDebug() << "initProcess (ZIP) terminato";
 }
 
 void zipProcess::showProgress() 
@@ -70,31 +87,17 @@ void zipProcess::showProgress()
 
 void zipProcess::giveOutput(int, QProcess::ExitStatus)
 {
- puts("process terminated (ZIP)");
- emit outputReady(stdoutput, headercrypted);
- if (streamerror.isEmpty()) {
-   puts("no problem");
-   noproblem = true;
- }
- else {
- // invalid option(s) used with -d; ignored --> warning relativo alla cancellazione di directory
-   if (streamerror.contains("invalid option(s) used with -d; ignored")) { 
-     streamerror.remove(0, (streamerror.indexOf("\n") + 1));
-     noproblem = true;
-   } 
- // stringa relativa all'eliminazione di tutti i file dell'archivio
-   if (streamerror.contains("zip warning: zip file empty")) {
-     streamerror.remove(0, (streamerror.indexOf("\n") + 1));
-     noproblem = true;
-   } 
-
-   if (!streamerror.isEmpty()) {
-     puts("problem! (ZIP)");
-     noproblem = false;
-     showError(streamerror);
-   }
- }
- emit processCompleted(noproblem); //check the bool 
+  kDebug() << "process terminated (ZIP)";
+  emit outputReady(stdoutput, headercrypted);
+  if (streamerror.isEmpty()) {
+    kDebug() << "no problem";
+    noproblem = true;
+  }
+  else {
+    noproblem = false;
+    showError(streamerror);
+  }
+  emit processCompleted(noproblem); //check the bool 
 }
 
 void zipProcess::showError(QByteArray streamerror)
@@ -129,5 +132,20 @@ void zipProcess::showError(QByteArray streamerror)
 void zipProcess::getError()
 { 
   QByteArray temp = thread -> readAllStandardError();
+  // invalid option(s) used with -d; ignored --> warning relativo alla cancellazione di directory  
+  if (temp.contains("invalid option(s) used with -d; ignored")) { 
+    temp.remove(0, (temp.indexOf("\n") + 1));
+  } 
+  // stringa relativa all'eliminazione di tutti i file dell'archivio
+  if (temp.contains("zip warning: zip file empty")) {
+    temp.remove(0, (temp.indexOf("\n") + 1));
+  } 
+
+  if (temp.contains("caution: filename not matched:")) {
+    
+  }
+ 
   streamerror.append(temp);
 }
+
+

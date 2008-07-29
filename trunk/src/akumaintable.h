@@ -24,7 +24,7 @@ public:
   QString rebuildPath(QTreeWidgetItem*);
   QString rebuildFullPath(QTreeWidgetItem*);
   
-  QStringList filesToExtract();
+  QStringList filesToExtract(QString compressor = "");
 
 public slots:
   void setFormat(QString);

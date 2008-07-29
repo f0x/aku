@@ -253,11 +253,9 @@ void akuMainTable::recursiveFolderIcons (QTreeWidgetItem *checkParent)
 
 // Abbiamo la creazione della lista "files con password" solo se
 // l'archivio non è headerpasswordprotected...
-QStringList akuMainTable::filesToExtract()
+QStringList akuMainTable::filesToExtract(QString compressor)
 {
   QStringList itemsPath;
-  
-  QStringList itemsWithPasswordPath;
 
   QList<QTreeWidgetItem*> selectedToExtract = selectedItems();
 
@@ -266,17 +264,26 @@ QStringList akuMainTable::filesToExtract()
       QTreeWidgetItem *tmp;
       QStringList pathlist; // file da estrarre dall'archivio
       pathlist << ( selectedToExtract[i] ) -> text ( 0 );
-      tmp = ( selectedToExtract[i] ) -> parent();
-      while ( tmp != NULL ) {
-        pathlist << tmp -> text ( 0 );
+      tmp = (selectedToExtract[i]) -> parent();
+      while (tmp != NULL) {
+        pathlist << tmp -> text (0);
         tmp = tmp -> parent();
       }
       QString path;
       for ( int j = pathlist.size() - 1; j >= 0; j-- ) {
         path.append ( pathlist[j] );
-        if (j != 0) path.append (QDir().separator( ));
+        if (j != 0) path.append (QDir().separator());
       }
-  
+
+      // necessarie per gestire zip
+      // in zip, se si è selezionata una cartella da estrarre, viene estratta solo la cartella
+      // senza il suo contenuto. Per questo motivo, per ogni cartella selezionata, viene aggiunto
+      // uno slash ed un asterisco
+      if ((selectedToExtract[i] -> childCount() != 0) && (compressor == "zip")) {
+        path.append(QDir().separator());     
+        path.append(QChar('*'));
+      }
+        
       itemsPath << path;
     }
   }

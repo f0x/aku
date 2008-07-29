@@ -122,11 +122,9 @@ void rarProcess::initProcess()
         
     if (fullArchive) {
         thread -> start(archiver, QStringList() << options << archivename << destination);
-        kDebug() << "full archive";
     }
     else {       
       thread -> start(archiver, QStringList() << options << archivename << files << destination);
-      kDebug() << "not full archive";
     }
     tmpPassFile.close();
     kDebug() << options << archivename << destination;

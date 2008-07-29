@@ -35,6 +35,8 @@ extractDialog::extractDialog (QString archiver, QString archive, QStringList fil
   }
   else if (compressor == "zip") {
     compressor = "unzip";
+    // elimino il tab Advanced di Rar
+    tabWidget -> removeTab(1);
   }
   else if (compressor == "tar") {
   }
@@ -65,6 +67,7 @@ extractDialog::extractDialog (QString archiver, QString archive, QStringList fil
   connect ( khistorycombobox, SIGNAL(returnPressed(QString)), this, SLOT(updateTreeViewSelection(QString)));
   connect ( khistorycombobox, SIGNAL(currentIndexChanged(QString)), this, SLOT(updateTreeViewSelection(QString)));
   radioAbsolutepath -> setEnabled(false);
+
 }
 
 extractDialog::~extractDialog()

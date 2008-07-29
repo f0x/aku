@@ -285,10 +285,15 @@ void MainWindow::extractoToPreferred(QAction *action)
     QStringList options;
     options << "x";
     if (!archivePassword.isEmpty()) options << "-p" + archivePassword;
-    rarProcess *process = new rarProcess(this, "rar", options, archive, table -> filesToExtract(), extractWhere );
+    rarProcess *process = new rarProcess(this, "rar", options, archive, table -> filesToExtract(), extractWhere);
     connect(process, SIGNAL(processCompleted(bool)), this, SLOT(extractionCompleted(bool)));
     connect(process, SIGNAL(tempFiles(QString)), this, SLOT(collectTempFiles(QString)));
     connect(process, SIGNAL(activeInterface(bool)), this, SLOT(enableActions(bool)));
+    process -> start();
+  }
+  else if (compressor == "zip") {
+    zipProcess *process = new zipProcess(this, "unzip", QStringList(), archive, table -> filesToExtract("zip"), extractWhere);
+    connect(process, SIGNAL(processCompleted(bool)), this, SLOT(extractionCompleted(bool)));
     process -> start();
   }
 }
@@ -413,7 +418,7 @@ void MainWindow::buildZipTable(QString zipoutput, bool crypted)
    buttonAddDir -> setEnabled(false);
    buttonAddFile -> setEnabled(false);
    buttonEncrypt -> setEnabled(false);
-   buttonExtract -> setEnabled(false);
+   //buttonExtract -> setEnabled(false);
 }
 
 void MainWindow::buildTarTable(QString taroutput)
@@ -1324,7 +1329,7 @@ void MainWindow::newArchive()
     archive.clear();
 
   kDebug() << archive;
-  if ((QFile(archive).exists() && (KMessageBox::warningYesNo(this, i18n("The file") + " <b>" + archive + "</b> " + "already exists. Do you wish to overwrite it?") == 3)) || !QFile(archive).exists()) {
+  if ((QFile(archive).exists() && (KMessageBox::warningYesNo(this, i18n("The file") + " <b>" + archive + "</b> " + "already exists. Do you wish to overwrite it?") == 3)) || !QFile(archive).exists() && !archive.isEmpty()) {
     QFile(archive).remove();
     dockOption -> setEnabled(false);
     targetList -> setEnabled(false);
