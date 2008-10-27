@@ -2,7 +2,7 @@
 
 MainTree::MainTree(QWidget *parent) : QTreeView(parent)
 {
-  model = new QAbstractItemModel();
+  model = new QStandardItemModel();
   model -> setHorizontalHeaderItem(0, new QStandardItem( "Name" ));
   setModel(model);
 }
