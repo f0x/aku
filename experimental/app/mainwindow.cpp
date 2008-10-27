@@ -16,6 +16,7 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
   splitter -> addWidget(tree);
   openArchive = new OpenArchive();
   setupActions();
+  setupGUI(QSize(650,460)); 
 }
 
 MainWindow::~MainWindow()
@@ -31,7 +32,6 @@ void MainWindow::setupActions()
   openAction = KStandardAction::open(this, SLOT(openDialog()), actionCollection());
   actionCollection() -> addAction("file_open", openAction);
   KStandardAction::quit(kapp, SLOT(quit()), actionCollection());
-  setupGUI(QSize(650,460)); 
 }
 
 void MainWindow::openDialog()
