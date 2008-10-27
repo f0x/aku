@@ -2,6 +2,7 @@
 #define MAINTREE_H
 
 #include <QStandardItemModel>
+#include <QTreeView>
 
 class MainTree : public QTreeView
 {
