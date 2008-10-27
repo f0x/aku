@@ -25,7 +25,7 @@
       <Action name="encrypt_archive" />
       <Action name="add_comment" />
    </Menu>
-   <Menu name="tools" >
+   <Menu name="tools" ><text>Tools</text>
       <Action name="info" />
       <Action name="find" />
       <Action name="comment" />

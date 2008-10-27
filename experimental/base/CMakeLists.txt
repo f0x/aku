@@ -6,7 +6,7 @@ set (akucore_SRCS
 
 kde4_add_library(akucore SHARED ${akucore_SRCS})
 
-target_link_library(akucore ${KDE4_KDEUI_LIBS})
+target_link_libraries(akucore ${KDE4_KDEUI_LIBS})
 
 install(TARGETS akucore ${INSTALL_TARGETS_DEFAULT_ARGS})
 
