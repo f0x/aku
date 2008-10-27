@@ -17,7 +17,10 @@
     <Action name="file_open" />
     <Action name="file_open_recent" />
     </Menu>
-   <Menu name="commands" ><text>Commands</text>
+    <Menu name="tools"><text>Tools</text>
+    <Action name="config" />
+    </Menu>
+<!--   <Menu name="commands" ><text>Commands</text>
       <Action name="add_dir" />
       <Action name="add_file" />
       <Separator/>
@@ -30,6 +33,6 @@
       <Action name="find" />
       <Action name="comment" />
       <Action name="lasttip" />
-   </Menu>
+   </Menu>-->
   </MenuBar>
 </gui>

@@ -28,6 +28,18 @@ class KDE_EXPORT AkuPlugin : public QObject
         AkuPlugin(QObject *parent);
         virtual ~AkuPlugin();
 
+        /**
+         * Reimplement this to give a comment about the type of archive
+         * handled. E.g. "Rar Archive", "Zip Archive"..
+         */
+        QString comment();
+
+        /** 
+         * Reimplement this to tell the app which suffix the plugin handles.
+         * E.g. "zip", "rar", "tar", "tar.gz"
+         */
+        QString archiveSuffix();
+
     private:
         class AkuPluginPrivate;
         AkuPluginPrivate *d;

@@ -25,3 +25,13 @@ AkuPlugin::AkuPlugin(QObject *parent) : QObject(parent),
 
 AkuPlugin::~AkuPlugin()
 {}
+
+QString AkuPlugin::comment()
+{
+    return QString();
+}
+
+QString AkuPlugin::archiveSuffix()
+{
+    return QString();
+}

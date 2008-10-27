@@ -8,6 +8,8 @@
 #include "maintree.h"
 #include "openarchive.h"
 
+class KDialog;
+
 class MainWindow : public KXmlGuiWindow
 {
   Q_OBJECT
@@ -20,8 +22,10 @@ class MainWindow : public KXmlGuiWindow
     QSplitter *splitter;
     MainTree *tree;
     OpenArchive *openArchive;
+    KDialog *m_optionDialog;
 
     void setupActions();
+    void setupOptionsWidget();
 
   private slots:
     void openDialog();
