@@ -40,6 +40,7 @@ int main ( int argc, char *argv[] )
   KCmdLineArgs::addCmdLineOptions(options);
 
   KApplication app;
+
   QString loIcon = KIconLoader().iconPath("aku",-KIconLoader::SizeEnormous);
   QApplication::setWindowIcon(KIcon(loIcon));
 

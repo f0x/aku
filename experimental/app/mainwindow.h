@@ -5,6 +5,7 @@
 #include <QSplitter>
 #include <QTreeView>
 
+#include "maintree.h"
 #include "openarchive.h"
 
 class MainWindow : public KXmlGuiWindow
@@ -17,7 +18,7 @@ class MainWindow : public KXmlGuiWindow
 
   private:
     QSplitter *splitter;
-    QTreeView *tree;
+    MainTree *tree;
     OpenArchive *openArchive;
 
     void setupActions();

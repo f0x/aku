@@ -175,15 +175,11 @@ void MainWindow::setupActions()
   buttonView -> setShortcut(QKeySequence ("F11"));
   actionCollection() -> addAction("preview", buttonView);
   
-  //KMenu *tool = new KMenu(i18n("Tools"), menuBar());
-  //actionCollection() -> addAction("tools", tool->menuAction());
   buttonLock = new KAction(this);
   buttonLock -> setText(i18n("Lock Archive"));
   buttonLock -> setIcon(KIcon("document-encrypt"));
   actionCollection() -> addAction("lock", buttonLock);
   buttonLock -> setEnabled(false);
-  //KMenu *commands = new KMenu(i18n("Commands"), menuBar());
-  //actionCollection() -> addAction("commands", commands->menuAction());
   buttonAddComment = new KAction(this);
   buttonAddComment -> setText(i18n("Add Archive Comment"));
   buttonAddComment -> setIcon(KIcon("view-pim-notes"));

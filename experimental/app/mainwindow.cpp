@@ -12,8 +12,8 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
 {
   splitter = new QSplitter(this);
   setCentralWidget(splitter);
-  tree = new QTreeView(this);
-  splitter -> addWidget(tree);
+  tree = new MainTree(splitter);
+  //splitter -> addWidget(tree);
   openArchive = new OpenArchive();
   setupActions();
 }
