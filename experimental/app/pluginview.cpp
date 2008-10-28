@@ -30,6 +30,7 @@ void PluginView::addPluginInfo(const QString &suffix, const QString &comment,
                                bool extraction, bool deletion, bool creation, bool renaming)
 {
     QList<QStandardItem*> items;
+
     QStandardItem *itsuf = new QStandardItem(suffix);
     itsuf->setEditable(false);
     items << itsuf;

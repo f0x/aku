@@ -89,8 +89,11 @@ void MainWindow::addPlugin(AkuPlugin *plugin)
     KMimeType::Ptr mime = KMimeType::mimeType(plugin->mimeTypeName());
 
     if (!mime) {
+        kDebug()<<"Could not retrieve mimetype. Maybe wrong plugin implementation.";
         return;
     }
+
+    m_plugins.insert(mime->name(), plugin);
 
     m_pluginView->addPluginInfo(
                   mime->name(),

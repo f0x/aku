@@ -26,6 +26,7 @@ class MainWindow : public KXmlGuiWindow
     OpenArchive *openArchive;
     KDialog *m_optionDialog;
     PluginView *m_pluginView;
+    QMap<QString, AkuPlugin*> m_plugins;
 
     void setupActions();
     void setupOptionsWidget();
