@@ -35,3 +35,23 @@ QString AkuPlugin::archiveSuffix()
 {
     return QString();
 }
+
+bool AkuPlugin::canExtract()
+{
+    return false;
+}
+
+bool AkuPlugin::canCreate()
+{
+    return false;
+}
+
+bool AkuPlugin::canRename()
+{
+    return false;
+}
+
+bool AkuPlugin::canDelete()
+{
+    return false;
+}

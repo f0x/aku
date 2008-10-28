@@ -1,4 +1,8 @@
 #include "mainwindow.h"
+#include "pluginloader.h"
+#include "pluginview.h"
+
+#include <akuplugin.h>
 
 #include <KStandardAction>
 #include <KActionCollection>
@@ -13,8 +17,13 @@
 
 #include <QListView>
 
-MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
+MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent),
+                                          m_pluginView(new PluginView())
 {
+  PluginLoader *loader = new PluginLoader(this);
+  connect(loader, SIGNAL(pluginLoaded(AkuPlugin*)), this, SLOT(addPlugin(AkuPlugin*)));
+  loader->loadAllPlugins();
+
   splitter = new QSplitter(this);
   setCentralWidget(splitter);
   tree = new MainTree(splitter);
@@ -58,7 +67,7 @@ void MainWindow::setupOptionsWidget()
     m_optionDialog = new KDialog(this);
     KPageWidget *optionsWidget = new KPageWidget(m_optionDialog);
 
-    KPageWidgetItem *plugins = new KPageWidgetItem( new QListView(), i18n( "Plugins" ) );
+    KPageWidgetItem *plugins = new KPageWidgetItem( m_pluginView, i18n( "Plugins" ) );
     plugins->setHeader( i18n( "Aku Loaded Plugins" ) );
     plugins->setIcon( KIcon( "configure" ) );
 
@@ -69,4 +78,17 @@ void MainWindow::setupOptionsWidget()
     optionsWidget->addPage(plugins);
     optionsWidget->addPage(viewopt);
     m_optionDialog->setMainWidget(optionsWidget);
+    m_optionDialog->setCaption(i18n("Configuration"));
+}
+
+void MainWindow::addPlugin(AkuPlugin *plugin)
+{
+    m_pluginView->addPluginInfo(
+                  plugin->archiveSuffix(),
+                  plugin->comment(),
+                  plugin->canExtract(),
+                  plugin->canDelete(),
+                  plugin->canCreate(),
+                  plugin->canRename()
+                 );
 }

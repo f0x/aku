@@ -9,6 +9,8 @@
 #include "openarchive.h"
 
 class KDialog;
+class AkuPlugin;
+class PluginView;
 
 class MainWindow : public KXmlGuiWindow
 {
@@ -23,12 +25,14 @@ class MainWindow : public KXmlGuiWindow
     MainTree *tree;
     OpenArchive *openArchive;
     KDialog *m_optionDialog;
+    PluginView *m_pluginView;
 
     void setupActions();
     void setupOptionsWidget();
 
   private slots:
     void openDialog();
+    void addPlugin(AkuPlugin*);
     
 };
 
