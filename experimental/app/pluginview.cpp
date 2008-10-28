@@ -72,6 +72,7 @@ void PluginView::addPluginInfo(const QString &suffix, const QString &comment,
         item->setCheckState(Qt::Unchecked);
         items << item;
     }
+ 
 
     static_cast<QStandardItemModel*>(model())->appendRow(items);
 }
