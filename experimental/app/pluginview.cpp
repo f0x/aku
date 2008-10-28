@@ -34,27 +34,43 @@ void PluginView::addPluginInfo(const QString &suffix, const QString &comment,
     items << new QStandardItem(comment);
 
     if (extraction) {
-        items << new QStandardItem(i18n("Supported"));
+        QStandardItem *item = new QStandardItem();
+        item->setCheckState(Qt::Checked);
+        items << item;
     } else {
-        items << new QStandardItem(i18n("Not supported"));
+        QStandardItem *item = new QStandardItem();
+        item->setCheckState(Qt::Unchecked);
+        items << item;
     }
 
     if (creation) {
-        items << new QStandardItem(i18n("Supported"));
+        QStandardItem *item = new QStandardItem();
+        item->setCheckState(Qt::Checked);
+        items << item;
     } else {
-        items << new QStandardItem(i18n("Not supported"));
+        QStandardItem *item = new QStandardItem();
+        item->setCheckState(Qt::Unchecked);
+        items << item;
     }
 
     if (renaming) {
-        items << new QStandardItem(i18n("Supported"));
+        QStandardItem *item = new QStandardItem();
+        item->setCheckState(Qt::Checked);
+        items << item;
     } else {
-        items << new QStandardItem(i18n("Not supported"));
+        QStandardItem *item = new QStandardItem();
+        item->setCheckState(Qt::Unchecked);
+        items << item;
     }
 
     if (deletion) {
-        items << new QStandardItem(i18n("Supported"));
+        QStandardItem *item = new QStandardItem();
+        item->setCheckState(Qt::Checked);
+        items << item;
     } else {
-        items << new QStandardItem(i18n("Not supported"));
+        QStandardItem *item = new QStandardItem();
+        item->setCheckState(Qt::Unchecked);
+        items << item;
     }
 
     static_cast<QStandardItemModel*>(model())->appendRow(items);
