@@ -14,6 +14,8 @@
 #include <KPageWidget>
 #include <KPageWidgetItem>
 #include <KDialog>
+#include <KMimeType>
+#include <KDebug>
 
 #include <QListView>
 
@@ -83,9 +85,16 @@ void MainWindow::setupOptionsWidget()
 
 void MainWindow::addPlugin(AkuPlugin *plugin)
 {
+    kDebug()<<plugin->mimeTypeName();
+    KMimeType::Ptr mime = KMimeType::mimeType(plugin->mimeTypeName());
+
+    if (!mime) {
+        return;
+    }
+
     m_pluginView->addPluginInfo(
-                  plugin->archiveSuffix(),
-                  plugin->comment(),
+                  mime->name(),
+                  mime->comment(),
                   plugin->canExtract(),
                   plugin->canDelete(),
                   plugin->canCreate(),

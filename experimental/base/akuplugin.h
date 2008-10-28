@@ -29,16 +29,12 @@ class KDE_EXPORT AkuPlugin : public QObject
         virtual ~AkuPlugin();
 
         /**
-         * Reimplement this to give a comment about the type of archive
-         * handled. E.g. "Rar Archive", "Zip Archive"..
+         * Reimplement this to reimplement a correct mime type name.
+         * Examples are: "application-x-rar" for .rar, 
+         * "application/x-compressed-tar" for .tar.gz, "application/x-zip" for .zip.
+         * Use this QString to build a KMimeType::Ptr.
          */
-        virtual QString comment();
-
-        /** 
-         * Reimplement this to tell the app which suffix the plugin handles.
-         * E.g. "zip", "rar", "tar", "tar.gz"
-         */
-        virtual QString archiveSuffix();
+        virtual QString mimeTypeName();
 
         /**
          * The reimplementation should return true if the plugin supports
