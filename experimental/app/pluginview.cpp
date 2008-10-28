@@ -30,46 +30,58 @@ void PluginView::addPluginInfo(const QString &suffix, const QString &comment,
                                bool extraction, bool deletion, bool creation, bool renaming)
 {
     QList<QStandardItem*> items;
-    items << new QStandardItem(suffix);
-    items << new QStandardItem(comment);
+    QStandardItem *itsuf = new QStandardItem(suffix);
+    itsuf->setEditable(false);
+    items << itsuf;
+    QStandardItem *itcom = new QStandardItem(comment);
+    itcom->setEditable(false);
+    items << itcom;
 
     if (extraction) {
         QStandardItem *item = new QStandardItem();
         item->setCheckState(Qt::Checked);
+        item->setEditable(false);
         items << item;
     } else {
         QStandardItem *item = new QStandardItem();
         item->setCheckState(Qt::Unchecked);
+        item->setEditable(false);
         items << item;
     }
 
     if (creation) {
         QStandardItem *item = new QStandardItem();
         item->setCheckState(Qt::Checked);
+        item->setEditable(false);
         items << item;
     } else {
         QStandardItem *item = new QStandardItem();
         item->setCheckState(Qt::Unchecked);
+        item->setEditable(false);
         items << item;
     }
 
     if (renaming) {
         QStandardItem *item = new QStandardItem();
         item->setCheckState(Qt::Checked);
+        item->setEditable(false);
         items << item;
     } else {
         QStandardItem *item = new QStandardItem();
         item->setCheckState(Qt::Unchecked);
+        item->setEditable(false);
         items << item;
     }
 
     if (deletion) {
         QStandardItem *item = new QStandardItem();
         item->setCheckState(Qt::Checked);
+        item->setEditable(false);
         items << item;
     } else {
         QStandardItem *item = new QStandardItem();
         item->setCheckState(Qt::Unchecked);
+        item->setEditable(false);
         items << item;
     }
  
