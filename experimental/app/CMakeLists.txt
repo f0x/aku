@@ -10,6 +10,7 @@ set( aku_SRCS
      maintree.cpp
      pluginview.cpp
      ../base/pluginloader.cpp
+     akutreemodel.cpp
  )
 
 kde4_add_executable(aku ${aku_SRCS})
