@@ -26,8 +26,17 @@ class AkuTreeNode
         QString data(int column) const;
         int row() const;
         AkuTreeNode* parent();
+        /**
+         * Set this to true if the current node is a folder.
+         */
         void setFolder(bool);
         bool isFolder();
+        /**
+         * Searches through the child folder nodes comparing the given string
+         * to the first column data. Returns the pointer to che child
+         * or 0 if no child is found.
+         */
+        AkuTreeNode* findChildFolder(QString);
 
     private:
         QList<AkuTreeNode*> childNodes;

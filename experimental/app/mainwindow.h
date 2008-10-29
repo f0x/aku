@@ -23,7 +23,7 @@ class MainWindow : public KXmlGuiWindow
 
   private:
     QSplitter *splitter;
-    QListView *tree;
+    QTreeView *tree;
     OpenArchive *openArchive;
     KDialog *m_optionDialog;
     PluginView *m_pluginView;

@@ -82,3 +82,13 @@ void AkuTreeNode::setFolder(bool set)
 {
     folder = set;
 }
+
+AkuTreeNode* AkuTreeNode::findChildFolder(QString name)
+{
+    for (int i = 0; i < childCount(); i++) {
+        if (child(i)->data(0) == name && child(i)->isFolder()) {
+            return child(i);
+        }
+    }
+    return 0;
+}

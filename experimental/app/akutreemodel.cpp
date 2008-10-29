@@ -179,6 +179,13 @@ void AkuTreeModel::Private::generateNodes()
                 continue;
             }
 
+            // here we avoid duplication of nodes
+            AkuTreeNode *existingNode = parentNode->findChildFolder(pathNodes[j]);
+            if (existingNode) {
+                parentNode = existingNode;
+                continue;
+            }
+
             AkuTreeNode *node = new AkuTreeNode(QStringList()<<pathNodes[j], parentNode);
             parentNode->appendChild(node);
             parentNode = node;
