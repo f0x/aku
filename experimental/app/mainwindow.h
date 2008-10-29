@@ -22,7 +22,7 @@ class MainWindow : public KXmlGuiWindow
 
   private:
     QSplitter *splitter;
-    MainTree *tree;
+    QTreeView *tree;
     OpenArchive *openArchive;
     KDialog *m_optionDialog;
     PluginView *m_pluginView;
@@ -34,6 +34,7 @@ class MainWindow : public KXmlGuiWindow
   private slots:
     void openDialog();
     void addPlugin(AkuPlugin*);
+    void showArchive(const QVector<QStringList> &archive);
     
 };
 

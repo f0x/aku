@@ -51,6 +51,11 @@ bool AkuPlugin::canDelete()
     return false;
 }
 
-void AkuPlugin::loadArchive(const QString &filename)
+void AkuPlugin::loadArchive(const KUrl &file)
 {
+}
+
+bool AkuPlugin::isWorkingProperly()
+{
+    return false;
 }

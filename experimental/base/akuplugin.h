@@ -19,6 +19,7 @@
   *
   * This is the base class for every archive plugin in Aku.
   */
+class KUrl;
 
 class KDE_EXPORT AkuPlugin : public QObject
 {
@@ -30,8 +31,8 @@ class KDE_EXPORT AkuPlugin : public QObject
 
         /**
          * Reimplement this to reimplement a correct mime type name.
-         * Examples are: "application-x-rar" for .rar, 
-         * "application/x-compressed-tar" for .tar.gz, "application/x-zip" for .zip.
+         * Examples are: "application/x-rar" for .rar, 
+         * "application/x-compressed-tar" for .tar.gz, "application/zip" for .zip.
          * Use this QString to build a KMimeType::Ptr.
          */
         virtual QString mimeTypeName();
@@ -52,7 +53,13 @@ class KDE_EXPORT AkuPlugin : public QObject
          * At the end of this function emit archiveLoaded() and pass
          * the correct data.
          */
-        virtual void loadArchive(const QString &fileName);
+        virtual void loadArchive(const KUrl &file);
+
+        /**
+         * Return true if the plugin has all needed resources ready and working
+         * to properly load the archive otherwise the plugin will be marked as not working.
+         */
+        virtual bool isWorkingProperly();
 
     signals:
         /**

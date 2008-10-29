@@ -34,15 +34,16 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent),
 
 
   AkuTreeModel *model = new AkuTreeModel(QVector<QStringList>());
-  QTreeView *mtree = new QTreeView(splitter);
-  mtree->setModel(model);
+  tree = new QTreeView(splitter);
+  tree->setModel(model);
 
 //   QVector<QStringList> testVector;
 //   testVector << (QStringList()<<"file1"<<"size1"<<"packed1") << (QStringList()<<"file2"<<"size2"<<"packed2");
 //   model->setSourceData(testVector);
 
   //splitter -> addWidget(tree);
-  openArchive = new OpenArchive();
+  openArchive = new OpenArchive(this);
+  openArchive->setAvailablePlugins(m_plugins);
   setupOptionsWidget();
   setupActions();
   setupGUI(QSize(650,460)); 
@@ -105,6 +106,9 @@ void MainWindow::addPlugin(AkuPlugin *plugin)
         return;
     }
 
+    connect(plugin, SIGNAL(archiveLoaded(const QVector<QStringList> &)),
+            this, SLOT(showArchive(const QVector<QStringList> &)));
+
     m_plugins.insert(mime->name(), plugin);
 
     m_pluginView->addPluginInfo(
@@ -115,4 +119,9 @@ void MainWindow::addPlugin(AkuPlugin *plugin)
                   plugin->canCreate(),
                   plugin->canRename()
                  );
+}
+
+void MainWindow::showArchive(const QVector<QStringList> &archive)
+{
+    static_cast<AkuTreeModel*>(tree->model())->setSourceData(archive);
 }
