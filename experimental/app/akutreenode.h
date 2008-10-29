@@ -7,30 +7,30 @@
    License as published by the Free Software Foundation; either
    version 2 of the License, or (at your option) any later version.
 */
-#ifndef AKUTREEITEM_H
-#define AKUTREEITEM_h
+#ifndef AKUTREENODE_H
+#define AKUTREENODE_H
 
 #include <QStringList>
 
-class AkuTreeItem
+class AkuTreeNode
 {
     public:
-        AkuTreeItem(const QStringList &data, AkuTreeItem *parent = 0);
-        ~AkuTreeItem();
+        AkuTreeNode(const QStringList &data, AkuTreeNode *parent = 0);
+        ~AkuTreeNode();
 
-        void appendChild(AkuTreeItem *);
+        void appendChild(AkuTreeNode *);
 
-        AkuTreeItem* child();
+        AkuTreeNode* child(int row);
         int childCount() const;
         int columnCount() const;
         QString data(int column) const;
         int row() const;
-        AkuTreeItem* parent();
+        AkuTreeNode* parent();
 
     private:
-        QList<AkuTreeItem*> childItems;
+        QList<AkuTreeNode*> childNodes;
         QStringList itemData;
-        AkuTreeItem *parentItem;
+        AkuTreeNode *parentNode;
         
 };
 

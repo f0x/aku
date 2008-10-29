@@ -47,6 +47,21 @@ class KDE_EXPORT AkuPlugin : public QObject
         virtual bool canRename();
         virtual bool canDelete();
 
+        /**
+         * In the reimplementation of this function goes the real parsing process.
+         * At the end of this function emit archiveLoaded() and pass
+         * the correct data.
+         */
+        virtual void loadArchive(const QString &fileName);
+
+    signals:
+        /**
+         * emit this signal when the data is ready to be used.
+         * each QStringList is in the form of: FilePath:FileSize:PackedSize:Ratio ...
+         * so each QStringList is a single file in the archive.
+         */
+        void archiveLoaded(const QVector<QStringList> &archive);
+
     private:
         class AkuPluginPrivate;
         AkuPluginPrivate *d;

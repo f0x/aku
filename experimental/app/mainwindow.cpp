@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "pluginloader.h"
 #include "pluginview.h"
+#include "akutreemodel.h"
 
 #include <akuplugin.h>
 
@@ -18,6 +19,7 @@
 #include <KDebug>
 
 #include <QListView>
+#include <QHeaderView>
 
 MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent),
                                           m_pluginView(new PluginView())
@@ -28,7 +30,15 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent),
 
   splitter = new QSplitter(this);
   setCentralWidget(splitter);
-  tree = new MainTree(splitter);
+//   tree = new MainTree(splitter);
+
+  QVector<QStringList> testVector;
+  testVector << (QStringList()<<"prova"<<"prova"<<"prova") << (QStringList()<<"prova2"<<"prova2"<<"prova2");
+
+  AkuTreeModel *model = new AkuTreeModel(testVector);
+  QTreeView *mtree = new QTreeView(splitter);
+  mtree->setModel(model);
+
   //splitter -> addWidget(tree);
   openArchive = new OpenArchive();
   setupOptionsWidget();
