@@ -77,18 +77,28 @@ void RarPlugin::loadArchive(const KUrl &fileName)
    output.remove (output.length() - 1, 1); //others parsing corrections
    QStringList splitList;
    splitList = output.split ("\n"); // split at the newline
-   QStringList fileList;
+   QVector<QStringList> archive;
+   QStringList file;
+
    for (int i = 0; i < splitList.size(); i++) {
      if ( i % 2 == 0 ) {
-       fileList << splitList[i].mid(1);
+       file << splitList[i].mid(1); // filepath
+     }
+     else {
+       QStringList attributes = (splitList.at(i)).split(" ", QString::SkipEmptyParts);
+       for (int j = 0; j < attributes.size(); j++) {
+         file << attributes[j];
+       }
+       archive << (QStringList() << file);
+       file.clear();
      }
    }
-   kDebug() << fileList;
-
-   QVector<QStringList> archive;
-   for (int i = 0; i < fileList.size(); i++) {
-      archive << (QStringList() << fileList[i]);
-   }
+ 
+   kDebug() << archive;
+   
+   //for (int i = 0; i < fileList.size(); i++) {
+   //   archive << (QStringList() << fileList[i]);
+   //}
 
    emit archiveLoaded(archive);
 }
