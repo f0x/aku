@@ -58,7 +58,8 @@ int AkuTreeModel::rowCount(const QModelIndex & parent) const
         return d->rootNode->childCount();
     }
 
-    return static_cast<AkuTreeNode*>(parent.internalPointer())->childCount();
+    int rows = static_cast<AkuTreeNode*>(parent.internalPointer())->childCount();
+    return rows;
 }
 
 int AkuTreeModel::columnCount(const QModelIndex & parent) const
@@ -87,6 +88,7 @@ QVariant AkuTreeModel::data(const QModelIndex &index, int role) const
     if (!index.isValid()) {
         return QVariant();
     }
+
 
     if (role == Qt::DecorationRole && index.column() == 0) {
         AkuTreeNode *node = static_cast<AkuTreeNode*>(index.internalPointer());
@@ -126,7 +128,7 @@ QModelIndex AkuTreeModel::index(int row, int column, const QModelIndex &parent) 
         return QModelIndex();
     }
 
-    if (row > rowCount() || column > columnCount()) {
+    if (row > rowCount(parent) || column > columnCount(parent)) {
         return QModelIndex();
     }
 
@@ -199,7 +201,11 @@ void AkuTreeModel::setSourceData(const QVector<QStringList> &source)
     delete d->rootNode;
     d->initData();
     d->sourceData = source;
-    kDebug()<<"setting data source"<<d->sourceData;
     d->generateNodes();
     reset();
+}
+
+QVector<QStringList> AkuTreeModel::sourceData()
+{
+    return d->sourceData;
 }

@@ -2,6 +2,10 @@
 #include "pluginloader.h"
 #include "pluginview.h"
 #include "akutreemodel.h"
+#include "akutreeview.h"
+#include "openarchive.h"
+#include "akuiconview.h"
+#include "akuviewoptionwidget.h"
 
 #include <akuplugin.h>
 
@@ -17,6 +21,7 @@
 #include <KDialog>
 #include <KMimeType>
 #include <KDebug>
+#include <KIcon>
 
 #include <QListView>
 #include <QHeaderView>
@@ -31,19 +36,9 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent),
 
   splitter = new QSplitter(this);
   setCentralWidget(splitter);
-//   tree = new MainTree(splitter);
 
-
-  AkuTreeModel *model = new AkuTreeModel(QVector<QStringList>());
-  tree = new QTreeView(splitter);
-//   tree->setViewMode(QListView::IconMode);
-//   tree->setWrapping(true);
-//   tree->setGridSize(QSize(64,64));
-  tree->setModel(model);
-
-//   QVector<QStringList> testVector;
-//   testVector << (QStringList()<<"folder1/folder2/folder3/file.zip"<<"size1"<<"packed1") << (QStringList()<<"folder1/folder2/folder3/file2.mp3"<<"size2"<<"packed2");
-//   model->setSourceData(testVector);
+  treeView = new AkuTreeView(splitter);
+  iconView = new AkuIconView(splitter);
 
   //splitter -> addWidget(tree);
   openArchive = new OpenArchive(this);
@@ -69,6 +64,7 @@ void MainWindow::setupActions()
 
   KAction *configAction = new KAction(this);
   configAction->setText(i18n("Configure Aku"));
+  configAction->setIcon(KIcon("configure"));
   actionCollection()->addAction("config", configAction);
   connect(configAction, SIGNAL(triggered()), m_optionDialog, SLOT(exec()));
 }
@@ -90,7 +86,11 @@ void MainWindow::setupOptionsWidget()
     plugins->setHeader( i18n( "Aku Loaded Plugins" ) );
     plugins->setIcon( KIcon( "configure" ) );
 
-    KPageWidgetItem *viewopt = new KPageWidgetItem( new QWidget(), i18n( "Setup the View" ) );
+    AkuViewOptionWidget *optionView = new AkuViewOptionWidget(m_optionDialog);
+    optionView->setViews(treeView, iconView);
+    connect(optionView, SIGNAL(visibilityChange()), this, SLOT(changeView()));
+
+    KPageWidgetItem *viewopt = new KPageWidgetItem( optionView, i18n( "Setup the View" ) );
     viewopt->setHeader( i18n( "Tree View Settings" ) );
     viewopt->setIcon( KIcon( "view-choose" ) );
 
@@ -98,6 +98,8 @@ void MainWindow::setupOptionsWidget()
     optionsWidget->addPage(viewopt);
     m_optionDialog->setMainWidget(optionsWidget);
     m_optionDialog->setCaption(i18n("Configuration"));
+
+    m_optionDialog->resize(600, 400);
 }
 
 void MainWindow::addPlugin(AkuPlugin *plugin)
@@ -127,5 +129,24 @@ void MainWindow::addPlugin(AkuPlugin *plugin)
 
 void MainWindow::showArchive(const QVector<QStringList> &archive)
 {
-    static_cast<AkuTreeModel*>(tree->model())->setSourceData(archive);
+    currentArchive = archive;
+
+    if (treeView->isVisible()) {
+        treeView->model()->setSourceData(currentArchive);
+    } else {
+        iconView->model()->setSourceData(currentArchive);
+    }
+}
+
+void MainWindow::changeView()
+{
+//TODO: chose the correct and fast behavior to undertake
+//      when the view changes.
+
+    if (treeView->isHidden()) {
+        showArchive(currentArchive);
+        return;
+    }
+
+    showArchive(currentArchive);
 }

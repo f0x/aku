@@ -4,14 +4,14 @@
 #include <KXmlGuiWindow>
 #include <QSplitter>
 
-#include "maintree.h"
-#include "openarchive.h"
-
 class KDialog;
 class AkuPlugin;
 class PluginView;
 class QTreeView;
 class QListView;
+class AkuTreeView;
+class AkuIconView;
+class OpenArchive;
 
 class MainWindow : public KXmlGuiWindow
 {
@@ -23,11 +23,13 @@ class MainWindow : public KXmlGuiWindow
 
   private:
     QSplitter *splitter;
-    QTreeView *tree;
+    AkuTreeView *treeView;
+    AkuIconView *iconView;
     OpenArchive *openArchive;
     KDialog *m_optionDialog;
     PluginView *m_pluginView;
     QMap<QString, AkuPlugin*> m_plugins;
+    QVector<QStringList> currentArchive;
 
     void setupActions();
     void setupOptionsWidget();
@@ -36,6 +38,7 @@ class MainWindow : public KXmlGuiWindow
     void openDialog();
     void addPlugin(AkuPlugin*);
     void showArchive(const QVector<QStringList> &archive);
+    void changeView();
     
 };
 

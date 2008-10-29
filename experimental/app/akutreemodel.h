@@ -30,6 +30,7 @@ class AkuTreeModel : public QAbstractItemModel
         QModelIndex parent(const QModelIndex &index) const;
         QVariant headerData(int section, Qt::Orientation, int role = Qt::DisplayRole) const;
         void setSourceData(const QVector<QStringList> &source);
+        QVector<QStringList> sourceData();
 
     private:
         class Private;
