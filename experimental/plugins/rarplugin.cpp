@@ -9,9 +9,15 @@
 */ 
 
 #include "rarplugin.h"
+
+#include <QProcess>
+
 #include <KLocale>
+#include <KDebug>
 
 AKU_PLUGIN_EXPORT(RarPlugin)
+
+const QString EXE_NAME = "unrar";
 
 RarPlugin::RarPlugin(QObject *parent, const QVariantList &args) : AkuPlugin(parent)
 {}
@@ -42,4 +48,17 @@ bool RarPlugin::canRename()
 bool RarPlugin::canDelete()
 {
     return true;
+}
+
+void RarPlugin::loadArchive(const KUrl &fileName)
+{
+   QProcess *process = new QProcess();
+   
+   kDebug() << fileName;
+   QStringList options;
+   options << "v" + fileName.pathOrUrl();
+   process -> start(EXE_NAME, options);
+   process -> waitForFinished();
+   QString output;
+   output = process -> readAllStandardOutput();
 }

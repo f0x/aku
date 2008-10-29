@@ -15,6 +15,8 @@
 #include <aku_macros.h>
 #include <QVariantList>
 
+#include <KUrl>
+
 class RarPlugin : public AkuPlugin
 {
     Q_OBJECT
@@ -27,6 +29,9 @@ class RarPlugin : public AkuPlugin
         bool canCreate();
         bool canRename();
         bool canDelete();
+
+        void loadArchive(const KUrl &fileName);
+
 };
 
 #endif
