@@ -84,4 +84,11 @@ void RarPlugin::loadArchive(const KUrl &fileName)
      }
    }
    kDebug() << fileList;
+
+   QVector<QStringList> archive;
+   for (int i = 0; i < fileList.size(); i++) {
+      archive << (QStringList() << fileList[i]);
+   }
+
+   emit archiveLoaded(archive);
 }

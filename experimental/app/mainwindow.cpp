@@ -41,9 +41,9 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent),
 //   tree->setGridSize(QSize(64,64));
   tree->setModel(model);
 
-  QVector<QStringList> testVector;
-  testVector << (QStringList()<<"folder1/folder2/folder3/file.zip"<<"size1"<<"packed1") << (QStringList()<<"folder1/folder2/folder3/file2.mp3"<<"size2"<<"packed2");
-  model->setSourceData(testVector);
+//   QVector<QStringList> testVector;
+//   testVector << (QStringList()<<"folder1/folder2/folder3/file.zip"<<"size1"<<"packed1") << (QStringList()<<"folder1/folder2/folder3/file2.mp3"<<"size2"<<"packed2");
+//   model->setSourceData(testVector);
 
   //splitter -> addWidget(tree);
   openArchive = new OpenArchive(this);

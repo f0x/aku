@@ -69,7 +69,8 @@ int AkuTreeModel::columnCount(const QModelIndex & parent) const
         return 0;
     }
 
-    return static_cast<QStringList>(d->sourceData.first()).count();
+    return d->sourceData.first().count() + 1;
+   
 }
 
 QVariant AkuTreeModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -195,7 +196,10 @@ void AkuTreeModel::Private::generateNodes()
 
 void AkuTreeModel::setSourceData(const QVector<QStringList> &source)
 {
+    delete d->rootNode;
+    d->initData();
     d->sourceData = source;
+    kDebug()<<"setting data source"<<d->sourceData;
     d->generateNodes();
     reset();
 }
