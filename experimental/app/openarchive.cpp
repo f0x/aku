@@ -39,7 +39,7 @@ void OpenArchive::load(KUrl url)
         m_availablePlugins[mimetype->name()]->loadArchive(url);
     } else {
         KMessageBox::sorry(static_cast<QWidget*>(parent()),
-                           i18n("Sorry, no plugin available to open: %1", mimetype->name()), 
+                           i18n("Sorry, no plugin available to open: %1", "<b>"+mimetype->name()+"</b>"), 
                            i18n("Unable to load archive"));
     }
 }

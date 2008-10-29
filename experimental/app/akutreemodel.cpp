@@ -13,9 +13,12 @@
 
 #include <QVector>
 #include <QStringList>
+#include <QDir>
 
 #include <KLocale>
+#include <KIcon>
 #include <KDebug>
+#include <KMimeType>
 
 class AkuTreeModel::Private
 {
@@ -84,17 +87,26 @@ QVariant AkuTreeModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 
+    if (role == Qt::DecorationRole && index.column() == 0) {
+        AkuTreeNode *node = static_cast<AkuTreeNode*>(index.internalPointer());
+        if (node->isFolder()) {
+            return KIcon("inode-directory");
+        } else {
+            KMimeType::Ptr mimeType = KMimeType::findByPath(node->data(0));
+            return KIcon(mimeType->iconName());
+        }
+    }
+
     if (role == Qt::DisplayRole) {
         return static_cast<AkuTreeNode*>(index.internalPointer())->data(index.column());
     }
 
-    // TODO: fill in with correct code
     return QVariant();
+
 }
 
 QModelIndex AkuTreeModel::parent(const QModelIndex &index) const
 {
-    // TODO: fill in with correct code
     if (!index.isValid()) {
         return QModelIndex();
     }
@@ -109,7 +121,6 @@ QModelIndex AkuTreeModel::parent(const QModelIndex &index) const
 
 QModelIndex AkuTreeModel::index(int row, int column, const QModelIndex &parent) const
 {
-    // TODO: fill in with correct code
     if (!hasIndex(row, column, parent)) {
         return QModelIndex();
     }
@@ -118,12 +129,20 @@ QModelIndex AkuTreeModel::index(int row, int column, const QModelIndex &parent) 
         return QModelIndex();
     }
 
-    if (parent.isValid()) {
-        // TODO: return the subnode correct index
+    AkuTreeNode *parentNode;
+
+    if (!parent.isValid()) {
+        parentNode = d->rootNode;
+    } else {
+        parentNode = static_cast<AkuTreeNode*>(parent.internalPointer());
     }
 
-    return createIndex(row, column, d->rootNode->child(row));
-//     return QModelIndex();
+    AkuTreeNode *childNode = parentNode->child(row);
+    if (childNode) {
+        return createIndex(row, column, childNode);
+    } else {
+        return QModelIndex();
+    }
 }
 
 void AkuTreeModel::Private::initData()
@@ -137,12 +156,33 @@ void AkuTreeModel::Private::initData()
 
 void AkuTreeModel::Private::generateNodes()
 {
-// TODO: generate parents/children
-    const QVector<QStringList> &source = sourceData;
+    QVector<QStringList> &source = sourceData;
     for (int i = 0; i < source.size(); i++) {
-        AkuTreeNode *node = new AkuTreeNode(source[i], rootNode);
-        rootNode->appendChild(node);
-        nodes<<node;
+
+        //NOTE: Since the first string of the list is in the 
+        // form folder/folder/folder/file
+        // then we need to split it to create nodes.
+
+        QString path = source[i][0];
+        source[i].removeAt(0);
+        QStringList pathNodes = path.split(QDir::separator());
+
+        AkuTreeNode *parentNode = rootNode;
+
+        for (int j = 0; j < pathNodes.size(); j++) {
+
+            // NOTE: we should put attributes only on last item
+            if (j == pathNodes.size() - 1) {
+                AkuTreeNode *node = new AkuTreeNode(QStringList()<<pathNodes[j]<<source[i], parentNode);
+                node->setFolder(false);
+                parentNode->appendChild(node);
+                continue;
+            }
+
+            AkuTreeNode *node = new AkuTreeNode(QStringList()<<pathNodes[j], parentNode);
+            parentNode->appendChild(node);
+            parentNode = node;
+        }
     }
 }
 

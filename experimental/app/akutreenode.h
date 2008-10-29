@@ -26,11 +26,14 @@ class AkuTreeNode
         QString data(int column) const;
         int row() const;
         AkuTreeNode* parent();
+        void setFolder(bool);
+        bool isFolder();
 
     private:
         QList<AkuTreeNode*> childNodes;
         QStringList itemData;
         AkuTreeNode *parentNode;
+        bool folder;
         
 };
 

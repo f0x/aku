@@ -20,6 +20,7 @@
 
 #include <QListView>
 #include <QHeaderView>
+#include <QTreeView>
 
 MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent),
                                           m_pluginView(new PluginView())
@@ -34,12 +35,15 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent),
 
 
   AkuTreeModel *model = new AkuTreeModel(QVector<QStringList>());
-  tree = new QTreeView(splitter);
+  tree = new QListView(splitter);
+  tree->setViewMode(QListView::IconMode);
+  tree->setWrapping(true);
+  tree->setGridSize(QSize(64,64));
   tree->setModel(model);
 
-//   QVector<QStringList> testVector;
-//   testVector << (QStringList()<<"file1"<<"size1"<<"packed1") << (QStringList()<<"file2"<<"size2"<<"packed2");
-//   model->setSourceData(testVector);
+  QVector<QStringList> testVector;
+  testVector << (QStringList()<<"folder1/folder2/folder3/file.zip"<<"size1"<<"packed1") << (QStringList()<<"file2.mp3"<<"size2"<<"packed2");
+  model->setSourceData(testVector);
 
   //splitter -> addWidget(tree);
   openArchive = new OpenArchive(this);

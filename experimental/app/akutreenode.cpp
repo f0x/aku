@@ -11,7 +11,8 @@
 
 AkuTreeNode::AkuTreeNode(const QStringList &data, AkuTreeNode *parent) :
                                                     itemData(data),
-                                                    parentNode(parent)
+                                                    parentNode(parent),
+                                                    folder(true)
 {
 }
 
@@ -47,7 +48,7 @@ QString AkuTreeNode::data(int column) const
         return QString();
     }
 
-    if (itemData.size() < column) {
+    if (column >= itemData.size()) {
         return QString();
     }
 
@@ -70,4 +71,14 @@ AkuTreeNode* AkuTreeNode::child(int row)
     }
 
     return childNodes[row];
+}
+
+bool AkuTreeNode::isFolder()
+{
+    return folder;
+}
+
+void AkuTreeNode::setFolder(bool set)
+{
+    folder = set;
 }
