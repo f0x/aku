@@ -30,7 +30,7 @@ public:
     AkuTreeNode *rootNode;
 
     void initData();
-    void generateNodes(const QVector<QStringList> &source);
+    void generateNodes();
 };
 
 AkuTreeModel::AkuTreeModel(QVector<QStringList> fileList, QObject *parent) : 
@@ -39,7 +39,7 @@ AkuTreeModel::AkuTreeModel(QVector<QStringList> fileList, QObject *parent) :
 {
     d->sourceData = fileList;
     d->initData();
-    d->generateNodes(d->sourceData);
+    d->generateNodes();
 }
 
 AkuTreeModel::~AkuTreeModel()
@@ -51,7 +51,11 @@ int AkuTreeModel::rowCount(const QModelIndex & parent) const
         return 0;
     }
 
-    return d->sourceData.size();
+    if (!parent.isValid()) {
+        return d->rootNode->childCount();
+    }
+
+    return static_cast<AkuTreeNode*>(parent.internalPointer())->childCount();
 }
 
 int AkuTreeModel::columnCount(const QModelIndex & parent) const
@@ -81,7 +85,7 @@ QVariant AkuTreeModel::data(const QModelIndex &index, int role) const
     }
 
     if (role == Qt::DisplayRole) {
-        return d->nodes[index.row()]->data(index.column());
+        return static_cast<AkuTreeNode*>(index.internalPointer())->data(index.column());
     }
 
     // TODO: fill in with correct code
@@ -97,22 +101,28 @@ QModelIndex AkuTreeModel::parent(const QModelIndex &index) const
 
     AkuTreeNode *node = static_cast<AkuTreeNode*>(index.internalPointer());
     if (node->parent() != d->rootNode) {
-        kDebug()<<"parent root != rootNode";
         return createIndex(node->parent()->row(), 0, node->parent());
     }
 
-    kDebug()<<"not parented";
     return QModelIndex();
 }
 
 QModelIndex AkuTreeModel::index(int row, int column, const QModelIndex &parent) const
 {
     // TODO: fill in with correct code
+    if (!hasIndex(row, column, parent)) {
+        return QModelIndex();
+    }
+
     if (row > rowCount() || column > columnCount()) {
         return QModelIndex();
     }
 
-    return createIndex(row, column, d->nodes[row]);
+    if (parent.isValid()) {
+        // TODO: return the subnode correct index
+    }
+
+    return createIndex(row, column, d->rootNode->child(row));
 //     return QModelIndex();
 }
 
@@ -125,12 +135,20 @@ void AkuTreeModel::Private::initData()
     rootNode = new AkuTreeNode(header);
 }
 
-void AkuTreeModel::Private::generateNodes(const QVector<QStringList> &source)
+void AkuTreeModel::Private::generateNodes()
 {
 // TODO: generate parents/children
-
+    const QVector<QStringList> &source = sourceData;
     for (int i = 0; i < source.size(); i++) {
         AkuTreeNode *node = new AkuTreeNode(source[i], rootNode);
+        rootNode->appendChild(node);
         nodes<<node;
     }
+}
+
+void AkuTreeModel::setSourceData(const QVector<QStringList> &source)
+{
+    d->sourceData = source;
+    d->generateNodes();
+    reset();
 }

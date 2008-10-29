@@ -32,12 +32,14 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent),
   setCentralWidget(splitter);
 //   tree = new MainTree(splitter);
 
-  QVector<QStringList> testVector;
-  testVector << (QStringList()<<"prova"<<"prova"<<"prova") << (QStringList()<<"prova2"<<"prova2"<<"prova2");
 
-  AkuTreeModel *model = new AkuTreeModel(testVector);
+  AkuTreeModel *model = new AkuTreeModel(QVector<QStringList>());
   QTreeView *mtree = new QTreeView(splitter);
   mtree->setModel(model);
+
+//   QVector<QStringList> testVector;
+//   testVector << (QStringList()<<"file1"<<"size1"<<"packed1") << (QStringList()<<"file2"<<"size2"<<"packed2");
+//   model->setSourceData(testVector);
 
   //splitter -> addWidget(tree);
   openArchive = new OpenArchive();

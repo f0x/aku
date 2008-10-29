@@ -12,6 +12,7 @@
 #define AKUTREEMODEL_H
 
 #include <QAbstractItemModel>
+#include <QVector>
 
 class QStringList;
 
@@ -19,7 +20,7 @@ class AkuTreeModel : public QAbstractItemModel
 {
     Q_OBJECT
     public:
-        AkuTreeModel(QVector<QStringList> filesList, QObject *parent = 0);
+        AkuTreeModel(QVector<QStringList> filesList = QVector<QStringList>(), QObject *parent = 0);
         ~AkuTreeModel();
 
         int columnCount(const QModelIndex & parent = QModelIndex()) const;
@@ -28,6 +29,7 @@ class AkuTreeModel : public QAbstractItemModel
         QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
         QModelIndex parent(const QModelIndex &index) const;
         QVariant headerData(int section, Qt::Orientation, int role = Qt::DisplayRole) const;
+        void setSourceData(const QVector<QStringList> &source);
 
     private:
         class Private;
