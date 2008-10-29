@@ -50,3 +50,7 @@ bool AkuPlugin::canDelete()
 {
     return false;
 }
+
+void AkuPlugin::loadArchive(const QString &filename)
+{
+}
