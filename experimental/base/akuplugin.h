@@ -52,7 +52,7 @@ class KDE_EXPORT AkuPlugin : public QObject
          * At the end of this function emit archiveLoaded() and pass
          * the correct data.
          */
-        virtual void loadArchive(const QString &fileName);
+        virtual void loadArchive(const QString &fileName) = 0;
 
     signals:
         /**
