@@ -24,6 +24,11 @@ AkuIconView::AkuIconView(QWidget *parent) : QListView(parent)
     setWrapping(false);
     setSpacing(2);
     setIconSize(64);
+    setWrapping(true);
+    setLayoutMode(QListView::Batched);
+    setSelectionRectVisible(true);
+    setResizeMode(QListView::Adjust);
+    setSelectionMode(QAbstractItemView::ExtendedSelection);
 
     if (KGlobalSettings::singleClick()) {
         connect(this, SIGNAL(clicked(const QModelIndex &)), this, SLOT(enterItem(const QModelIndex &)));

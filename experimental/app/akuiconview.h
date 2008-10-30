@@ -34,6 +34,7 @@ class AkuIconView : public QListView
     public slots:
         void enterItem(const QModelIndex &index);
         void browseUp();
+
 };
 
 #endif
