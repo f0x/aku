@@ -123,7 +123,8 @@ void MainWindow::addPlugin(AkuPlugin *plugin)
                   plugin->canExtract(),
                   plugin->canDelete(),
                   plugin->canCreate(),
-                  plugin->canRename()
+                  plugin->canRename(),
+                  plugin->isWorkingProperly()
                  );
 }
 

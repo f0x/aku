@@ -21,7 +21,7 @@ class PluginView : public QTreeView
         ~PluginView();
 
         void addPluginInfo(const QString &suffix, const QString &comment, bool extraction,
-                            bool deletion, bool creation, bool renaming);
+                            bool deletion, bool creation, bool renaming, bool working);
 
 };
 

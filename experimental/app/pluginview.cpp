@@ -18,7 +18,8 @@ PluginView::PluginView(QWidget *parent) : QTreeView(parent)
 {
     QStandardItemModel *model = new QStandardItemModel();
     model->setHorizontalHeaderLabels(QStringList()<<i18n("Archive suffix")<<i18n("Archive Type")<<
-                                     i18n("Extraction")<<i18n("Creation")<<i18n("Rename")<<i18n("Delete"));
+                                     i18n("Extraction")<<i18n("Creation")<<i18n("Rename")<<
+                                     i18n("Delete")<<i18n("Working Properly"));
     setModel(model);
     setRootIsDecorated(false);
 }
@@ -27,7 +28,8 @@ PluginView::~PluginView()
 {}
 
 void PluginView::addPluginInfo(const QString &suffix, const QString &comment,
-                               bool extraction, bool deletion, bool creation, bool renaming)
+                               bool extraction, bool deletion, bool creation,
+                               bool renaming, bool working)
 {
     QList<QStandardItem*> items;
 
@@ -75,6 +77,18 @@ void PluginView::addPluginInfo(const QString &suffix, const QString &comment,
     }
 
     if (deletion) {
+        QStandardItem *item = new QStandardItem();
+        item->setCheckState(Qt::Checked);
+        item->setEditable(false);
+        items << item;
+    } else {
+        QStandardItem *item = new QStandardItem();
+        item->setCheckState(Qt::Unchecked);
+        item->setEditable(false);
+        items << item;
+    }
+
+    if (working) {
         QStandardItem *item = new QStandardItem();
         item->setCheckState(Qt::Checked);
         item->setEditable(false);
