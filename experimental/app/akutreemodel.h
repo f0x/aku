@@ -1,4 +1,4 @@
- /* This file is part of the KDE project
+ /*
 
    Copyright (C) 2008 Alessandro Diaferia <alediaferia@gmail.com>
 

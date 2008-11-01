@@ -17,6 +17,7 @@
 
 #include <KLocale>
 #include <KDebug>
+#include <KStandardDirs>
 
 AKU_PLUGIN_EXPORT(RarPlugin)
 
@@ -107,4 +108,18 @@ void RarPlugin::loadArchive(const KUrl &fileName)
 //    kDebug() << archive;
 
     emit archiveLoaded(archive);
+}
+
+bool RarPlugin::isWorkingProperly()
+{
+    // WARNING: this checks for unrar or rar with no distinction
+    // TODO: decide whether we should support also the shareware rar
+
+    if (KStandardDirs::findExe("unrar").isEmpty()) {
+        if (!KStandardDirs::findExe("rar").isEmpty()) {
+            return true;
+        }
+        return false;
+    }
+    return true;
 }

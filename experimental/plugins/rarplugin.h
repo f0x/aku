@@ -25,10 +25,13 @@ class RarPlugin : public AkuPlugin
         ~RarPlugin();
 
         QString mimeTypeName();
+
         bool canExtract();
         bool canCreate();
         bool canRename();
         bool canDelete();
+
+        bool isWorkingProperly();
 
         void loadArchive(const KUrl &fileName);
 
