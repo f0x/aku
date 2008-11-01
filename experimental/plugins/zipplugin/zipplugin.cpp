@@ -63,9 +63,6 @@ void ZipPlugin::loadArchive(const KUrl &filename)
 
     m_archive->open(QIODevice::ReadOnly);
 
-    // NOTE: here the errors are handled internally
-    //       in the plugin. Think about this, whether
-    //       to use them internally or globally by the main app.
     if (!m_archive->isOpen()) {
         emit error(i18n("An error occurred. Could not open archive <b>%1</b>").arg(m_archive->fileName()));
         return;
@@ -78,7 +75,7 @@ void ZipPlugin::loadArchive(const KUrl &filename)
 
     m_archive->close();
 
-    kDebug()<<m_entries;
+//     kDebug()<<m_entries;
     QVector<QStringList> archive;
 
     foreach (const QString &field, m_entries) {
