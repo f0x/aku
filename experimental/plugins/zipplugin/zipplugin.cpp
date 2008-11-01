@@ -93,7 +93,7 @@ void ZipPlugin::getEntries(const KArchiveEntry *rootEntry)
 {
     if (rootEntry->isFile()) {
         m_entries << m_currentPath + rootEntry->name();
-//         m_currentPath.clear();
+        kDebug() << m_entries.last();
         return;
     }
 
@@ -109,7 +109,15 @@ void ZipPlugin::getEntries(const KArchiveEntry *rootEntry)
     const KArchiveDirectory *rootDir = static_cast<const KArchiveDirectory*>(rootEntry);
 
     foreach (const QString &entry, rootDir->entries()) {
+        kDebug() << "root" << rootDir->name();
+        kDebug() << rootDir->entry(entry)->name();
         getEntries(rootDir->entry(entry));
+
+        if (rootEntry == m_archive->directory()) {
+            m_currentPath.clear();
+        }
+
+        // TODO: one step missing, but almost working.
     }
 
 }
