@@ -13,8 +13,11 @@
 #include <akuplugin.h>
 #include <aku_macros.h>
 #include <QVariantList>
+#include <QStringList>
 
+class KZip;
 class KUrl;
+class KArchiveEntry;
 
 class ZipPlugin : public AkuPlugin
 {
@@ -33,6 +36,14 @@ class ZipPlugin : public AkuPlugin
         bool isWorkingProperly();
 
         void loadArchive(const KUrl &fileName);
+
+
+    private:
+        KZip *m_archive;
+        QStringList m_entries;
+        QString m_currentPath;
+
+        void getEntries(const KArchiveEntry *rootEntry);
 
 };
 

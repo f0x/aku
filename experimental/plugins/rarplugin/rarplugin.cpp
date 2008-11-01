@@ -1,5 +1,6 @@
- /* This file is part of the KDE project
+ /*
 
+   Copyright (C) 2008 Francesco Grieco <fgrieco@gmail.com>
    Copyright (C) 2008 Alessandro Diaferia <alediaferia@gmail.com>
 
    This program is free software; you can redistribute it and/or
@@ -14,6 +15,7 @@
 #include "rarplugin.h"
 
 #include <QProcess>
+// #include <QFile>
 
 #include <KLocale>
 #include <KDebug>
@@ -59,6 +61,12 @@ bool RarPlugin::canDelete()
 
 void RarPlugin::loadArchive(const KUrl &fileName)
 {
+//     // TODO: maybe do also some url check after this
+//     if (!QFile::exists(fileName.pathOrUrl())) {
+//         emit error(i18n("The file <b>%1</b> does not exist. Cannot load archive.").arg(fileName.pathOrUrl()));
+//         return;
+//     }
+
     QProcess *process = new QProcess();
    
     QStringList options;

@@ -1,5 +1,6 @@
- /* This file is part of the KDE project
+ /*
 
+   Copyright (C) 2008 Francesco Grieco <fgrieco@gmail.com>
    Copyright (C) 2008 Alessandro Diaferia <alediaferia@gmail.com>
 
    This program is free software; you can redistribute it and/or

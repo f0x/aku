@@ -69,6 +69,12 @@ class KDE_EXPORT AkuPlugin : public QObject
          */
         void archiveLoaded(const QVector<QStringList> &archive);
 
+        /**
+         * emit this signal when an error occurs. Pass the error
+         * as QString so that it will be displayed by the main app.
+         */
+        void error(QString);
+
     private:
         class AkuPluginPrivate;
         AkuPluginPrivate *d;

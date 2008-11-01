@@ -10,6 +10,8 @@
 
 #include "zipplugin.h"
 
+#include <QDir>
+
 #include <KZip>
 #include <KLocale>
 #include <KArchiveDirectory>
@@ -56,30 +58,59 @@ bool ZipPlugin::isWorkingProperly()
 
 void ZipPlugin::loadArchive(const KUrl &filename)
 {
-    // WARNING: to enable extraction/editing in general
-    //          maybe archive should be made global.
 
-    KZip archive = KZip(filename.pathOrUrl());
+    m_archive = new KZip(filename.pathOrUrl());
 
-    archive.open(QIODevice::ReadOnly);
+    m_archive->open(QIODevice::ReadOnly);
 
     // NOTE: here the errors are handled internally
     //       in the plugin. Think about this, whether
     //       to use them internally or globally by the main app.
-    if (!archive.isOpen()) {
-        emit error(i18n("An error occurred. Could not open archive <b>%1</b>").arg(archive.fileName()));
+    if (!m_archive->isOpen()) {
+        emit error(i18n("An error occurred. Could not open archive <b>%1</b>").arg(m_archive->fileName()));
         return;
     }
 
-//     kDebug()<<archive.directory()->entries();
+    m_currentPath.clear();
+    m_entries.clear();
 
-    QStringList topLevelEntries;
-    QStringList totalEntries;
+    getEntries(m_archive->directory());
 
-    topLevelEntries = archive.directory()->entries();
+    m_archive->close();
 
-    foreach (const QString &entry, topLevelEntries) {
-        
+    kDebug()<<m_entries;
+    QVector<QStringList> archive;
+
+    foreach (const QString &field, m_entries) {
+        archive << (QStringList() << field);
     }
+
+    emit archiveLoaded(archive);
+
+}
+
+void ZipPlugin::getEntries(const KArchiveEntry *rootEntry)
+{
+    if (rootEntry->isFile()) {
+        m_entries << m_currentPath + rootEntry->name();
+//         m_currentPath.clear();
+        return;
+    }
+
+    if (rootEntry->name() != QDir::separator()) {
+        m_currentPath.append(rootEntry->name());
+    }
+
+    // if we are here then the rootEntry is a dir.
+    if (!m_currentPath.isEmpty()) {
+        m_currentPath.append(QDir::separator());
+    }
+
+    const KArchiveDirectory *rootDir = static_cast<const KArchiveDirectory*>(rootEntry);
+
+    foreach (const QString &entry, rootDir->entries()) {
+        getEntries(rootDir->entry(entry));
+    }
+
 }
 

@@ -114,6 +114,7 @@ void MainWindow::addPlugin(AkuPlugin *plugin)
 
     connect(plugin, SIGNAL(archiveLoaded(const QVector<QStringList> &)),
             this, SLOT(showArchive(const QVector<QStringList> &)));
+    // TODO handle signal error(QString)
 
     m_plugins.insert(mime->name(), plugin);
 
