@@ -36,18 +36,21 @@ void OpenArchive::load(KUrl url)
     kDebug() << mimetype -> name();
 
     if (m_availablePlugins.contains(mimetype->name())) {
+
         if (m_availablePlugins[mimetype->name()]->isWorkingProperly()) {
             m_availablePlugins[mimetype->name()]->loadArchive(url);
         } else {
             KMessageBox::sorry(static_cast<QWidget*>(parent()),
-                           i18n("The correct plugin to open %1 mimetype was found but appears to not be working properly. "
-                                "Please check the installation", "<b>"+mimetype->name()+"</b>"), 
+                           i18n("The correct plugin to open <b>%1</b> mimetype was found but appears to not be working properly. "
+                                "Please check the installation", mimetype->name()), 
                            i18n("Unable to load archive"));
         }
+
     } else {
         KMessageBox::sorry(static_cast<QWidget*>(parent()),
-                           i18n("Sorry, no available plugin to open: %2. Install a plugin for %1 mimetype in order to load the archive."
-                           , "<b>"+mimetype->name()+"</b>", "<b>"+url.pathOrUrl()+"</b>"), 
+                           i18n("Sorry, no available plugin to open: <b>%2</b>. "
+                           "Install a plugin for <b>%1</b> mimetype in order to load the archive."
+                           , mimetype->name(), url.pathOrUrl()), 
                            i18n("Unable to load archive"));
     }
 }
