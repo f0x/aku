@@ -22,6 +22,8 @@ class AkuIconWidget : public KVBox
         AkuIconWidget(QWidget *parent = 0);
         ~AkuIconWidget();
 
+        AkuIconView *view();
+
     private:
         AkuIconView *m_view;
         QLabel *m_currentPathLabel;

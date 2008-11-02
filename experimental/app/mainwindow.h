@@ -10,7 +10,7 @@ class PluginView;
 class QTreeView;
 class QListView;
 class AkuTreeView;
-class AkuIconView;
+class AkuIconWidget;
 class AkuTreeModel;
 class OpenArchive;
 
@@ -25,7 +25,7 @@ class MainWindow : public KXmlGuiWindow
   private:
     QSplitter *splitter;
     AkuTreeView *treeView;
-    AkuIconView *iconView;
+    AkuIconWidget *iconWidget;
     AkuTreeModel *m_model;
     OpenArchive *openArchive;
     KDialog *m_optionDialog;

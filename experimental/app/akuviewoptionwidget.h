@@ -15,7 +15,7 @@
 #include "ui_akuviewoptionwidget.h"
 
 class AkuTreeView;
-class AkuIconView;
+class AkuIconWidget;
 
 class AkuViewOptionWidget : public KVBox
 {
@@ -24,11 +24,11 @@ class AkuViewOptionWidget : public KVBox
         AkuViewOptionWidget(QWidget *parent = 0);
         ~AkuViewOptionWidget();
 
-        void setViews(AkuTreeView*, AkuIconView*);
+        void setViews(AkuTreeView*, AkuIconWidget*);
 
     private:
         Ui::AkuViewOptionWidget ui;
-        AkuIconView *m_iconView;
+        AkuIconWidget *m_iconWidget;
         AkuTreeView *m_treeView;
 
     protected slots:

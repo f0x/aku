@@ -6,6 +6,7 @@
 #include "openarchive.h"
 #include "akuiconview.h"
 #include "akuviewoptionwidget.h"
+#include "akuiconwidget.h"
 
 #include <akuplugin.h>
 
@@ -39,9 +40,9 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent),
   setCentralWidget(splitter);
 
   treeView = new AkuTreeView(splitter);
-  iconView = new AkuIconView(splitter);
+  iconWidget = new AkuIconWidget(splitter);
   treeView->setModel(m_model);
-  iconView->setModel(m_model);
+  iconWidget->view()->setModel(m_model);
 
   openArchive = new OpenArchive(this);
   openArchive->setAvailablePlugins(m_plugins);
@@ -88,7 +89,7 @@ void MainWindow::setupOptionsWidget()
     plugins->setIcon( KIcon( "configure" ) );
 
     AkuViewOptionWidget *optionView = new AkuViewOptionWidget(m_optionDialog);
-    optionView->setViews(treeView, iconView);
+    optionView->setViews(treeView, iconWidget);
     connect(optionView, SIGNAL(visibilityChange()), this, SLOT(changeView()));
 
     KPageWidgetItem *viewopt = new KPageWidgetItem( optionView, i18n( "Setup the View" ) );
@@ -139,7 +140,7 @@ void MainWindow::showArchive(const QVector<QStringList> &archive)
     if (treeView->isVisible()) {
         treeView->model()->setSourceData(currentArchive);
     } else {
-        iconView->model()->setSourceData(currentArchive);
+        iconWidget->view()->model()->setSourceData(currentArchive);
     }
 }
 

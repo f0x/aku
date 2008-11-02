@@ -19,7 +19,6 @@
 
 AkuIconView::AkuIconView(QWidget *parent) : QListView(parent)
 {
-//     setModel(new AkuTreeModel(QVector<QStringList>()));
     setViewMode(QListView::IconMode);
     setWrapping(false);
     setSpacing(2);
@@ -71,7 +70,5 @@ void AkuIconView::enterItem(const QModelIndex &index)
 
 void AkuIconView::browseUp()
 {
-    if (rootIndex().parent().isValid()) {
-        setRootIndex(rootIndex().parent());
-    }
+    setRootIndex(rootIndex().parent());
 }

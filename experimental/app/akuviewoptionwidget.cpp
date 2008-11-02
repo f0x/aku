@@ -13,13 +13,14 @@
 
 #include "akutreeview.h"
 #include "akuiconview.h"
+#include "akuiconwidget.h"
 
 #include <KIcon>
 #include <KLocale>
 #include <KDebug>
 
 AkuViewOptionWidget::AkuViewOptionWidget(QWidget *parent) : KVBox(parent),
-                                                            m_iconView(0),
+                                                            m_iconWidget(0),
                                                             m_treeView(0)
 {
     QWidget *widget = new QWidget(this);
@@ -44,12 +45,12 @@ AkuViewOptionWidget::~AkuViewOptionWidget()
 
 void AkuViewOptionWidget::showView(int view)
 {
-    if (!m_iconView || !m_treeView) {
+    if (!m_iconWidget || !m_treeView) {
         return;
     }
 
     bool show = view;
-    m_iconView->setVisible(show);
+    m_iconWidget->setVisible(show);
     ui.iconBox->setVisible(show);
     m_treeView->setVisible(!show);
     ui.treeBox->setVisible(!show);
@@ -57,24 +58,24 @@ void AkuViewOptionWidget::showView(int view)
     emit visibilityChange();
 }
 
-void AkuViewOptionWidget::setViews(AkuTreeView *tree, AkuIconView *icon)
+void AkuViewOptionWidget::setViews(AkuTreeView *tree, AkuIconWidget *icon)
 {
-    m_iconView = icon;
+    m_iconWidget = icon;
     m_treeView = tree;
 
     showView(ui.comboBox->currentIndex());
-    ui.iconSizeSlider->setSliderPosition(m_iconView->viewItemSize());
+    ui.iconSizeSlider->setSliderPosition(m_iconWidget->view()->viewItemSize());
 }
 
 void AkuViewOptionWidget::setIconSize(int size)
 {
-    if (!m_iconView) {
+    if (!m_iconWidget) {
         return;
     }
 
 // TODO: only fix KDE icon sizes
 
-    m_iconView->setIconSize(size);
+    m_iconWidget->view()->setIconSize(size);
 }
 
 #include "akuviewoptionwidget.moc"

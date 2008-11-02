@@ -19,11 +19,19 @@
 AkuIconWidget::AkuIconWidget(QWidget *parent) : KVBox(parent)
 {
     KHBox *navigator = new KHBox(this);
-    QToolButton *upButton = new QToolButton(KHBox);
-    m_currentPathLabel = new QLabel(KHBox);
+    QToolButton *upButton = new QToolButton(navigator);
+    upButton->setIcon(KIcon("go-up"));
+    upButton->setAutoRaise(true);
+    m_currentPathLabel = new QLabel(navigator);
 
     m_view = new AkuIconView(this);
+    connect(upButton, SIGNAL(clicked()), m_view, SLOT(browseUp()));
 }
 
 AkuIconWidget::~AkuIconWidget()
 {}
+
+AkuIconView* AkuIconWidget::view()
+{
+    return m_view;
+}
