@@ -31,6 +31,7 @@ class AkuTreeModel : public QAbstractItemModel
         QVariant headerData(int section, Qt::Orientation, int role = Qt::DisplayRole) const;
         void setSourceData(const QVector<QStringList> &source);
         QVector<QStringList> sourceData();
+        void setAdditionalHeaders(const QStringList &headers);
 
     private:
         class Private;

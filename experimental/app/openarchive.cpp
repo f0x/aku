@@ -47,10 +47,10 @@ void OpenArchive::load(KUrl url)
         }
 
     } else {
-        KMessageBox::sorry(static_cast<QWidget*>(parent()),
-                           i18n("Sorry, no available plugin to open: <b>%2</b>. "
-                           "Install a plugin for <b>%1</b> mimetype in order to load the archive."
-                           , mimetype->name(), url.pathOrUrl()), 
+        KMessageBox::detailedSorry(static_cast<QWidget*>(parent()),
+                           i18n("Sorry, no available plugin to open: <b>%1</b>.", url.pathOrUrl() ),
+                           i18n("Install a plugin for <b>%1</b> mimetype in order to load the archive."
+                           , mimetype->name()), 
                            i18n("Unable to load archive"));
     }
 }

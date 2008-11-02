@@ -22,6 +22,7 @@
 #include <KMimeType>
 #include <KDebug>
 #include <KIcon>
+#include <KMessageBox>
 
 #include <QListView>
 #include <QHeaderView>
@@ -30,6 +31,7 @@
 MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent),
                                           m_pluginView(new PluginView())
 {
+  m_model = new AkuTreeModel(QVector<QStringList>());
   PluginLoader *loader = new PluginLoader(this);
   connect(loader, SIGNAL(pluginLoaded(AkuPlugin*)), this, SLOT(addPlugin(AkuPlugin*)));
   loader->loadAllPlugins();
@@ -39,8 +41,9 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent),
 
   treeView = new AkuTreeView(splitter);
   iconView = new AkuIconView(splitter);
+  treeView->setModel(m_model);
+  iconView->setModel(m_model);
 
-  //splitter -> addWidget(tree);
   openArchive = new OpenArchive(this);
   openArchive->setAvailablePlugins(m_plugins);
   setupOptionsWidget();
@@ -108,13 +111,16 @@ void MainWindow::addPlugin(AkuPlugin *plugin)
     KMimeType::Ptr mime = KMimeType::mimeType(plugin->mimeTypeName());
 
     if (!mime) {
-        kDebug()<<"Could not retrieve mimetype. Maybe wrong plugin implementation.";
+        kError()<<"Could not retrieve mimetype. Maybe wrong plugin implementation.";
         return;
     }
 
+    m_model->setAdditionalHeaders(plugin->additionalHeaderStrings());
+
     connect(plugin, SIGNAL(archiveLoaded(const QVector<QStringList> &)),
             this, SLOT(showArchive(const QVector<QStringList> &)));
-    // TODO handle signal error(QString)
+    connect(plugin, SIGNAL(error(const QString &)), this, SLOT(handleError(const QString &)));
+
 
     m_plugins.insert(mime->name(), plugin);
 
@@ -151,4 +157,10 @@ void MainWindow::changeView()
     }
 
     showArchive(currentArchive);
+}
+
+void MainWindow::handleError(const QString &error)
+{
+    AkuPlugin *sender = static_cast<AkuPlugin *>(this->sender());
+    KMessageBox::error(this, error, sender->mimeTypeName() +" "+ i18n("plugin error"));
 }

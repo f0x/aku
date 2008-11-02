@@ -11,6 +11,7 @@ class QTreeView;
 class QListView;
 class AkuTreeView;
 class AkuIconView;
+class AkuTreeModel;
 class OpenArchive;
 
 class MainWindow : public KXmlGuiWindow
@@ -25,11 +26,13 @@ class MainWindow : public KXmlGuiWindow
     QSplitter *splitter;
     AkuTreeView *treeView;
     AkuIconView *iconView;
+    AkuTreeModel *m_model;
     OpenArchive *openArchive;
     KDialog *m_optionDialog;
     PluginView *m_pluginView;
     QMap<QString, AkuPlugin*> m_plugins;
     QVector<QStringList> currentArchive;
+ 
 
     void setupActions();
     void setupOptionsWidget();
@@ -39,6 +42,7 @@ class MainWindow : public KXmlGuiWindow
     void addPlugin(AkuPlugin*);
     void showArchive(const QVector<QStringList> &archive);
     void changeView();
+    void handleError(const QString &);
     
 };
 

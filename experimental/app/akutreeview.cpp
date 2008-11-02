@@ -7,7 +7,7 @@
 
 AkuTreeView::AkuTreeView(QWidget *parent) : QTreeView(parent)
 {
-    setModel(new AkuTreeModel(QVector<QStringList>()));
+//     setModel(new AkuTreeModel(QVector<QStringList>()));
     setAlternatingRowColors(true);
 }
 

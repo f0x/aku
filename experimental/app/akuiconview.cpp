@@ -19,7 +19,7 @@
 
 AkuIconView::AkuIconView(QWidget *parent) : QListView(parent)
 {
-    setModel(new AkuTreeModel(QVector<QStringList>()));
+//     setModel(new AkuTreeModel(QVector<QStringList>()));
     setViewMode(QListView::IconMode);
     setWrapping(false);
     setSpacing(2);

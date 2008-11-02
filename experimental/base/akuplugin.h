@@ -61,11 +61,19 @@ class KDE_EXPORT AkuPlugin : public QObject
          */
         virtual bool isWorkingProperly();
 
+        /**
+         * Reimplement this if your plugin gives more parameter for each file 
+         * in addition to the standard File Name, Size, Packed Size..
+         */
+        virtual QStringList additionalHeaderStrings();
+
     signals:
         /**
          * emit this signal when the data is ready to be used.
          * each QStringList is in the form of: FilePath:FileSize:PackedSize:Ratio ...
          * so each QStringList is a single file in the archive.
+         * Note that the first three arguments of each QStringList should be in order:
+         * File Path, File Size, Packed Size.
          */
         void archiveLoaded(const QVector<QStringList> &archive);
 
@@ -73,7 +81,7 @@ class KDE_EXPORT AkuPlugin : public QObject
          * emit this signal when an error occurs. Pass the error
          * as QString so that it will be displayed by the main app.
          */
-        void error(QString);
+        void error(const QString&);
 
     private:
         class AkuPluginPrivate;

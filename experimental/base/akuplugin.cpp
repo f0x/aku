@@ -9,6 +9,8 @@
 */
 #include "akuplugin.h"
 
+#include <QStringList>
+
 class AkuPlugin::AkuPluginPrivate {
 
 public:
@@ -58,4 +60,9 @@ void AkuPlugin::loadArchive(const KUrl &file)
 bool AkuPlugin::isWorkingProperly()
 {
     return false;
+}
+
+QStringList AkuPlugin::additionalHeaderStrings()
+{
+    return QStringList();
 }

@@ -36,6 +36,8 @@ class RarPlugin : public AkuPlugin
 
         void loadArchive(const KUrl &fileName);
 
+        QStringList additionalHeaderStrings();
+
 };
 
 #endif

@@ -31,6 +31,7 @@ public:
     QVector<QStringList> sourceData;
     QList<AkuTreeNode*> nodes;
     AkuTreeNode *rootNode;
+    QStringList additionalHeaders;
 
     void initData();
     void generateNodes();
@@ -151,8 +152,8 @@ QModelIndex AkuTreeModel::index(int row, int column, const QModelIndex &parent) 
 void AkuTreeModel::Private::initData()
 {
     QStringList header;
-    header << i18n("File Name") << i18n("Size") << i18n("Packed Size") << i18n("Ratio") << i18n("Modified")
-           << i18n("Attributes") << i18n("Owner/Group") << i18n("CRC") << i18n("Method") << i18n("Version") << i18n("Mimetype");
+    header << i18n("File Name") << i18n("Size") << i18n("Packed Size");
+    header << additionalHeaders;
 
     rootNode = new AkuTreeNode(header);
 }
@@ -210,4 +211,9 @@ void AkuTreeModel::setSourceData(const QVector<QStringList> &source)
 QVector<QStringList> AkuTreeModel::sourceData()
 {
     return d->sourceData;
+}
+
+void AkuTreeModel::setAdditionalHeaders(const QStringList &headers)
+{
+    d->additionalHeaders = headers;
 }
