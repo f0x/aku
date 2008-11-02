@@ -55,10 +55,6 @@ void OpenArchive::load(KUrl url)
     }
 }
 
-void OpenArchive::buildTree()
-{
-}
-
 void OpenArchive::setAvailablePlugins(const QMap<QString, AkuPlugin*> &plugins)
 {
     m_availablePlugins = plugins;

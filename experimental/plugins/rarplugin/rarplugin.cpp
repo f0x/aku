@@ -73,7 +73,6 @@ void RarPlugin::loadArchive(const KUrl &fileName)
 
     QString output;
     output = process->readAllStandardOutput();
-//     kDebug() << output;
    
     int indexOfHeaderLine;
     indexOfHeaderLine = output.indexOf(headerLine);
@@ -86,7 +85,7 @@ void RarPlugin::loadArchive(const KUrl &fileName)
 
     output.remove(indexOfHeaderLine, output.length());
     output.remove(0, 1);
-    output.remove(output.length() - 1, 1); //others parsing corrections
+    output.remove(output.length() - 1, 1); //other parsing corrections
 
     QStringList splitList;
     splitList = output.split("\n"); // split at the newline

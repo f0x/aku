@@ -11,8 +11,8 @@
 
 #include <KStandardAction>
 #include <KActionCollection>
-#include <KLocale>
 #include <KApplication>
+#include <KLocale>
 #include <KAction>
 #include <KUrl>
 #include <KFileDialog>
@@ -25,7 +25,6 @@
 #include <KMessageBox>
 
 #include <QListView>
-#include <QHeaderView>
 #include <QTreeView>
 
 MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent),
@@ -57,24 +56,23 @@ MainWindow::~MainWindow()
 
 void MainWindow::setupActions()
 {
-  KAction* newAction = new KAction(this);
-  newAction = KStandardAction::openNew(this, SLOT(createNewArchive()), actionCollection());
-  actionCollection() -> addAction("file_new", newAction);
-  KAction* openAction = new KAction(this);
-  openAction = KStandardAction::open(this, SLOT(openDialog()), actionCollection());
-  actionCollection() -> addAction("file_open", openAction);
+  KStandardAction::openNew(this, SLOT(createNewArchive()), actionCollection());
+
+  KStandardAction::open(this, SLOT(openDialog()), actionCollection());
+
   KStandardAction::quit(kapp, SLOT(quit()), actionCollection());
 
-  KAction *configAction = new KAction(this);
-  configAction->setText(i18n("Configure Aku"));
-  configAction->setIcon(KIcon("configure"));
-  actionCollection()->addAction("config", configAction);
-  connect(configAction, SIGNAL(triggered()), m_optionDialog, SLOT(exec()));
+  KStandardAction::preferences(m_optionDialog, SLOT(exec()), actionCollection());
+
 }
 
 void MainWindow::openDialog()
 {
-  KUrl url = KFileDialog::getOpenUrl(KUrl("kfiledialog:///AkuOpenDir"), i18n("*.rar *.7z *.zip *.bz2 *.gz *.tar|All supported types\n*.rar|Rar archives\n*.7z|7-zip archives\n*.zip|Zip archives\n*.bz2|Tar archives (bzip)\n*.gz|Tar archives (gzip)\n*.tar|Tar archives\n*.*|All files"), this);
+  // TODO: base suffixes on available plugins
+  KUrl url = KFileDialog::getOpenUrl(KUrl("kfiledialog:///AkuOpenDir"), 
+                          i18n("*.rar *.7z *.zip *.bz2 *.gz *.tar|All supported types\n"
+                               "*.rar|Rar archives\n*.7z|7-zip archives\n*.zip|Zip archives\n*.bz2|Tar archives (bzip)"
+                               "\n*.gz|Tar archives (gzip)\n*.tar|Tar archives\n*.*|All files"), this);
   if (!url.isEmpty()) {
     openArchive -> load(url);
   }
@@ -107,7 +105,6 @@ void MainWindow::setupOptionsWidget()
 
 void MainWindow::addPlugin(AkuPlugin *plugin)
 {
-    kDebug()<<plugin->mimeTypeName();
     KMimeType::Ptr mime = KMimeType::mimeType(plugin->mimeTypeName());
 
     if (!mime) {

@@ -30,7 +30,6 @@ class OpenArchive : public QObject
   private:
     KMimeType::Ptr mimetype;
     QMap<QString, AkuPlugin*> m_availablePlugins;
-    void buildTree();
 
 };
 
