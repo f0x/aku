@@ -160,14 +160,14 @@ void AkuTreeModel::Private::initData()
 void AkuTreeModel::Private::generateNodes()
 {
     QVector<QStringList> &source = sourceData;
-    for (int i = 0; i < source.size(); i++) {
+    foreach (QStringList file, source) {
 
         //NOTE: Since the first string of the list is in the 
         // form folder/folder/folder/file
         // then we need to split it to create nodes.
 
-        QString path = source[i][0];
-        source[i].removeAt(0);
+        QString path = file[0];
+        file.removeAt(0);
         QStringList pathNodes = path.split(QDir::separator());
 
         AkuTreeNode *parentNode = rootNode;
@@ -176,7 +176,9 @@ void AkuTreeModel::Private::generateNodes()
 
             // NOTE: we should put attributes only on last item
             if (j == pathNodes.size() - 1) {
-                AkuTreeNode *node = new AkuTreeNode(QStringList()<<pathNodes[j]<<source[i], parentNode);
+                AkuTreeNode *node = new AkuTreeNode(QStringList()<<pathNodes[j]<<file, parentNode);
+
+                // TODO: make a real check to see whether it is a folder or not
                 node->setFolder(false);
                 parentNode->appendChild(node);
                 continue;
