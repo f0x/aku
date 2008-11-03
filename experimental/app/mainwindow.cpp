@@ -113,8 +113,6 @@ void MainWindow::addPlugin(AkuPlugin *plugin)
         return;
     }
 
-    m_model->setAdditionalHeaders(plugin->additionalHeaderStrings());
-
     connect(plugin, SIGNAL(archiveLoaded(const QVector<QStringList> &)),
             this, SLOT(showArchive(const QVector<QStringList> &)));
     connect(plugin, SIGNAL(error(const QString &)), this, SLOT(handleError(const QString &)));
@@ -135,6 +133,10 @@ void MainWindow::addPlugin(AkuPlugin *plugin)
 
 void MainWindow::showArchive(const QVector<QStringList> &archive)
 {
+    // here we set additional per-plugin headers
+    AkuPlugin *sender = static_cast<AkuPlugin*>(this->sender());
+    m_model->setAdditionalHeaders(sender->additionalHeaderStrings());
+
     currentArchive = archive;
 
     if (treeView->isVisible()) {

@@ -66,7 +66,7 @@ void GZipPlugin::loadArchive(const KUrl &fileName)
     gzFile.read(buffer, 10);
 
     if ( (uint)buffer[0] != 31 && (uint)buffer[1] != 139) {
-        emit(i18n("Not valid gzip format"));
+        emit(error(i18n("Not valid gzip format")));
         return;
     }
 
@@ -74,6 +74,7 @@ void GZipPlugin::loadArchive(const KUrl &fileName)
     kDebug() << flag;
 
     if (!(flag & 8)) {
+        emit (error(i18n("File name not set")));
         kDebug() << "file name not set";
         return;
     }
@@ -159,6 +160,7 @@ void GZipPlugin::loadArchive(const KUrl &fileName)
             break;
     }
 
+    // last 8 bytes contain crc32 + size (4 + 4)
     gzFile.seek(gzFile.size() - 8);
     char endBlock[8];
     gzFile.read(endBlock, 8);
@@ -166,12 +168,17 @@ void GZipPlugin::loadArchive(const KUrl &fileName)
 
     // size is 32 bit
     uint isize = (uint)endBlock[4] | (uint)endBlock[5] << 8 | (uint)endBlock[6] << 16 | (uint)endBlock[7] << 24;
-    QStringList entry = QStringList() << entryName << KLocale(QString()).formatByteSize(isize) << QString() << osType;
+    uint crc32 = (uint)endBlock[0] | (uint)endBlock[1] << 8 | (uint)endBlock[2] << 16 | (uint)endBlock[3] << 24;
+
+    QStringList entry = QStringList() << entryName 
+                                      << KLocale(QString()).formatByteSize(isize) 
+                                      << QString() << osType 
+                                      << QString::number(crc32);
 
     emit(archiveLoaded(QVector<QStringList>() << entry));
 }
 
 QStringList GZipPlugin::additionalHeaderStrings()
 {
-    return QStringList() << i18n("OS Type");
+    return QStringList() << i18n("OS Type") << i18n("CRC32");
 }

@@ -75,21 +75,25 @@ void ZipPlugin::loadArchive(const KUrl &filename)
 
     m_archive->close();
 
-//     kDebug()<<m_entries;
-    QVector<QStringList> archive;
 
-    foreach (const QString &field, m_entries) {
-        archive << (QStringList() << field);
-    }
-
-    emit archiveLoaded(archive);
+    emit archiveLoaded(m_entries);
 
 }
 
 void ZipPlugin::getEntries(const KArchiveEntry *rootEntry)
 {
     if (rootEntry->isFile()) {
-        m_entries << m_currentPath + rootEntry->name();
+        const KZipFileEntry *fileEntry = static_cast<const KZipFileEntry*>(rootEntry);
+
+        m_entries << (QStringList() << m_currentPath + fileEntry->name()  // file name
+                                    << KLocale(QString()).formatByteSize(fileEntry->size()) // file size
+                                    << KLocale(QString()).formatByteSize(fileEntry->compressedSize()) // compressed size
+                                    << QString::number(fileEntry->crc32()) // crc
+                                    << QString::number(fileEntry->encoding()) // method
+                                    << fileEntry->user() // owner
+                                    << fileEntry->group() // group
+                                    //<< formatPermissions(fileEntry->permissions()) // permissions WARNING: kzip does not support permissions()
+        );
         return;
     }
 
@@ -109,6 +113,88 @@ void ZipPlugin::getEntries(const KArchiveEntry *rootEntry)
     }
 
     m_currentPath.remove(rootDir->name() + QDir::separator());
+
+}
+
+QStringList ZipPlugin::additionalHeaderStrings()
+{
+    return QStringList() << i18n("CRC") << i18n("Method") << i18n("Owner") << i18n("Group") /*<< i18n("Permissions")*/;
+}
+
+QString ZipPlugin::formatPermissions(mode_t permissions)
+{
+    QString pString = "---------"; // permission string
+
+    // we should convert mode_t to human readable permissions
+
+    // Owner permissions:
+    // S_IRWXU = rwx
+    // S_IRUSR = r
+    // S_IWUSR = w
+    // S_IXUSR = x
+
+    // Group permissions
+    // S_IRWXG = rwx
+    // S_IRGRP = r
+    // S_IWGRP = w
+    // S_IXGRP = x
+
+    // Others permissions
+    // S_IRWXO = rwx
+    // S_IROTH = r
+    // S_IWOTH = w
+    // S_IXOTH = x
+
+    // full permissions
+    if ( permissions & S_IRWXU ) {
+        kDebug() << "full owner permissions";
+        pString.replace(0, 3, "rwx");
+    } else {
+
+        if (permissions & S_IRUSR) {
+            pString.replace(0, 1, "r");
+        }
+        if (permissions & S_IWUSR) {
+            pString.replace(1, 1, "w");
+        }
+        if (permissions & S_IXUSR) {
+            pString.replace(2, 1, "x");
+        }
+    }
+
+    if ( permissions & S_IRWXG ) {
+        kDebug() << "full group permissions";
+        pString.replace(3, 3, "rwx");
+    } else {
+
+        if (permissions & S_IRGRP) {
+            pString.replace(3, 1, "r");
+        }
+        if (permissions & S_IWGRP) {
+            pString.replace(4, 1, "w");
+        }
+        if (permissions & S_IXGRP) {
+            pString.replace(5, 1, "x");
+        }
+    }
+
+    if ( permissions & S_IRWXO ) {
+        kDebug() << "full others permissions";
+        pString.replace(6, 3, "rwx");
+    } else {
+
+        if (permissions & S_IROTH) {
+            pString.replace(6, 1, "r");
+        }
+        if (permissions & S_IWOTH) {
+            pString.replace(7, 1, "w");
+        }
+        if (permissions & S_IXOTH) {
+            pString.replace(8, 1, "x");
+        }
+    }
+
+    return pString;
 
 }
 
