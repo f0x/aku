@@ -88,7 +88,7 @@ void ZipPlugin::getEntries(const KArchiveEntry *rootEntry)
         m_entries << (QStringList() << m_currentPath + fileEntry->name()  // file name
                                     << KLocale(QString()).formatByteSize(fileEntry->size()) // file size
                                     << KLocale(QString()).formatByteSize(fileEntry->compressedSize()) // compressed size
-                                    << QString::number(fileEntry->crc32()) // crc
+                                    << QString::number(fileEntry->crc32(), 16) // crc
                                     << QString::number(fileEntry->encoding()) // method
                                     << fileEntry->user() // owner
                                     << fileEntry->group() // group

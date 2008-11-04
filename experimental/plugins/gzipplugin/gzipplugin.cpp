@@ -172,8 +172,9 @@ void GZipPlugin::loadArchive(const KUrl &fileName)
 
     QStringList entry = QStringList() << entryName 
                                       << KLocale(QString()).formatByteSize(isize) 
-                                      << QString() << osType 
-                                      << QString::number(crc32);
+                                      << KLocale(QString()).formatByteSize(gzFile.size())
+                                      << osType 
+                                      << QString::number(crc32, 16);
 
     emit(archiveLoaded(QVector<QStringList>() << entry));
 }
