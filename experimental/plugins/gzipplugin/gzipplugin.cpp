@@ -167,8 +167,8 @@ void GZipPlugin::loadArchive(const KUrl &fileName)
     gzFile.close();
 
     // size is 32 bit
-    uint isize = (uint)endBlock[4] | (uint)endBlock[5] << 8 | (uint)endBlock[6] << 16 | (uint)endBlock[7] << 24;
-    uint crc32 = (uint)endBlock[0] | (uint)endBlock[1] << 8 | (uint)endBlock[2] << 16 | (uint)endBlock[3] << 24;
+    uint isize = (uchar)endBlock[4] | (uchar)endBlock[5] << 8 | (uchar)endBlock[6] << 16 | (uchar)endBlock[7] << 24;
+    uint crc32 = (uchar)endBlock[0] | (uchar)endBlock[1] << 8 | (uchar)endBlock[2] << 16 | (uchar)endBlock[3] << 24;
 
     QStringList entry = QStringList() << entryName 
                                       << KLocale(QString()).formatByteSize(isize) 
