@@ -24,15 +24,17 @@ class OpenArchive : public QObject
     OpenArchive(QWidget *parent);
     ~OpenArchive();
 
-    void load (KUrl url);
     void setAvailablePlugins(const QMap<QString, AkuPlugin*> &plugins);
 
   private:
     KMimeType::Ptr mimetype;
     QMap<QString, AkuPlugin*> m_availablePlugins;
 
+  public slots:
+    void load (const KUrl &url);
+
   signals:
-    void fileLoaded(KUrl);
+    void fileLoaded(const KUrl &);
 };
 
 #endif

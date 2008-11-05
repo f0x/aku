@@ -23,6 +23,7 @@
 #include <KDebug>
 #include <KIcon>
 #include <KMessageBox>
+#include <KConfigGroup>
 
 #include <QListView>
 #include <QTreeView>
@@ -66,14 +67,12 @@ void MainWindow::setupActions()
   KStandardAction::preferences(m_optionDialog, SLOT(exec()), actionCollection());
 
   // Open Recent Files
-  actionRecentFiles = KStandardAction::openRecent( this, SLOT(openUrl(const KUrl&)), actionCollection());
-  actionCollection() -> addAction("file_open_recent", actionRecentFiles);
-  //actionRecentFiles -> loadEntries( KGlobal::config()->group("Recent Files"));
+  actionRecentFiles = KStandardAction::openRecent( openArchive, SLOT(load(const KUrl&)), actionCollection());
+  actionRecentFiles->loadEntries(KConfigGroup(KGlobal::config()->group("RecentFiles")));
 }
 
 void MainWindow::setupConnections()
 {
-  connect(actionRecentFiles, SIGNAL(triggered()), this, SLOT(openDialog()));
   connect(openArchive, SIGNAL(fileLoaded(KUrl)), this, SLOT(addRecentFile(KUrl)));
 }
 
@@ -92,7 +91,7 @@ void MainWindow::openDialog()
 void MainWindow::addRecentFile(KUrl recent)
 {
    actionRecentFiles -> addUrl(recent);
-   kDebug() << "RECENT FILE ADDED";
+   actionRecentFiles->saveEntries(KGlobal::config()->group("RecentFiles"));
 }
 
 void MainWindow::setupOptionsWidget()

@@ -26,7 +26,7 @@ OpenArchive::~OpenArchive()
 {
 }
 
-void OpenArchive::load(KUrl url)
+void OpenArchive::load(const KUrl &url)
 {
     if (!KFileItem(KFileItem::Unknown, KFileItem::Unknown, url).isReadable()) {
         return;
@@ -38,8 +38,8 @@ void OpenArchive::load(KUrl url)
     if (m_availablePlugins.contains(mimetype->name())) {
         if (m_availablePlugins[mimetype->name()]->isWorkingProperly()) {
             // this emit adds the url of the file loaded to recent files
-            emit fileLoaded(url);
             m_availablePlugins[mimetype->name()]->loadArchive(url);
+            emit fileLoaded(url);
         } else {
             KMessageBox::sorry(static_cast<QWidget*>(parent()),
                            i18n("The correct plugin to open <b>%1</b> mimetype was found but appears to not be working properly. "
