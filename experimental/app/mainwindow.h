@@ -45,7 +45,6 @@ class MainWindow : public KXmlGuiWindow
     void openDialog();
     void addPlugin(AkuPlugin*);
     void showArchive(const QVector<QStringList> &archive);
-    void changeView();
     void handleError(const QString &);
     void addRecentFile(KUrl);
     

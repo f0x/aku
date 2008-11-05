@@ -18,6 +18,8 @@
 #include <KIcon>
 #include <KLocale>
 #include <KDebug>
+#include <KConfigGroup>
+#include <KIconLoader>
 
 AkuViewOptionWidget::AkuViewOptionWidget(QWidget *parent) : KVBox(parent),
                                                             m_iconWidget(0),
@@ -35,13 +37,75 @@ AkuViewOptionWidget::AkuViewOptionWidget(QWidget *parent) : KVBox(parent),
     ui.zoomOutButton->setIcon(KIcon("zoom-out"));
     ui.zoomInButton->setIcon(KIcon("zoom-in"));
 
-    connect(ui.comboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(showView(int)));
-    connect(ui.iconSizeSlider, SIGNAL(sliderMoved(int)), this, SLOT(setIconSize(int)));
+    connect(ui.comboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(showConfigBox(int)));
+    ui.comboBox->setCurrentIndex(3);
 
 }
 
 AkuViewOptionWidget::~AkuViewOptionWidget()
 {}
+
+void AkuViewOptionWidget::loadSettings()
+{
+    KConfigGroup viewOptionConfig = KGlobal::config()->group("Views Option");
+
+    if (!viewOptionConfig.exists()) {
+        viewOptionConfig.writeEntry("Active View", "TreeView");
+        viewOptionConfig.writeEntry("IconView item size", 
+                                    KIconLoader::global()->currentSize(KIconLoader::Desktop));
+    }
+
+    // here we load the active view
+    int view = 0;
+    if (viewOptionConfig.readEntry("Active View", "TreeView") == "IconView") {
+        view = 1;
+    }
+    showView(view);
+
+    // icon settings
+    m_iconWidget->view()->setIconSize(viewOptionConfig.readEntry("IconView item size",
+                                      KIconLoader::global()->currentSize(KIconLoader::Desktop) ));
+    ui.iconSizeSlider->setValue(m_iconWidget->view()->iconSize());
+
+
+}
+
+void AkuViewOptionWidget::saveSettings()
+{
+    KConfigGroup viewOptionConfig = KGlobal::config()->group("Views Option");
+
+    // active view settings
+    QString currentView = "TreeView";
+    if (ui.comboBox->currentIndex() == 1) {
+        currentView = "IconView";
+    }
+    viewOptionConfig.writeEntry("Active View", currentView);
+
+    viewOptionConfig.writeEntry("IconView item size", ui.iconSizeSlider->value());
+
+}
+
+void AkuViewOptionWidget::restoreDefaults()
+{
+    KConfigGroup viewOptionConfig = KGlobal::config()->group("Views Option");
+
+    viewOptionConfig.deleteEntry("Active View");
+    viewOptionConfig.deleteEntry("IconView item size");
+
+    loadSettings();
+}
+
+void AkuViewOptionWidget::applySettings()
+{
+    saveSettings();
+    loadSettings();
+}
+
+void AkuViewOptionWidget::showConfigBox(int box)
+{
+    ui.iconBox->setVisible((bool)box);
+    ui.treeBox->setVisible(!(bool)box);
+}
 
 void AkuViewOptionWidget::showView(int view)
 {
@@ -49,11 +113,10 @@ void AkuViewOptionWidget::showView(int view)
         return;
     }
 
-    bool show = view;
-    m_iconWidget->setVisible(show);
-    ui.iconBox->setVisible(show);
-    m_treeView->setVisible(!show);
-    ui.treeBox->setVisible(!show);
+    m_iconWidget->setVisible((bool)view);
+    m_treeView->setVisible(!(bool)view);
+
+    ui.comboBox->setCurrentIndex(view);
 
     emit visibilityChange();
 }
@@ -63,8 +126,7 @@ void AkuViewOptionWidget::setViews(AkuTreeView *tree, AkuIconWidget *icon)
     m_iconWidget = icon;
     m_treeView = tree;
 
-    showView(ui.comboBox->currentIndex());
-    ui.iconSizeSlider->setSliderPosition(m_iconWidget->view()->viewItemSize());
+    loadSettings();
 }
 
 void AkuViewOptionWidget::setIconSize(int size)

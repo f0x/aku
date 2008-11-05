@@ -54,6 +54,11 @@ void AkuIconView::setIconSize(int size)
     m_gridSize = fm.height()*2 + size;
 }
 
+int AkuIconView::iconSize()
+{
+    return m_iconSize;
+}
+
 int AkuIconView::viewItemSize()
 {
     return m_gridSize;

@@ -26,6 +26,7 @@ class AkuIconView : public QListView
         AkuTreeModel* model();
         void setIconSize(int size);
         int viewItemSize();
+        int iconSize();
 
     private:
          int m_gridSize;

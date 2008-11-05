@@ -31,9 +31,17 @@ class AkuViewOptionWidget : public KVBox
         AkuIconWidget *m_iconWidget;
         AkuTreeView *m_treeView;
 
+        void loadSettings();
+        void saveSettings();
+
     protected slots:
         void showView(int index);
+        void showConfigBox(int);
         void setIconSize(int);
+
+    public slots:
+        void applySettings();
+        void restoreDefaults();
 
     signals:
         void visibilityChange();

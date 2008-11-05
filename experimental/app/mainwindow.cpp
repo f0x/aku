@@ -54,6 +54,7 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent),
 
 MainWindow::~MainWindow()
 {
+   actionRecentFiles->saveEntries(KGlobal::config()->group("RecentFiles"));
 }
 
 void MainWindow::setupActions()
@@ -91,12 +92,13 @@ void MainWindow::openDialog()
 void MainWindow::addRecentFile(KUrl recent)
 {
    actionRecentFiles -> addUrl(recent);
-   actionRecentFiles->saveEntries(KGlobal::config()->group("RecentFiles"));
 }
 
 void MainWindow::setupOptionsWidget()
 {
     m_optionDialog = new KDialog(this);
+    m_optionDialog->setButtons(KDialog::Ok | KDialog::Apply | KDialog::Cancel | KDialog::Default);
+
     KPageWidget *optionsWidget = new KPageWidget(m_optionDialog);
 
     KPageWidgetItem *plugins = new KPageWidgetItem( m_pluginView, i18n( "Plugins" ) );
@@ -105,7 +107,10 @@ void MainWindow::setupOptionsWidget()
 
     AkuViewOptionWidget *optionView = new AkuViewOptionWidget(m_optionDialog);
     optionView->setViews(treeView, iconWidget);
-    connect(optionView, SIGNAL(visibilityChange()), this, SLOT(changeView()));
+
+    connect(m_optionDialog, SIGNAL(applyClicked()), optionView, SLOT(applySettings()));
+    connect(m_optionDialog, SIGNAL(okClicked()), optionView, SLOT(applySettings()));
+    connect(m_optionDialog, SIGNAL(defaultClicked()), optionView, SLOT(restoreDefaults()));
 
     KPageWidgetItem *viewopt = new KPageWidgetItem( optionView, i18n( "Setup the View" ) );
     viewopt->setHeader( i18n( "Tree View Settings" ) );
@@ -148,30 +153,17 @@ void MainWindow::addPlugin(AkuPlugin *plugin)
 
 void MainWindow::showArchive(const QVector<QStringList> &archive)
 {
+    if (archive.isEmpty()) {
+        return;
+    }
+
     // here we set additional per-plugin headers
     AkuPlugin *sender = static_cast<AkuPlugin*>(this->sender());
     m_model->setAdditionalHeaders(sender->additionalHeaderStrings());
 
     currentArchive = archive;
 
-    if (treeView->isVisible()) {
-        treeView->model()->setSourceData(currentArchive);
-    } else {
-        iconWidget->view()->model()->setSourceData(currentArchive);
-    }
-}
-
-void MainWindow::changeView()
-{
-//TODO: chose the correct and fast behavior to undertake
-//      when the view changes.
-
-    if (treeView->isHidden()) {
-        showArchive(currentArchive);
-        return;
-    }
-
-    showArchive(currentArchive);
+    m_model->setSourceData(currentArchive);
 }
 
 void MainWindow::handleError(const QString &error)
