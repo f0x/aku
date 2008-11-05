@@ -17,7 +17,6 @@ set( aku_SRCS
      akutreenode.cpp
      akuviewoptionwidget.cpp
      akuiconview.cpp
-     akuviewoptionwidget.cpp
      akuiconwidget.cpp
  )
 kde4_add_ui_files(aku_SRCS akuviewoptionwidget.ui)

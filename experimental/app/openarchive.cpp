@@ -36,8 +36,9 @@ void OpenArchive::load(KUrl url)
     kDebug() << mimetype -> name();
 
     if (m_availablePlugins.contains(mimetype->name())) {
-
         if (m_availablePlugins[mimetype->name()]->isWorkingProperly()) {
+            // this emit adds the url of the file loaded to recent files
+            emit fileLoaded(url);
             m_availablePlugins[mimetype->name()]->loadArchive(url);
         } else {
             KMessageBox::sorry(static_cast<QWidget*>(parent()),

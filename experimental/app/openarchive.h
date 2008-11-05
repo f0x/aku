@@ -31,6 +31,8 @@ class OpenArchive : public QObject
     KMimeType::Ptr mimetype;
     QMap<QString, AkuPlugin*> m_availablePlugins;
 
+  signals:
+    void fileLoaded(KUrl);
 };
 
 #endif

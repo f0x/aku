@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <KXmlGuiWindow>
+#include <KRecentFilesAction>
+#include <KUrl>
 #include <QSplitter>
 
 class KDialog;
@@ -32,10 +34,12 @@ class MainWindow : public KXmlGuiWindow
     PluginView *m_pluginView;
     QMap<QString, AkuPlugin*> m_plugins;
     QVector<QStringList> currentArchive;
+    KRecentFilesAction *actionRecentFiles;
  
 
     void setupActions();
     void setupOptionsWidget();
+    void setupConnections();
 
   private slots:
     void openDialog();
@@ -43,6 +47,7 @@ class MainWindow : public KXmlGuiWindow
     void showArchive(const QVector<QStringList> &archive);
     void changeView();
     void handleError(const QString &);
+    void addRecentFile(KUrl);
     
 };
 

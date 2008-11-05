@@ -15,7 +15,6 @@
 #include <KApplication>
 #include <KLocale>
 #include <KAction>
-#include <KUrl>
 #include <KFileDialog>
 #include <KPageWidget>
 #include <KPageWidgetItem>
@@ -48,6 +47,7 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent),
   openArchive->setAvailablePlugins(m_plugins);
   setupOptionsWidget();
   setupActions();
+  setupConnections();
   setupGUI(QSize(650,460)); 
 }
 
@@ -65,6 +65,16 @@ void MainWindow::setupActions()
 
   KStandardAction::preferences(m_optionDialog, SLOT(exec()), actionCollection());
 
+  // Open Recent Files
+  actionRecentFiles = KStandardAction::openRecent( this, SLOT(openUrl(const KUrl&)), actionCollection());
+  actionCollection() -> addAction("file_open_recent", actionRecentFiles);
+  //actionRecentFiles -> loadEntries( KGlobal::config()->group("Recent Files"));
+}
+
+void MainWindow::setupConnections()
+{
+  connect(actionRecentFiles, SIGNAL(triggered()), this, SLOT(openDialog()));
+  connect(openArchive, SIGNAL(fileLoaded(KUrl)), this, SLOT(addRecentFile(KUrl)));
 }
 
 void MainWindow::openDialog()
@@ -77,6 +87,12 @@ void MainWindow::openDialog()
   if (!url.isEmpty()) {
     openArchive -> load(url);
   }
+}
+
+void MainWindow::addRecentFile(KUrl recent)
+{
+   actionRecentFiles -> addUrl(recent);
+   kDebug() << "RECENT FILE ADDED";
 }
 
 void MainWindow::setupOptionsWidget()
