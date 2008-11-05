@@ -13,6 +13,7 @@
 #include <KLocale>
 #include <KUrl>
 #include <KDebug>
+#include <KGlobal>
 
 #include <QFile>
 #include <QDateTime>
@@ -176,11 +177,11 @@ void GZipPlugin::loadArchive(const KUrl &fileName)
     uint crc32 = (uchar)endBlock[0] | (uchar)endBlock[1] << 8 | (uchar)endBlock[2] << 16 | (uchar)endBlock[3] << 24;
 
     QStringList entry = QStringList() << entryName 
-                                      << KLocale(QString()).formatByteSize(isize) 
-                                      << KLocale(QString()).formatByteSize(gzFile.size())
+                                      << KGlobal::locale()->formatByteSize(isize) 
+                                      << KGlobal::locale()->formatByteSize(gzFile.size())
                                       << osType 
                                       << QString::number(crc32, 16)
-                                      << KLocale(QString()).formatDateTime(mDateTime);
+                                      << KGlobal::locale()->formatDateTime(mDateTime);
 
     emit(archiveLoaded(QVector<QStringList>() << entry));
 }

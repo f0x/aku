@@ -108,6 +108,11 @@ void RarPlugin::loadArchive(const KUrl &fileName)
                     continue;
                 }
 
+                if (j == 0 || j == 1) {
+                    file << KGlobal::locale()->formatByteSize(attributes[j].toDouble());
+                    continue;
+                }
+
                 if (j > 3) {
                     file << attributes[j];
                     continue;
