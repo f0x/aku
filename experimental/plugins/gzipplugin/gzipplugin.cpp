@@ -15,6 +15,7 @@
 #include <KDebug>
 
 #include <QFile>
+#include <QDateTime>
 
 AKU_PLUGIN_EXPORT(GZipPlugin)
 
@@ -160,6 +161,10 @@ void GZipPlugin::loadArchive(const KUrl &fileName)
             break;
     }
 
+    // modification time
+    uint mtime = (uchar)buffer[4] | (uchar)buffer[5] << 8 | (uchar)buffer[6] << 16 | (uchar)buffer[7] << 24;
+    QDateTime mDateTime = QDateTime::fromTime_t(mtime);
+
     // last 8 bytes contain crc32 + size (4 + 4)
     gzFile.seek(gzFile.size() - 8);
     char endBlock[8];
@@ -174,12 +179,13 @@ void GZipPlugin::loadArchive(const KUrl &fileName)
                                       << KLocale(QString()).formatByteSize(isize) 
                                       << KLocale(QString()).formatByteSize(gzFile.size())
                                       << osType 
-                                      << QString::number(crc32, 16);
+                                      << QString::number(crc32, 16)
+                                      << KLocale(QString()).formatDateTime(mDateTime);
 
     emit(archiveLoaded(QVector<QStringList>() << entry));
 }
 
 QStringList GZipPlugin::additionalHeaderStrings()
 {
-    return QStringList() << i18n("OS Type") << i18n("CRC32");
+    return QStringList() << i18n("OS Type") << i18n("CRC32") << i18n("Last Modified");
 }
