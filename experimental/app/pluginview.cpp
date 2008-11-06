@@ -12,14 +12,18 @@
 
 #include <QStandardItemModel>
 #include <QStandardItem>
+
 #include <KLocale>
+#include <KPushButton>
+#include <KIcon>
+#include <KDialog>
 
 PluginView::PluginView(QWidget *parent) : QTreeView(parent)
 {
     QStandardItemModel *model = new QStandardItemModel();
     model->setHorizontalHeaderLabels(QStringList()<<i18n("Archive suffix")<<i18n("Archive Type")<<
                                      i18n("Extraction")<<i18n("Creation")<<i18n("Rename")<<
-                                     i18n("Delete")<<i18n("Working Properly"));
+                                     i18n("Delete")<<i18n("Working Properly")<<i18n("Configuration"));
     setModel(model);
     setRootIsDecorated(false);
 }
@@ -29,7 +33,7 @@ PluginView::~PluginView()
 
 void PluginView::addPluginInfo(const QString &suffix, const QString &comment,
                                bool extraction, bool deletion, bool creation,
-                               bool renaming, bool working)
+                               bool renaming, bool working, QWidget *config)
 {
     QList<QStandardItem*> items;
 
@@ -99,7 +103,28 @@ void PluginView::addPluginInfo(const QString &suffix, const QString &comment,
         item->setEditable(false);
         items << item;
     }
- 
+
+    if (config) {
+        KPushButton *configure = new KPushButton;
+        configure->setIcon(KIcon("configure"));
+        configure->setMaximumSize(configure->minimumSizeHint());
+
+        QStandardItem *bItem = new QStandardItem();
+        items << bItem;
+
+        static_cast<QStandardItemModel*>(model())->appendRow(items);
+
+        setIndexWidget(bItem->index(), configure);
+
+        KDialog *dialog = new KDialog;
+        dialog->setCaption(comment);
+        dialog->setMainWidget(config);
+
+        connect(configure, SIGNAL(clicked()), dialog, SLOT(exec()));
+
+        return;
+    }
 
     static_cast<QStandardItemModel*>(model())->appendRow(items);
+
 }

@@ -173,7 +173,8 @@ void MainWindow::addPlugin(AkuPlugin *plugin)
                   plugin->canDelete(),
                   plugin->canCreate(),
                   plugin->canRename(),
-                  plugin->isWorkingProperly()
+                  plugin->isWorkingProperly(),
+                  plugin->configurationWidget()
                  );
 }
 
