@@ -66,3 +66,8 @@ QStringList AkuPlugin::additionalHeaderStrings()
 {
     return QStringList();
 }
+
+QWidget* AkuPlugin::configurationWidget()
+{
+    return 0;
+}

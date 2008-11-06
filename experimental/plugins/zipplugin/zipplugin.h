@@ -16,6 +16,8 @@
 #include <QStringList>
 #include <QVector>
 
+#include "ui_zipconfig.h"
+
 class KZip;
 class KUrl;
 class KArchiveEntry;
@@ -40,8 +42,12 @@ class ZipPlugin : public AkuPlugin
 
         QStringList additionalHeaderStrings();
 
+        QWidget* configurationWidget();
+
 
     private:
+        Ui::ZipConfig ui;
+        QWidget *m_widget;
         KZip *m_archive;
         QVector<QStringList> m_entries;
         QString m_currentPath;

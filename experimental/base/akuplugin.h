@@ -67,6 +67,13 @@ class KDE_EXPORT AkuPlugin : public QObject
          */
         virtual QStringList additionalHeaderStrings();
 
+        /**
+         * The widget will be correctly embedded in the main application.
+         * @return the configuration widget for the specific plugin or 0 if
+         * there is no reimplementation.
+         */
+        virtual QWidget* configurationWidget();
+
     signals:
         /**
          * emit this signal when the data is ready to be used.

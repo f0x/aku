@@ -21,7 +21,10 @@
 AKU_PLUGIN_EXPORT(ZipPlugin)
 
 ZipPlugin::ZipPlugin(QObject *parent, const QVariantList &args) : AkuPlugin(parent)
-{}
+{
+    m_widget = new QWidget();
+    ui.setupUi(m_widget);
+}
 
 ZipPlugin::~ZipPlugin()
 {}
@@ -198,3 +201,7 @@ QString ZipPlugin::formatPermissions(mode_t permissions)
 
 }
 
+QWidget* ZipPlugin::configurationWidget()
+{
+    return m_widget;
+}
