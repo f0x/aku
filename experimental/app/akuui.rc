@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gui name="aku" version="1">
-<!--  <ToolBar name="mainToolBar">
+<ToolBar name="mainToolBar">
    <text>Main Toolbar</text>
-   <Action name="extract" />
-   <Action name="add_dir" />
+   <Action name="view" />
+</ToolBar>
+ <!--  <Action name="add_dir" />
    <Action name="add_file" />
    <Action name="delete" />
    <Separator />

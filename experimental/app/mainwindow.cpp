@@ -14,7 +14,6 @@
 #include <KActionCollection>
 #include <KApplication>
 #include <KLocale>
-#include <KAction>
 #include <KFileDialog>
 #include <KPageWidget>
 #include <KPageWidgetItem>
@@ -24,6 +23,7 @@
 #include <KIcon>
 #include <KMessageBox>
 #include <KConfigGroup>
+#include <KAction>
 
 #include <QListView>
 #include <QTreeView>
@@ -70,11 +70,25 @@ void MainWindow::setupActions()
   // Open Recent Files
   actionRecentFiles = KStandardAction::openRecent( openArchive, SLOT(load(const KUrl&)), actionCollection());
   actionRecentFiles->loadEntries(KConfigGroup(KGlobal::config()->group("RecentFiles")));
+
+  actionViewChoose = new KActionMenu(this);
+  actionViewChoose -> setIcon(KIcon("view-choose"));
+  actionViewChoose -> setText(i18n("View"));
+  actionCollection() -> addAction("view", actionViewChoose);
+  actionViewChoose -> setDelayed(false);
+  viewTree = new QAction(i18n("Tree View"), this);
+  viewTree -> setIcon(KIcon("view-list-tree"));
+  viewIcon = new QAction(i18n("Icon View"), this);
+  viewIcon -> setIcon(KIcon("view-list-icons"));
+  actionViewChoose -> addAction(viewTree);
+  actionViewChoose -> addAction(viewIcon);
 }
 
 void MainWindow::setupConnections()
 {
   connect(openArchive, SIGNAL(fileLoaded(KUrl)), this, SLOT(addRecentFile(KUrl)));
+  //connect(viewTree, SIGNAL(triggered()), this, SLOT());
+  //connect(viewIcon, SIGNAL(triggered()), this, SLOT());
 }
 
 void MainWindow::openDialog()
