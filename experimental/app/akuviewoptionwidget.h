@@ -35,11 +35,11 @@ class AkuViewOptionWidget : public KVBox
         void saveSettings();
 
     protected slots:
-        void showView(int index);
         void showConfigBox(int);
         void setIconSize(int);
 
     public slots:
+        void showView(int index);
         void applySettings();
         void restoreDefaults();
 

@@ -87,8 +87,8 @@ void MainWindow::setupActions()
 void MainWindow::setupConnections()
 {
   connect(openArchive, SIGNAL(fileLoaded(KUrl)), this, SLOT(addRecentFile(KUrl)));
-  //connect(viewTree, SIGNAL(triggered()), this, SLOT());
-  //connect(viewIcon, SIGNAL(triggered()), this, SLOT());
+  connect(viewTree, SIGNAL(triggered()), this, SLOT(changeView()));
+  connect(viewIcon, SIGNAL(triggered()), this, SLOT(changeView()));
 }
 
 void MainWindow::openDialog()
@@ -119,14 +119,14 @@ void MainWindow::setupOptionsWidget()
     plugins->setHeader( i18n( "Aku Loaded Plugins" ) );
     plugins->setIcon( KIcon( "configure" ) );
 
-    AkuViewOptionWidget *optionView = new AkuViewOptionWidget(m_optionDialog);
-    optionView->setViews(treeView, iconWidget);
+    m_optionView = new AkuViewOptionWidget(m_optionDialog);
+    m_optionView->setViews(treeView, iconWidget);
 
-    connect(m_optionDialog, SIGNAL(applyClicked()), optionView, SLOT(applySettings()));
-    connect(m_optionDialog, SIGNAL(okClicked()), optionView, SLOT(applySettings()));
-    connect(m_optionDialog, SIGNAL(defaultClicked()), optionView, SLOT(restoreDefaults()));
+    connect(m_optionDialog, SIGNAL(applyClicked()), m_optionView, SLOT(applySettings()));
+    connect(m_optionDialog, SIGNAL(okClicked()), m_optionView, SLOT(applySettings()));
+    connect(m_optionDialog, SIGNAL(defaultClicked()), m_optionView, SLOT(restoreDefaults()));
 
-    KPageWidgetItem *viewopt = new KPageWidgetItem( optionView, i18n( "Setup the View" ) );
+    KPageWidgetItem *viewopt = new KPageWidgetItem(m_optionView, i18n( "Setup the View" ) );
     viewopt->setHeader( i18n( "Tree View Settings" ) );
     viewopt->setIcon( KIcon( "view-choose" ) );
 
@@ -136,6 +136,18 @@ void MainWindow::setupOptionsWidget()
     m_optionDialog->setCaption(i18n("Configuration"));
 
     m_optionDialog->resize(600, 400);
+}
+
+void MainWindow::changeView()
+{
+    if (dynamic_cast<QAction*>(sender()) == viewTree) {
+        m_optionView->showView(0);
+        return;
+    }
+
+    if (dynamic_cast<QAction*>(sender()) == viewIcon) {
+        m_optionView->showView(1);
+    }
 }
 
 void MainWindow::addPlugin(AkuPlugin *plugin)

@@ -16,6 +16,7 @@ class AkuTreeView;
 class AkuIconWidget;
 class AkuTreeModel;
 class OpenArchive;
+class AkuViewOptionWidget;
 
 class MainWindow : public KXmlGuiWindow
 {
@@ -39,6 +40,7 @@ class MainWindow : public KXmlGuiWindow
     KActionMenu *actionViewChoose;
     QAction *viewTree;
     QAction *viewIcon;
+    AkuViewOptionWidget *m_optionView;
 
     void setupActions();
     void setupOptionsWidget();
@@ -50,6 +52,7 @@ class MainWindow : public KXmlGuiWindow
     void showArchive(const QVector<QStringList> &archive);
     void handleError(const QString &);
     void addRecentFile(KUrl);
+    void changeView();
     
 };
 
