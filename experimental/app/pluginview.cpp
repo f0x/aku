@@ -31,6 +31,7 @@ PluginView::PluginView(QWidget *parent) : QTreeView(parent)
     setRootIsDecorated(false);
 
     setColumnWidth(0, 200); // TODO: do not hardcode this
+    setAlternatingRowColors(true);
 }
 
 PluginView::~PluginView()
