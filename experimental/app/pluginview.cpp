@@ -29,6 +29,8 @@ PluginView::PluginView(QWidget *parent) : QTreeView(parent)
     setModel(model);
     setItemDelegate(new PluginInfoDelegate);
     setRootIsDecorated(false);
+
+    setColumnWidth(0, 200); // TODO: do not hardcode this
 }
 
 PluginView::~PluginView()
@@ -47,10 +49,6 @@ void PluginView::addPluginInfo(const QString &suffix, const QString &comment,
     itsuf->setData(info.icon(), PluginInfoDelegate::PluginIconRole);
 
     items << itsuf;
-
-//     QStandardItem *itcom = new QStandardItem(comment);
-//     itcom->setEditable(false);
-//     items << itcom;
 
     if (extraction) {
         QStandardItem *item = new QStandardItem();
@@ -112,26 +110,26 @@ void PluginView::addPluginInfo(const QString &suffix, const QString &comment,
         items << item;
     }
 
-    if (config) {
-        KPushButton *configure = new KPushButton;
-        configure->setIcon(KIcon("configure"));
-        configure->setMaximumSize(configure->minimumSizeHint());
-
-        QStandardItem *bItem = new QStandardItem();
-        items << bItem;
-
-        static_cast<QStandardItemModel*>(model())->appendRow(items);
-
-        setIndexWidget(bItem->index(), configure);
-
-        KDialog *dialog = new KDialog;
-        dialog->setCaption(comment);
-        dialog->setMainWidget(config);
-
-        connect(configure, SIGNAL(clicked()), dialog, SLOT(exec()));
-
-        return;
-    }
+//     if (config) {
+//         KPushButton *configure = new KPushButton;
+//         configure->setIcon(KIcon("configure"));
+//         configure->setMaximumSize(configure->minimumSizeHint());
+// 
+//         QStandardItem *bItem = new QStandardItem();
+//         items << bItem;
+// 
+//         static_cast<QStandardItemModel*>(model())->appendRow(items);
+// 
+//         setIndexWidget(bItem->index(), configure);
+// 
+//         KDialog *dialog = new KDialog;
+//         dialog->setCaption(comment);
+//         dialog->setMainWidget(config);
+// 
+//         connect(configure, SIGNAL(clicked()), dialog, SLOT(exec()));
+// 
+//         return;
+//     }
 
     static_cast<QStandardItemModel*>(model())->appendRow(items);
 
