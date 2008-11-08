@@ -13,6 +13,8 @@
 
 #include <QTreeView>
 
+class KPluginInfo;
+
 class PluginView : public QTreeView
 {
     Q_OBJECT
@@ -21,7 +23,8 @@ class PluginView : public QTreeView
         ~PluginView();
 
         void addPluginInfo(const QString &suffix, const QString &comment, bool extraction,
-                            bool deletion, bool creation, bool renaming, bool working, QWidget *config = 0);
+                            bool deletion, bool creation, bool renaming, bool working,
+                            const KPluginInfo &, QWidget *config = 0);
 
 };
 

@@ -9,6 +9,7 @@
 */ 
 
 #include "pluginview.h"
+#include "plugininfodelegate.h"
 
 #include <QStandardItemModel>
 #include <QStandardItem>
@@ -17,14 +18,16 @@
 #include <KPushButton>
 #include <KIcon>
 #include <KDialog>
+#include <KPluginInfo>
 
 PluginView::PluginView(QWidget *parent) : QTreeView(parent)
 {
     QStandardItemModel *model = new QStandardItemModel();
-    model->setHorizontalHeaderLabels(QStringList()<<i18n("Archive suffix")<<i18n("Archive Type")<<
+    model->setHorizontalHeaderLabels(QStringList()<<i18n("Archive Plugin")<<
                                      i18n("Extraction")<<i18n("Creation")<<i18n("Rename")<<
                                      i18n("Delete")<<i18n("Working Properly")<<i18n("Configuration"));
     setModel(model);
+    setItemDelegate(new PluginInfoDelegate);
     setRootIsDecorated(false);
 }
 
@@ -33,16 +36,21 @@ PluginView::~PluginView()
 
 void PluginView::addPluginInfo(const QString &suffix, const QString &comment,
                                bool extraction, bool deletion, bool creation,
-                               bool renaming, bool working, QWidget *config)
+                               bool renaming, bool working, const KPluginInfo &info, QWidget *config)
 {
     QList<QStandardItem*> items;
 
     QStandardItem *itsuf = new QStandardItem(suffix);
     itsuf->setEditable(false);
+
+    itsuf->setData(comment, PluginInfoDelegate::PluginDescriptionRole);
+    itsuf->setData(info.icon(), PluginInfoDelegate::PluginIconRole);
+
     items << itsuf;
-    QStandardItem *itcom = new QStandardItem(comment);
-    itcom->setEditable(false);
-    items << itcom;
+
+//     QStandardItem *itcom = new QStandardItem(comment);
+//     itcom->setEditable(false);
+//     items << itcom;
 
     if (extraction) {
         QStandardItem *item = new QStandardItem();

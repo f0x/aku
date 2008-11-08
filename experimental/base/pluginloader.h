@@ -14,6 +14,7 @@
 #include <QObject>
 
 class AkuPlugin;
+class KPluginInfo;
 
 class PluginLoader : public QObject
 {
@@ -26,6 +27,6 @@ class PluginLoader : public QObject
         void loadAllPlugins();
 
     signals:
-        void pluginLoaded(AkuPlugin *plugin);
+        void pluginLoaded(AkuPlugin *plugin, const KPluginInfo &);
 };
 #endif 

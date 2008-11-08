@@ -18,6 +18,7 @@ set( aku_SRCS
      akuviewoptionwidget.cpp
      akuiconview.cpp
      akuiconwidget.cpp
+     plugininfodelegate.cpp
  )
 kde4_add_ui_files(aku_SRCS akuviewoptionwidget.ui)
 

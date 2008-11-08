@@ -17,6 +17,7 @@ class AkuIconWidget;
 class AkuTreeModel;
 class OpenArchive;
 class AkuViewOptionWidget;
+class KPluginInfo;
 
 class MainWindow : public KXmlGuiWindow
 {
@@ -48,7 +49,7 @@ class MainWindow : public KXmlGuiWindow
 
   private slots:
     void openDialog();
-    void addPlugin(AkuPlugin*);
+    void addPlugin(AkuPlugin*, const KPluginInfo &);
     void showArchive(const QVector<QStringList> &archive);
     void handleError(const QString &);
     void addRecentFile(KUrl);

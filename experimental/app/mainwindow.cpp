@@ -33,7 +33,10 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent),
 {
   m_model = new AkuTreeModel(QVector<QStringList>());
   PluginLoader *loader = new PluginLoader(this);
-  connect(loader, SIGNAL(pluginLoaded(AkuPlugin*)), this, SLOT(addPlugin(AkuPlugin*)));
+
+  connect(loader, SIGNAL(pluginLoaded(AkuPlugin*, const KPluginInfo &)),
+          this, SLOT(addPlugin(AkuPlugin*, const KPluginInfo &)));
+
   loader->loadAllPlugins();
 
   splitter = new QSplitter(this);
@@ -150,7 +153,7 @@ void MainWindow::changeView()
     }
 }
 
-void MainWindow::addPlugin(AkuPlugin *plugin)
+void MainWindow::addPlugin(AkuPlugin *plugin, const KPluginInfo &info)
 {
     KMimeType::Ptr mime = KMimeType::mimeType(plugin->mimeTypeName());
 
@@ -174,6 +177,7 @@ void MainWindow::addPlugin(AkuPlugin *plugin)
                   plugin->canCreate(),
                   plugin->canRename(),
                   plugin->isWorkingProperly(),
+                  info,
                   plugin->configurationWidget()
                  );
 }

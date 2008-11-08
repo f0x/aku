@@ -13,6 +13,7 @@
 
 #include <KServiceTypeTrader>
 #include <KDebug>
+#include <KPluginInfo>
 
 PluginLoader::PluginLoader(QObject *parent)
     : QObject(parent)
@@ -42,7 +43,7 @@ void PluginLoader::loadAllPlugins()
 
         if (plugin) {
             kDebug()<<"Loading:"<<service->name();
-            emit pluginLoaded(plugin);
+            emit pluginLoaded(plugin, KPluginInfo(service));
         } else {
             kDebug()<<"plugin not valid";
         }
