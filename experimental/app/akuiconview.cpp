@@ -50,8 +50,8 @@ void AkuIconView::setIconSize(int size)
     m_iconSize = size;
     QFontMetrics fm(QApplication::font());
 
-    setGridSize(QSize(size + fm.height()*2, size + fm.height()*2));
-    m_gridSize = fm.height()*2 + size;
+    m_gridSize = (fm.height() + size)*2;
+    setGridSize(QSize(m_gridSize, m_gridSize));
 }
 
 int AkuIconView::iconSize()

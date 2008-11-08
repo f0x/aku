@@ -151,6 +151,8 @@ void MainWindow::changeView()
     if (dynamic_cast<QAction*>(sender()) == viewIcon) {
         m_optionView->showView(1);
     }
+
+    m_optionView->applySettings();
 }
 
 void MainWindow::addPlugin(AkuPlugin *plugin, const KPluginInfo &info)
