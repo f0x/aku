@@ -62,6 +62,11 @@ void PluginInfoDelegate::paint(QPainter *painter, const QStyleOptionViewItem &op
     icon.paint(painter, iconRect, Qt::AlignCenter, iconMode);
     painter->restore();
 
+    QColor foregroundColor = (option.state.testFlag(QStyle::State_Selected))?
+        option.palette.color(QPalette::HighlightedText):option.palette.color(QPalette::Text);
+
+    painter->setPen(foregroundColor);
+
     // the main title
     painter->save();
     clipRect = QRect(iconRect.right(), iconRect.top(), option.rect.width() - iconRect.width(), option.rect.height() / 2);
