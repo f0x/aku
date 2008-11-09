@@ -44,55 +44,61 @@ void PluginInfoDelegate::paint(QPainter *painter, const QStyleOptionViewItem &op
     QStyle *style = QApplication::style();
     style->drawPrimitive(QStyle::PE_PanelItemViewItem, &opt, painter, opt.widget);
 
+    QPixmap pixmap(opt.rect.size());
+    pixmap.fill(Qt::transparent);
+    QPainter p(&pixmap);
+    p.translate(0, -opt.rect.top());
+
     QRect clipRect;
 
     // the icon
-    painter->save();
+    p.save();
     clipRect = QRect(option.rect.topLeft(), QSize(qMin(ICON_SIZE, option.rect.width()), ICON_SIZE));
     QRect iconRect(option.rect.topLeft(), QSize(ICON_SIZE, ICON_SIZE));
 
     KIcon icon(index.data(PluginIconRole).toString());
-    painter->setClipRect(clipRect);
+    p.setClipRect(clipRect);
     QIcon::Mode iconMode = QIcon::Normal;
 
     if (opt.state & QStyle::State_MouseOver) {
         iconMode = QIcon::Active;
     }
 
-    icon.paint(painter, iconRect, Qt::AlignCenter, iconMode);
-    painter->restore();
+    icon.paint(&p, iconRect, Qt::AlignCenter, iconMode);
+    p.restore();
 
     QColor foregroundColor = (option.state.testFlag(QStyle::State_Selected))?
         option.palette.color(QPalette::HighlightedText):option.palette.color(QPalette::Text);
 
-    painter->setPen(foregroundColor);
+    p.setPen(foregroundColor);
 
     // the main title
-    painter->save();
+    p.save();
     clipRect = QRect(iconRect.right(), iconRect.top(), option.rect.width() - iconRect.width(), option.rect.height() / 2);
     QFont titleFont = opt.font;
     titleFont.setBold(true);
     titleFont.setPointSize(titleFont.pointSize() + 2);
-    painter->setFont(titleFont);
-    painter->drawText(clipRect, Qt::AlignLeft | Qt::AlignBottom, index.data(PluginDescriptionRole).toString());
-    painter->restore();
+    p.setFont(titleFont);
+    p.drawText(clipRect, Qt::AlignLeft | Qt::AlignBottom, index.data(PluginDescriptionRole).toString());
+    p.restore();
 
     // the plugin comment
-    painter->save();
+    p.save();
     clipRect = QRect(iconRect.right(), clipRect.bottom(), option.rect.width() - iconRect.width(), option.rect.height() / 2);
     titleFont = opt.font;
     titleFont.setPointSize(titleFont.pointSize() - 1);
-    painter->setFont(titleFont);
-    painter->drawText(clipRect, Qt::AlignLeft | Qt::AlignVCenter, index.data().toString());
-    painter->restore();
+    p.setFont(titleFont);
+    p.drawText(clipRect, Qt::AlignLeft | Qt::AlignVCenter, index.data().toString());
+    p.restore();
 
-//     QLinearGradient gradient(opt.rect.right() - 35, 0, opt.rect.right(), 0);
-//     gradient.setColorAt(0, Qt::transparent);
-//     gradient.setColorAt(1, Qt::white);
-//     painter->save();
-//     painter->setCompositionMode(QPainter::CompositionMode_DestinationOver);
-//     painter->fillRect(opt.rect, gradient);
-//     painter->restore();
+    QLinearGradient gradient(opt.rect.right(), 0, opt.rect.right() -35, 0);
+    gradient.setColorAt(0, Qt::transparent);
+    gradient.setColorAt(1, Qt::white);
+    p.setCompositionMode(QPainter::CompositionMode_DestinationIn);
+    p.fillRect(opt.rect, gradient);
+    p.end();
+
+    painter->drawPixmap(opt.rect.topLeft(), pixmap);
 
 }
 
