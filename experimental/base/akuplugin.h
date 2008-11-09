@@ -94,8 +94,6 @@ class KDE_EXPORT AkuPlugin : public QObject
         class AkuPluginPrivate;
         AkuPluginPrivate *d;
 
-// TODO: add convenient methods to share in the main application in
-//       order to correctly retrieve and show infos about the archive.
 };
 
 #endif 

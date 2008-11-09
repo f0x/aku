@@ -44,17 +44,24 @@ void PluginInfoDelegate::paint(QPainter *painter, const QStyleOptionViewItem &op
     QStyle *style = QApplication::style();
     style->drawPrimitive(QStyle::PE_PanelItemViewItem, &opt, painter, opt.widget);
 
+    paintMainCol(painter, opt, index);
+
+}
+
+void PluginInfoDelegate::paintMainCol(QPainter *painter, const QStyleOptionViewItemV4 &opt,
+                         const QModelIndex &index) const
+{
     QPixmap pixmap(opt.rect.size());
     pixmap.fill(Qt::transparent);
     QPainter p(&pixmap);
-    p.translate(0, -opt.rect.top());
+    p.translate(-opt.rect.topLeft());
 
     QRect clipRect;
 
     // the icon
     p.save();
-    clipRect = QRect(option.rect.topLeft(), QSize(qMin(ICON_SIZE, option.rect.width()), ICON_SIZE));
-    QRect iconRect(option.rect.topLeft(), QSize(ICON_SIZE, ICON_SIZE));
+    clipRect = QRect(opt.rect.topLeft(), QSize(qMin(ICON_SIZE, opt.rect.width()), ICON_SIZE));
+    QRect iconRect(opt.rect.topLeft(), QSize(ICON_SIZE, ICON_SIZE));
 
     KIcon icon(index.data(PluginIconRole).toString());
     p.setClipRect(clipRect);
@@ -67,14 +74,14 @@ void PluginInfoDelegate::paint(QPainter *painter, const QStyleOptionViewItem &op
     icon.paint(&p, iconRect, Qt::AlignCenter, iconMode);
     p.restore();
 
-    QColor foregroundColor = (option.state.testFlag(QStyle::State_Selected))?
-        option.palette.color(QPalette::HighlightedText):option.palette.color(QPalette::Text);
+    QColor foregroundColor = (opt.state.testFlag(QStyle::State_Selected))?
+        opt.palette.color(QPalette::HighlightedText):opt.palette.color(QPalette::Text);
 
     p.setPen(foregroundColor);
 
     // the main title
     p.save();
-    clipRect = QRect(iconRect.right(), iconRect.top(), option.rect.width() - iconRect.width(), option.rect.height() / 2);
+    clipRect = QRect(iconRect.right(), iconRect.top(), opt.rect.width() - iconRect.width(), opt.rect.height() / 2);
     QFont titleFont = opt.font;
     titleFont.setBold(true);
     titleFont.setPointSize(titleFont.pointSize() + 2);
@@ -84,14 +91,15 @@ void PluginInfoDelegate::paint(QPainter *painter, const QStyleOptionViewItem &op
 
     // the plugin comment
     p.save();
-    clipRect = QRect(iconRect.right(), clipRect.bottom(), option.rect.width() - iconRect.width(), option.rect.height() / 2);
+    clipRect = QRect(iconRect.right(), clipRect.bottom(), opt.rect.width() - iconRect.width(), opt.rect.height() / 2);
     titleFont = opt.font;
     titleFont.setPointSize(titleFont.pointSize() - 1);
     p.setFont(titleFont);
     p.drawText(clipRect, Qt::AlignLeft | Qt::AlignVCenter, index.data().toString());
     p.restore();
 
-    QLinearGradient gradient(opt.rect.right(), 0, opt.rect.right() -35, 0);
+    // a gradient to fade out
+    QLinearGradient gradient(opt.rect.right(), 0, opt.rect.right() -35, 0); // FIXME: 35 shoudln't be so magic
     gradient.setColorAt(0, Qt::transparent);
     gradient.setColorAt(1, Qt::white);
     p.setCompositionMode(QPainter::CompositionMode_DestinationIn);
@@ -99,12 +107,13 @@ void PluginInfoDelegate::paint(QPainter *painter, const QStyleOptionViewItem &op
     p.end();
 
     painter->drawPixmap(opt.rect.topLeft(), pixmap);
-
 }
 
 QSize PluginInfoDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     QFontMetrics fm(QApplication::font());
+    // TODO: do a real height calculation based on font sizes used
+    //       (+2 the title, -1 the description)
     QSize size = QSize( 0,
                          ICON_SIZE + 2*option.rect.y());
 

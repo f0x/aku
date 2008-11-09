@@ -26,6 +26,9 @@ class PluginInfoDelegate : public QStyledItemDelegate
 
         void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
         QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
+
+    private:
+        void paintMainCol(QPainter *painter, const QStyleOptionViewItemV4 &option, const QModelIndex &index) const;
 };
 
 #endif
