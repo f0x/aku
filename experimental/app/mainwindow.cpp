@@ -146,7 +146,6 @@ void MainWindow::changeView()
 {
     if (dynamic_cast<QAction*>(sender()) == viewTree) {
         m_optionView->showView(0);
-        return;
     }
 
     if (dynamic_cast<QAction*>(sender()) == viewIcon) {
