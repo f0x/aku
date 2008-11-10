@@ -96,6 +96,7 @@ void ZipPlugin::getEntries(const KArchiveEntry *rootEntry)
                                     << fileEntry->user() // owner
                                     << fileEntry->group() // group
                                     << formatPermissions(fileEntry->permissions()) // permissions
+                                    << KGlobal::locale()->formatDateTime(fileEntry->datetime())
         );
         return;
     }
@@ -121,7 +122,8 @@ void ZipPlugin::getEntries(const KArchiveEntry *rootEntry)
 
 QStringList ZipPlugin::additionalHeaderStrings()
 {
-    return QStringList() << i18n("CRC") << i18n("Method") << i18n("Owner") << i18n("Group") << i18n("Permissions");
+    return QStringList() << i18n("CRC") << i18n("Method") << i18n("Owner")
+                         << i18n("Group") << i18n("Permissions") << i18n("CreationTime");
 }
 
 QString ZipPlugin::formatPermissions(mode_t permissions)

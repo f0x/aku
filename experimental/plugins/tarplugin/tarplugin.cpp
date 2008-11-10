@@ -92,6 +92,7 @@ void TarPlugin::getEntries(const KArchiveEntry *rootEntry)
                                     << fileEntry->user() // owner
                                     << fileEntry->group() // group
                                     << formatPermissions(fileEntry->permissions()) // permissions
+                                    << KGlobal::locale()->formatDateTime(fileEntry->datetime())
         );
         return;
     }
@@ -117,7 +118,7 @@ void TarPlugin::getEntries(const KArchiveEntry *rootEntry)
 
 QStringList TarPlugin::additionalHeaderStrings()
 {
-    return QStringList() << i18n("Owner") << i18n("Group") << i18n("Permissions");
+    return QStringList() << i18n("Owner") << i18n("Group") << i18n("Permissions") << i18n("Creation Time");
 }
 
 QString TarPlugin::formatPermissions(mode_t permissions)
