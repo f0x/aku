@@ -29,7 +29,7 @@ class ZipPlugin : public AkuPlugin
         ZipPlugin(QObject *parent, const QVariantList &args);
         ~ZipPlugin();
 
-        QString mimeTypeName();
+        QStringList mimeTypeNames();
 
         bool canExtract();
         bool canCreate();

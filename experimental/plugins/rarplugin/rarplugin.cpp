@@ -35,9 +35,9 @@ RarPlugin::RarPlugin(QObject *parent, const QVariantList &args) : AkuPlugin(pare
 RarPlugin::~RarPlugin()
 {}
 
-QString RarPlugin::mimeTypeName()
+QStringList RarPlugin::mimeTypeNames()
 {
-    return "application/x-rar";
+    return QStringList() << "application/x-rar";
 }
 
 bool RarPlugin::canExtract()

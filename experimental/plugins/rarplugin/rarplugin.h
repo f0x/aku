@@ -25,7 +25,7 @@ class RarPlugin : public AkuPlugin
         RarPlugin(QObject *parent, const QVariantList &args);
         ~RarPlugin();
 
-        QString mimeTypeName();
+        QStringList mimeTypeNames();
 
         bool canExtract();
         bool canCreate();

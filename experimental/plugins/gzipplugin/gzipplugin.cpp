@@ -26,9 +26,9 @@ GZipPlugin::GZipPlugin(QObject *parent, const QVariantList &args) : AkuPlugin(pa
 GZipPlugin::~GZipPlugin()
 {}
 
-QString GZipPlugin::mimeTypeName()
+QStringList GZipPlugin::mimeTypeNames()
 {
-    return "application/x-gzip";
+    return QStringList() << "application/x-gzip";
 }
 
 bool GZipPlugin::canExtract()

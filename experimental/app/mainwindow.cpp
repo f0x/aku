@@ -157,31 +157,32 @@ void MainWindow::changeView()
 
 void MainWindow::addPlugin(AkuPlugin *plugin, const KPluginInfo &info)
 {
-    KMimeType::Ptr mime = KMimeType::mimeType(plugin->mimeTypeName());
-
-    if (!mime) {
-        kError()<<"Could not retrieve mimetype. Maybe wrong plugin implementation.";
-        return;
-    }
-
     connect(plugin, SIGNAL(archiveLoaded(const QVector<QStringList> &)),
             this, SLOT(showArchive(const QVector<QStringList> &)));
     connect(plugin, SIGNAL(error(const QString &)), this, SLOT(handleError(const QString &)));
 
+    foreach (const QString &mimeName, plugin->mimeTypeNames()) {
+        KMimeType::Ptr mime = KMimeType::mimeType(mimeName);
 
-    m_plugins.insert(mime->name(), plugin);
+        if (!mime) {
+            kError()<<"Could not retrieve mimetype. Maybe wrong plugin implementation.";
+            continue;
+        }
 
-    m_pluginView->addPluginInfo(
-                  mime->name(),
-                  mime->comment(),
-                  plugin->canExtract(),
-                  plugin->canDelete(),
-                  plugin->canCreate(),
-                  plugin->canRename(),
-                  plugin->isWorkingProperly(),
-                  info,
-                  plugin->configurationWidget()
-                 );
+        m_plugins.insert(mime->name(), plugin);
+
+        m_pluginView->addPluginInfo(
+                      mime->name(),
+                      mime->comment(),
+                      plugin->canExtract(),
+                      plugin->canDelete(),
+                      plugin->canCreate(),
+                      plugin->canRename(),
+                      plugin->isWorkingProperly(),
+                      info,
+                      plugin->configurationWidget()
+                     );
+    }
 }
 
 void MainWindow::showArchive(const QVector<QStringList> &archive)
@@ -202,5 +203,5 @@ void MainWindow::showArchive(const QVector<QStringList> &archive)
 void MainWindow::handleError(const QString &error)
 {
     AkuPlugin *sender = static_cast<AkuPlugin *>(this->sender());
-    KMessageBox::error(this, error, sender->mimeTypeName() +" "+ i18n("plugin error"));
+    KMessageBox::error(this, error, i18n("Plugin error"));
 }

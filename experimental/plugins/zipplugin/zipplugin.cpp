@@ -29,9 +29,9 @@ ZipPlugin::ZipPlugin(QObject *parent, const QVariantList &args) : AkuPlugin(pare
 ZipPlugin::~ZipPlugin()
 {}
 
-QString ZipPlugin::mimeTypeName()
+QStringList ZipPlugin::mimeTypeNames()
 {
-    return "application/zip";
+    return QStringList() << "application/zip";
 }
 
 bool ZipPlugin::canExtract()

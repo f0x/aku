@@ -30,12 +30,11 @@ class KDE_EXPORT AkuPlugin : public QObject
         virtual ~AkuPlugin();
 
         /**
-         * Reimplement this to reimplement a correct mime type name.
+         * Reimplement this to return a list of correct mime type names supported.
          * Examples are: "application/x-rar" for .rar, 
          * "application/x-compressed-tar" for .tar.gz, "application/zip" for .zip.
-         * Use this QString to build a KMimeType::Ptr.
          */
-        virtual QString mimeTypeName();
+        virtual QStringList mimeTypeNames();
 
         /**
          * The reimplementation should return true if the plugin supports

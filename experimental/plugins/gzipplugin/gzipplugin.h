@@ -23,7 +23,7 @@ class GZipPlugin : public AkuPlugin
         GZipPlugin(QObject *parent, const QVariantList &args);
         ~GZipPlugin();
 
-        QString mimeTypeName();
+        QStringList mimeTypeNames();
 
         bool canExtract();
         bool canCreate();

@@ -28,9 +28,9 @@ AkuPlugin::AkuPlugin(QObject *parent) : QObject(parent),
 AkuPlugin::~AkuPlugin()
 {}
 
-QString AkuPlugin::mimeTypeName()
+QStringList AkuPlugin::mimeTypeNames()
 {
-    return QString();
+    return QStringList();
 }
 
 bool AkuPlugin::canExtract()
