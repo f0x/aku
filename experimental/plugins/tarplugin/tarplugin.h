@@ -13,8 +13,11 @@
 #include <akuplugin.h>
 #include <aku_macros.h>
 #include <QVariantList>
+#include <QVector>
 
 class KUrl;
+class KTar;
+class KArchiveEntry;
 
 class TarPlugin : public AkuPlugin
 {
@@ -35,6 +38,14 @@ class TarPlugin : public AkuPlugin
         void loadArchive(const KUrl &fileName);
 
         QStringList additionalHeaderStrings();
+
+    private:
+        KTar *m_archive;
+        QVector<QStringList> m_entries;
+        QString m_currentPath;
+
+        void getEntries(const KArchiveEntry *rootEntry);
+        QString formatPermissions(mode_t permissions);
 };
 
 #endif 

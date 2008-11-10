@@ -95,7 +95,7 @@ void ZipPlugin::getEntries(const KArchiveEntry *rootEntry)
                                     << QString::number(fileEntry->encoding()) // method
                                     << fileEntry->user() // owner
                                     << fileEntry->group() // group
-                                    << formatPermissions(fileEntry->permissions()) // permissions WARNING: kzip does not support permissions()
+                                    << formatPermissions(fileEntry->permissions()) // permissions
         );
         return;
     }
