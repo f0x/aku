@@ -45,6 +45,11 @@ bool RarPlugin::canExtract()
     return true;
 }
 
+bool RarPlugin::canAdd()
+{
+    return true;
+}
+
 bool RarPlugin::canCreate()
 {
     return false;

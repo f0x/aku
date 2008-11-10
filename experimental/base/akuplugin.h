@@ -46,6 +46,7 @@ class KDE_EXPORT AkuPlugin : public QObject
         virtual bool canCreate();
         virtual bool canRename();
         virtual bool canDelete();
+        virtual bool canAdd();
 
         /**
          * In the reimplementation of this function goes the real parsing process.

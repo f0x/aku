@@ -211,10 +211,29 @@ void MainWindow::showArchive(const QVector<QStringList> &archive)
     if (archive.isEmpty()) {
         return;
     }
-
+   
+    actionExtract->setEnabled(true);
+    actionDelete->setEnabled(true);
+    actionAdd->setEnabled(true);
+   
     // here we set additional per-plugin headers
     AkuPlugin *sender = static_cast<AkuPlugin*>(this->sender());
     m_model->setAdditionalHeaders(sender->additionalHeaderStrings());
+ 
+    if (!sender->canExtract()) {
+        actionExtract->setEnabled(false);
+        actionExtract->setToolTip(i18n("Not supported by the current plugin"));
+    }
+
+    if (!sender->canDelete()) {
+        actionDelete->setEnabled(false);
+        actionDelete->setToolTip(i18n("Not supported by the current plugin"));
+    }  
+  
+    if (!sender->canAdd()) {
+        actionAdd->setEnabled(false);
+        actionAdd->setToolTip(i18n("Not supported by the current plugin"));
+    }    
 
     currentArchive = archive;
 

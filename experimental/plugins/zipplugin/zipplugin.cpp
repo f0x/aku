@@ -39,6 +39,11 @@ bool ZipPlugin::canExtract()
     return true;
 }
 
+bool ZipPlugin::canAdd()
+{
+    return true;
+}
+
 bool ZipPlugin::canCreate()
 {
     return false;

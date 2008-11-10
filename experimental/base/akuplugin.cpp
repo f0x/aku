@@ -43,6 +43,11 @@ bool AkuPlugin::canCreate()
     return false;
 }
 
+bool AkuPlugin::canAdd()
+{
+    return false;
+}
+
 bool AkuPlugin::canRename()
 {
     return false;

@@ -29,6 +29,7 @@ class GZipPlugin : public AkuPlugin
         bool canCreate();
         bool canRename();
         bool canDelete();
+        bool canAdd();
 
         bool isWorkingProperly();
 

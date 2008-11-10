@@ -46,6 +46,11 @@ bool GZipPlugin::canRename()
     return true;
 }
 
+bool GZipPlugin::canAdd()
+{
+    return false;
+}
+
 bool GZipPlugin::canDelete()
 {
     return true;

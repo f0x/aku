@@ -47,6 +47,11 @@ bool TarPlugin::canRename()
     return true;
 }
 
+bool TarPlugin::canAdd()
+{
+    return false;
+}
+
 bool TarPlugin::canDelete()
 {
     return true;
