@@ -2,6 +2,10 @@
 <gui name="aku" version="1">
 <ToolBar name="mainToolBar">
    <text>Main Toolbar</text>
+   <Action name="extract" />
+   <Action name="add" />
+   <Action name="delete" />
+   <Separator />
    <Action name="view" />
 </ToolBar>
  <!--  <Action name="add_dir" />

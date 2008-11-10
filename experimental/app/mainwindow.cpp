@@ -23,7 +23,6 @@
 #include <KIcon>
 #include <KMessageBox>
 #include <KConfigGroup>
-#include <KAction>
 
 #include <QListView>
 #include <QTreeView>
@@ -76,16 +75,38 @@ void MainWindow::setupActions()
   actionRecentFiles->loadEntries(KConfigGroup(KGlobal::config()->group("RecentFiles")));
 
   actionViewChoose = new KActionMenu(this);
-  actionViewChoose -> setIcon(KIcon("view-choose"));
-  actionViewChoose -> setText(i18n("View"));
-  actionCollection() -> addAction("view", actionViewChoose);
-  actionViewChoose -> setDelayed(false);
+  actionViewChoose->setIcon(KIcon("view-choose"));
+  actionViewChoose->setText(i18n("View"));
+  actionCollection()->addAction("view", actionViewChoose);
+  actionViewChoose->setDelayed(false);
   viewTree = new QAction(i18n("Tree View"), this);
-  viewTree -> setIcon(KIcon("view-list-tree"));
+  viewTree->setIcon(KIcon("view-list-tree"));
   viewIcon = new QAction(i18n("Icon View"), this);
-  viewIcon -> setIcon(KIcon("view-list-icons"));
-  actionViewChoose -> addAction(viewTree);
-  actionViewChoose -> addAction(viewIcon);
+  viewIcon->setIcon(KIcon("view-list-icons"));
+  actionViewChoose->addAction(viewTree);
+  actionViewChoose->addAction(viewIcon);
+
+  actionExtract = new KActionMenu(this);
+  actionExtract->setIcon(KIcon("archive-extract.png"));
+  actionExtract->setText(i18n("Extract"));
+  actionCollection()->addAction("extract", actionExtract);
+
+  actionAdd = new KActionMenu(this);
+  actionAdd->setIcon(KIcon("archive-insert"));
+  actionAdd->setText(i18n("Add to archive"));
+  actionCollection()->addAction("add", actionAdd);
+  actionAdd->setDelayed(false);
+  addFile = new QAction(i18n("Add file(s)"), this);
+  addFile->setIcon(KIcon("archive-insert"));
+  addDir = new QAction(i18n("Add dir"), this);
+  addDir->setIcon(KIcon("archive-insert-directory"));
+  actionAdd->addAction(addFile);
+  actionAdd->addAction(addDir);
+
+  actionDelete = new KAction(this);
+  actionDelete->setIcon(KIcon("archive-remove.png"));
+  actionDelete->setText(i18n("Remove"));
+  actionCollection()->addAction("delete", actionDelete);
 }
 
 void MainWindow::setupConnections()

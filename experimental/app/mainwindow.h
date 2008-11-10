@@ -4,6 +4,7 @@
 #include <KXmlGuiWindow>
 #include <KRecentFilesAction>
 #include <KUrl>
+#include <KAction>
 #include <KActionMenu>
 #include <QSplitter>
 
@@ -40,10 +41,16 @@ class MainWindow : public KXmlGuiWindow
     QVector<QStringList> currentArchive;
     KRecentFilesAction *actionRecentFiles;
     KActionMenu *actionViewChoose;
+    KActionMenu *actionAdd;
+    KActionMenu *actionExtract;
     QAction *viewTree;
     QAction *viewIcon;
+    QAction *addFile;
+    QAction *addDir;
     AkuViewOptionWidget *m_optionView;
     QProgressBar *m_progressBar;
+
+    KAction *actionDelete;
 
     void setupActions();
     void setupOptionsWidget();
