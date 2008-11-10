@@ -51,65 +51,26 @@ void PluginView::addPluginInfo(const QString &suffix, const QString &comment,
 
     items << itsuf;
 
-    if (extraction) {
-        QStandardItem *item = new QStandardItem();
-        item->setCheckState(Qt::Checked);
-        item->setEditable(false);
-        items << item;
-    } else {
-        QStandardItem *item = new QStandardItem();
-        item->setCheckState(Qt::Unchecked);
-        item->setEditable(false);
-        items << item;
-    }
+    QStandardItem *item = new QStandardItem();
+    item->setData(extraction, PluginInfoDelegate::PluginPropertyRole);
+    items << item;
 
-    if (creation) {
-        QStandardItem *item = new QStandardItem();
-        item->setCheckState(Qt::Checked);
-        item->setEditable(false);
-        items << item;
-    } else {
-        QStandardItem *item = new QStandardItem();
-        item->setCheckState(Qt::Unchecked);
-        item->setEditable(false);
-        items << item;
-    }
+    item = new QStandardItem();
+    item->setData(deletion, PluginInfoDelegate::PluginPropertyRole);
+    items << item;
 
-    if (renaming) {
-        QStandardItem *item = new QStandardItem();
-        item->setCheckState(Qt::Checked);
-        item->setEditable(false);
-        items << item;
-    } else {
-        QStandardItem *item = new QStandardItem();
-        item->setCheckState(Qt::Unchecked);
-        item->setEditable(false);
-        items << item;
-    }
+    item = new QStandardItem();
+    item->setData(creation, PluginInfoDelegate::PluginPropertyRole);
+    items << item;
 
-    if (deletion) {
-        QStandardItem *item = new QStandardItem();
-        item->setCheckState(Qt::Checked);
-        item->setEditable(false);
-        items << item;
-    } else {
-        QStandardItem *item = new QStandardItem();
-        item->setCheckState(Qt::Unchecked);
-        item->setEditable(false);
-        items << item;
-    }
+    item = new QStandardItem();
+    item->setData(renaming, PluginInfoDelegate::PluginPropertyRole);
+    items << item;
 
-    if (working) {
-        QStandardItem *item = new QStandardItem();
-        item->setCheckState(Qt::Checked);
-        item->setEditable(false);
-        items << item;
-    } else {
-        QStandardItem *item = new QStandardItem();
-        item->setCheckState(Qt::Unchecked);
-        item->setEditable(false);
-        items << item;
-    }
+    item = new QStandardItem();
+    item->setData(working, PluginInfoDelegate::PluginPropertyRole);
+    items << item;
+
 
 //     if (config) {
 //         KPushButton *configure = new KPushButton;

@@ -16,6 +16,7 @@
 #include <QApplication>
 
 #include <KGlobalSettings>
+#include <KFileItemDelegate>
 
 AkuIconView::AkuIconView(QWidget *parent) : QListView(parent)
 {
@@ -28,6 +29,7 @@ AkuIconView::AkuIconView(QWidget *parent) : QListView(parent)
     setSelectionRectVisible(true);
     setResizeMode(QListView::Adjust);
     setSelectionMode(QAbstractItemView::ExtendedSelection);
+    setItemDelegate(new KFileItemDelegate(this));
 
     if (KGlobalSettings::singleClick()) {
         connect(this, SIGNAL(clicked(const QModelIndex &)), this, SLOT(enterItem(const QModelIndex &)));
@@ -50,7 +52,7 @@ void AkuIconView::setIconSize(int size)
     m_iconSize = size;
     QFontMetrics fm(QApplication::font());
 
-    m_gridSize = (fm.height() + size)*2;
+    m_gridSize = fm.height() + (size)*2;
     setGridSize(QSize(m_gridSize, m_gridSize));
 }
 

@@ -18,6 +18,7 @@ class AkuTreeModel;
 class OpenArchive;
 class AkuViewOptionWidget;
 class KPluginInfo;
+class QProgressBar;
 
 class MainWindow : public KXmlGuiWindow
 {
@@ -42,6 +43,7 @@ class MainWindow : public KXmlGuiWindow
     QAction *viewTree;
     QAction *viewIcon;
     AkuViewOptionWidget *m_optionView;
+    QProgressBar *m_progressBar;
 
     void setupActions();
     void setupOptionsWidget();

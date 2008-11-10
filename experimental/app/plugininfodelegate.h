@@ -19,7 +19,10 @@ class PluginInfoDelegate : public QStyledItemDelegate
     Q_OBJECT
 
     public:
-        enum DataRoles { PluginDescriptionRole = 33, PluginIconRole };
+        enum DataRoles { PluginDescriptionRole = 33, 
+                         PluginIconRole,
+                         PluginPropertyRole
+                       };
 
         PluginInfoDelegate(QObject *parent = 0);
         ~PluginInfoDelegate();
@@ -29,6 +32,7 @@ class PluginInfoDelegate : public QStyledItemDelegate
 
     private:
         void paintMainCol(QPainter *painter, const QStyleOptionViewItemV4 &option, const QModelIndex &index) const;
+        void paintPropertyCol(QPainter *painter, const QStyleOptionViewItemV4 &option, const QModelIndex &index) const;
 };
 
 #endif

@@ -27,11 +27,12 @@
 
 #include <QListView>
 #include <QTreeView>
+#include <QProgressBar>
 
 MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent),
                                           m_pluginView(new PluginView())
 {
-  m_model = new AkuTreeModel(QVector<QStringList>());
+  m_model = new AkuTreeModel(QVector<QStringList>(), this);
   PluginLoader *loader = new PluginLoader(this);
 
   connect(loader, SIGNAL(pluginLoaded(AkuPlugin*, const KPluginInfo &)),

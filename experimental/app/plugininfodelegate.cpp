@@ -18,6 +18,7 @@
 #include <QLinearGradient>
 
 #include <KIcon>
+#include <KIconLoader>
 #include <KDebug>
 
 #define ICON_SIZE 48
@@ -35,16 +36,23 @@ void PluginInfoDelegate::paint(QPainter *painter, const QStyleOptionViewItem &op
 {
     QStyleOptionViewItemV4 opt(option);
 
-    if (index.column() > 0) {
-        QStyledItemDelegate::paint(painter, opt, index);
-        return;
-    }
+//     if (index.column() > 0) {
+//         QStyledItemDelegate::paint(painter, opt, index);
+//         return;
+//     }
 
 
     QStyle *style = QApplication::style();
     style->drawPrimitive(QStyle::PE_PanelItemViewItem, &opt, painter, opt.widget);
 
-    paintMainCol(painter, opt, index);
+    switch (index.column()) {
+    case 0 :
+        paintMainCol(painter, opt, index);
+        break;
+    default:
+        paintPropertyCol(painter, opt, index);
+        break;
+    }
 
 }
 
@@ -107,6 +115,31 @@ void PluginInfoDelegate::paintMainCol(QPainter *painter, const QStyleOptionViewI
     p.end();
 
     painter->drawPixmap(opt.rect.topLeft(), pixmap);
+}
+
+void PluginInfoDelegate::paintPropertyCol(QPainter *painter, const QStyleOptionViewItemV4 &opt,
+                         const QModelIndex &index) const
+{
+    // true = dialog-ok-apply
+    // false = edit-delete
+
+    QString iconName = "edit-delete";
+    if (index.data(PluginPropertyRole).toBool()) {
+        iconName = "dialog-ok-apply";
+    }
+
+    KIconLoader::States state = KIconLoader::DefaultState;
+    if (opt.state & QStyle::State_MouseOver) {
+        state = KIconLoader::ActiveState;
+    }
+
+    QPixmap icon = KIconLoader::global()->loadIcon(iconName, KIconLoader::Small, 0, state);
+
+    QRect iconRect;
+    iconRect.setSize(icon.size());
+    iconRect.moveCenter(opt.rect.center());
+
+    painter->drawPixmap(iconRect.topLeft(), icon);
 }
 
 QSize PluginInfoDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
