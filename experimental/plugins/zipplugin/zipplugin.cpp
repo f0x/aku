@@ -95,7 +95,7 @@ void ZipPlugin::getEntries(const KArchiveEntry *rootEntry)
                                     << QString::number(fileEntry->encoding()) // method
                                     << fileEntry->user() // owner
                                     << fileEntry->group() // group
-                                    //<< formatPermissions(fileEntry->permissions()) // permissions WARNING: kzip does not support permissions()
+                                    << formatPermissions(fileEntry->permissions()) // permissions WARNING: kzip does not support permissions()
         );
         return;
     }
@@ -121,7 +121,7 @@ void ZipPlugin::getEntries(const KArchiveEntry *rootEntry)
 
 QStringList ZipPlugin::additionalHeaderStrings()
 {
-    return QStringList() << i18n("CRC") << i18n("Method") << i18n("Owner") << i18n("Group") /*<< i18n("Permissions")*/;
+    return QStringList() << i18n("CRC") << i18n("Method") << i18n("Owner") << i18n("Group") << i18n("Permissions");
 }
 
 QString ZipPlugin::formatPermissions(mode_t permissions)
@@ -148,55 +148,41 @@ QString ZipPlugin::formatPermissions(mode_t permissions)
     // S_IWOTH = w
     // S_IXOTH = x
 
-    // full permissions
-    if ( permissions & S_IRWXU ) {
-        kDebug() << "full owner permissions";
-        pString.replace(0, 3, "rwx");
-    } else {
-
-        if (permissions & S_IRUSR) {
-            pString.replace(0, 1, "r");
-        }
-        if (permissions & S_IWUSR) {
-            pString.replace(1, 1, "w");
-        }
-        if (permissions & S_IXUSR) {
-            pString.replace(2, 1, "x");
-        }
+    // owner
+    uint own = permissions & S_IRWXU;
+    if (own & S_IRUSR) {
+        pString.replace(0, 1, "r");
+    }
+    if (own & S_IWUSR){
+        pString.replace(1, 1, "w");
+    }
+    if (own & S_IXUSR) {
+        pString.replace(2, 1, "x");
     }
 
-    if ( permissions & S_IRWXG ) {
-        kDebug() << "full group permissions";
-        pString.replace(3, 3, "rwx");
-    } else {
-
-        if (permissions & S_IRGRP) {
-            pString.replace(3, 1, "r");
-        }
-        if (permissions & S_IWGRP) {
-            pString.replace(4, 1, "w");
-        }
-        if (permissions & S_IXGRP) {
-            pString.replace(5, 1, "x");
-        }
+    uint grp = permissions & S_IRWXG;
+    if (grp& S_IRGRP) {
+        pString.replace(3, 1, "r");
+    }
+    if (grp & S_IWGRP){
+        pString.replace(4, 1, "w");
+    }
+    if (grp & S_IXGRP) {
+        pString.replace(5, 1, "x");
     }
 
-    if ( permissions & S_IRWXO ) {
-        kDebug() << "full others permissions";
-        pString.replace(6, 3, "rwx");
-    } else {
-
-        if (permissions & S_IROTH) {
-            pString.replace(6, 1, "r");
-        }
-        if (permissions & S_IWOTH) {
-            pString.replace(7, 1, "w");
-        }
-        if (permissions & S_IXOTH) {
-            pString.replace(8, 1, "x");
-        }
+    uint oth = permissions & S_IRWXO;
+    if (oth & S_IROTH) {
+        pString.replace(6, 1, "r");
+    }
+    if (oth & S_IWOTH){
+        pString.replace(7, 1, "w");
+    }
+    if (oth & S_IXOTH) {
+        pString.replace(8, 1, "x");
     }
 
+    
     return pString;
 
 }
