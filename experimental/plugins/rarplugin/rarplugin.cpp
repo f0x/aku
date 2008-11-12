@@ -105,6 +105,14 @@ void RarPlugin::loadArchive(const KUrl &fileName)
 
     QStringList file;
 
+#ifdef Q_WS_WIN
+    // one more parsing correction on Win32
+    // since appears to be a newline char issue
+    for (int i = 0; i < splitList.count(); i++) {
+        splitList[i] = splitList[i].remove(splitList[i].size() - 1, 1);
+    }
+#endif
+
     for (int i = 0; i < splitList.size(); i++) {
         if ( i % 2 == 0 ) {
             file << splitList[i].mid(1); // filepath
