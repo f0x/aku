@@ -24,10 +24,12 @@
 
 AKU_PLUGIN_EXPORT(RarPlugin)
 
-// name of the executable
-const QString EXE_NAME = "unrar";
 // the list of files in the rar archive starts after this line
 const QString headerLine = "-------------------------------------------------------------------------------";
+
+// name of the executable
+QString exeName;
+
 
 RarPlugin::RarPlugin(QObject *parent, const QVariantList &args) : AkuPlugin(parent)
 {}
@@ -72,8 +74,7 @@ void RarPlugin::loadArchive(const KUrl &fileName)
    
     QStringList options;
     options << "v" << fileName.pathOrUrl();
-
-    process->start(EXE_NAME, options);
+    process->start(exeName, options);
     process->waitForFinished();
 
     QString output;
@@ -89,11 +90,16 @@ void RarPlugin::loadArchive(const KUrl &fileName)
     indexOfHeaderLine = output.indexOf(headerLine);
 
     output.remove(indexOfHeaderLine, output.length());
-    output.remove(0, 1);
-    output.remove(output.length() - 1, 1); //other parsing corrections
+
+    //kDebug() << output;
+    //output.remove(0, 1);
+    //output.remove(output.length() - 1, 1); //other parsing corrections
 
     QStringList splitList;
     splitList = output.split("\n"); // split at the newline
+
+    splitList.removeFirst();
+    splitList.removeLast();
 
     QVector<QStringList> archive;
 
@@ -141,13 +147,17 @@ bool RarPlugin::isWorkingProperly()
     // WARNING: this checks for unrar or rar with no distinction
     // TODO: decide whether we should support also the shareware rar
 
-    if (KStandardDirs::findExe("unrar").isEmpty()) {
-        if (!KStandardDirs::findExe("rar").isEmpty()) {
+    if (KStandardDirs::findExe("rar").isEmpty()) {
+        if (!KStandardDirs::findExe("unrar").isEmpty()) {
+            exeName = "unrar";
             return true;
         }
         return false;
     }
-    return true;
+    else {
+        exeName = "rar";
+        return true;
+    }
 }
 
 QStringList RarPlugin::additionalHeaderStrings()
