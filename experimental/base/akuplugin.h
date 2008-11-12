@@ -12,7 +12,7 @@
 #define AKUPLUGIN_H
 
 #include <QObject>
-#include <kdemacros.h>
+#include <aku_macros.h>
 
 /** \class AkuPlugin akuplugin.h
   * \brief Aku's Base Plugin Class for archive management
@@ -21,7 +21,8 @@
   */
 class KUrl;
 
-class KDE_EXPORT AkuPlugin : public QObject
+
+class AKU_EXPORT AkuPlugin : public QObject
 {
     Q_OBJECT
 
