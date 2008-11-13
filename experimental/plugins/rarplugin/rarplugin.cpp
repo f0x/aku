@@ -123,7 +123,7 @@ void RarPlugin::loadArchive(const KUrl &fileName)
                 if (j == 4) {
                     QDateTime modified(QDate::fromString(file[4], QString("dd-MM-yy")), 
                                        QTime::fromString(attributes[4], QString("hh:mm")));
-                    file[4] = modified.toString("dd-MM-yy hh:MM");
+                    file[4] = KGlobal::locale()->formatDateTime(modified);
                     continue;
                 }
 
