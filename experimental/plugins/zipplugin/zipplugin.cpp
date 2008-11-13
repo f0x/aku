@@ -106,7 +106,7 @@ void ZipPlugin::getEntries(const KArchiveEntry *rootEntry)
         return;
     }
 
-    if (rootEntry->name() != QDir::separator()) {
+    if (rootEntry->name() != "/" || rootEntry->name() != QDir::separator()) { // even on win32 the rootEntry is "/"
         m_currentPath.append(rootEntry->name());
     }
 
