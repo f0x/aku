@@ -66,14 +66,14 @@ void GZipPlugin::loadArchive(const KUrl &fileName)
     QFile gzFile(fileName.pathOrUrl());
 
     if(!gzFile.open(QIODevice::ReadOnly)) {
-        emit(i18n("Could not open file"));
+        emit error(i18n("Could not open file"));
     }
 
     char buffer[10];
     gzFile.read(buffer, 10);
 
     if ( (uint)buffer[0] != 31 && (uint)buffer[1] != 139) {
-        emit(error(i18n("Not valid gzip format")));
+        emiterror(i18n("Not valid gzip format"));
         return;
     }
 
@@ -81,7 +81,7 @@ void GZipPlugin::loadArchive(const KUrl &fileName)
     kDebug() << flag;
 
     if (!(flag & 8)) {
-        emit (error(i18n("File name not set")));
+        emit error(i18n("File name not set"));
         kDebug() << "file name not set";
         return;
     }
