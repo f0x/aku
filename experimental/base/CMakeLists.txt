@@ -2,11 +2,12 @@ project (libaku)
 
 set (akucore_SRCS
     akuplugin.cpp
+    akujobs.cpp
 )
 
 kde4_add_library(akucore SHARED ${akucore_SRCS})
 
-target_link_libraries(akucore ${KDE4_KDEUI_LIBS})
+target_link_libraries(akucore ${KDE4_KDEUI_LIBS} ${KDE4_THREADWEAVER_LIBRARIES})
 
 install(TARGETS akucore ${INSTALL_TARGETS_DEFAULT_ARGS})
 

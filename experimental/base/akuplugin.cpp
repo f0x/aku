@@ -8,8 +8,12 @@
    version 2 of the License, or (at your option) any later version.
 */
 #include "akuplugin.h"
+#include "akujobs.h"
 
 #include <QStringList>
+#include <QVector>
+
+Q_DECLARE_METATYPE(QVector<QStringList>)
 
 class AkuPlugin::AkuPluginPrivate {
 
@@ -75,4 +79,11 @@ QStringList AkuPlugin::additionalHeaderStrings()
 QWidget* AkuPlugin::configurationWidget()
 {
     return 0;
+}
+
+void AkuPlugin::load(const KUrl &fileName)
+{
+    qRegisterMetaType<QVector<QStringList> >();
+    KJob *job = new AkuJobs::LoadJob(fileName, this, this);
+    job->start();
 }

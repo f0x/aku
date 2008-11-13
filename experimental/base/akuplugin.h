@@ -75,6 +75,11 @@ class AKU_EXPORT AkuPlugin : public QObject
          */
         virtual QWidget* configurationWidget();
 
+        /**
+         * @internal
+         */
+        void load(const KUrl &fileName);
+
     signals:
         /**
          * emit this signal when the data is ready to be used.
