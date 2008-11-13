@@ -54,7 +54,7 @@ class AKU_EXPORT AkuPlugin : public QObject
          * At the end of this function emit archiveLoaded() and pass
          * the correct data.
          */
-        virtual void loadArchive(const KUrl &file);
+        virtual void loadArchive(const KUrl &file) = 0;
 
         /**
          * Return true if the plugin has all needed resources ready and working
@@ -76,9 +76,20 @@ class AKU_EXPORT AkuPlugin : public QObject
         virtual QWidget* configurationWidget();
 
         /**
-         * @internal
+         * This method should be reimplemented in order to allow archive extraction.
+         * If @param files is empty then the whole archive should be extracted.
+         */
+//         virtual void extractArchive(const KUrl &destination, const QStringList &files) = 0;
+
+        /**
+         * @internal used to load the archive in a threading way.
          */
         void load(const KUrl &fileName);
+
+        /**
+         * @internal used to extract the archive.
+         */
+        void extract(const KUrl &destination, const QStringList &files);
 
     signals:
         /**

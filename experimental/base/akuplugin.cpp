@@ -62,10 +62,6 @@ bool AkuPlugin::canDelete()
     return false;
 }
 
-void AkuPlugin::loadArchive(const KUrl &file)
-{
-}
-
 bool AkuPlugin::isWorkingProperly()
 {
     return false;
@@ -87,3 +83,6 @@ void AkuPlugin::load(const KUrl &fileName)
     KJob *job = new AkuJobs::LoadJob(fileName, this, this);
     job->start();
 }
+
+void AkuPlugin::extract(const KUrl &destination, const QStringList &files)
+{}

@@ -73,7 +73,7 @@ void GZipPlugin::loadArchive(const KUrl &fileName)
     gzFile.read(buffer, 10);
 
     if ( (uint)buffer[0] != 31 && (uint)buffer[1] != 139) {
-        emiterror(i18n("Not valid gzip format"));
+        emit error(i18n("Not valid gzip format"));
         return;
     }
 
