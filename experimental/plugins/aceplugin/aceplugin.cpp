@@ -130,7 +130,7 @@ void AcePlugin::loadArchive(const KUrl &fileName)
 
         QDateTime modified(QDate::fromString(attributes[0], QString("dd.MM.yy")), 
                                        QTime::fromString(attributes[1], QString("hh:mm")));
-        file << modified.toString("dd-MM-yy hh:MM");
+        file << KGlobal::locale()->formatDateTime(modified);
 
         archive << (QStringList() << file);
         file.clear();
@@ -145,9 +145,7 @@ bool AcePlugin::isWorkingProperly()
         exeName = "unace";
         return true;
     }
-    else {
-        return true;
-    }
+    return true;
 }
 
 QStringList AcePlugin::additionalHeaderStrings()
