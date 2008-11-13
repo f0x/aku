@@ -120,9 +120,9 @@ void MainWindow::openDialog()
 {
   // TODO: base suffixes on available plugins
   KUrl url = KFileDialog::getOpenUrl(KUrl("kfiledialog:///AkuOpenDir"), 
-                          i18n("*.rar *.7z *.zip *.bz2 *.gz *.tar|All supported types\n"
+                          i18n("*.rar *.7z *.zip *.bz2 *.gz *.tar *.ace|All supported types\n"
                                "*.rar|Rar archives\n*.7z|7-zip archives\n*.zip|Zip archives\n*.bz2|Tar archives (bzip)"
-                               "\n*.gz|Tar archives (gzip)\n*.tar|Tar archives\n*.*|All files"), this);
+                               "\n*.gz|Tar archives (gzip)\n*.tar|Tar archives\n*.ace|Ace archives\n*.*|All files"), this);
   if (!url.isEmpty()) {
     openArchive -> load(url);
   }
