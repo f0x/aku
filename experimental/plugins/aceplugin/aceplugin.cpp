@@ -122,6 +122,9 @@ void AcePlugin::loadArchive(const KUrl &fileName)
         
         splitList[i].truncate(43);
         attributes = splitList[i].split(QRegExp("\\s+"), QString::SkipEmptyParts);
+
+        // NOTE: ace format
+        // Date    |Time |Packed     |Size     |Ratio|File
         
         file << filePath;
         file << attributes[3];  // size
