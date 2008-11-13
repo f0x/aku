@@ -112,11 +112,11 @@ void AcePlugin::loadArchive(const KUrl &fileName)
         //while (filePath.at(filePath.size() - 1).isSpace()) {
         //   filePath.truncate(filePath.size() - 1);
         //}
-        for (int i = filePath.size() - 1; i >= 0; i--) {
-            if (filePath.at( i).isSpace()) {
+        for (int j = filePath.size() - 1; j >= 0; j--) {
+            if (filePath.at(j).isSpace()) {
                continue;
             }
-            filePath.truncate(i + 1);
+            filePath.truncate(j + 1);
             break;
         }
         
