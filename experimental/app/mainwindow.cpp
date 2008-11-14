@@ -181,6 +181,7 @@ void MainWindow::addPlugin(AkuPlugin *plugin, const KPluginInfo &info)
     connect(plugin, SIGNAL(archiveLoaded(const QVector<QStringList> &)),
             this, SLOT(showArchive(const QVector<QStringList> &)));
     connect(plugin, SIGNAL(error(const QString &)), this, SLOT(handleError(const QString &)));
+    connect(plugin, SIGNAL(percent(uint, uint)), this, SLOT(handleProgress(uint, uint)));
 
     foreach (const QString &mimeName, plugin->mimeTypeNames()) {
         KMimeType::Ptr mime = KMimeType::mimeType(mimeName);
@@ -244,4 +245,10 @@ void MainWindow::handleError(const QString &error)
 {
     AkuPlugin *sender = static_cast<AkuPlugin *>(this->sender());
     KMessageBox::error(this, error, i18n("Plugin error"));
+}
+
+void MainWindow::handleProgress(uint current, uint total)
+{
+    float percent = float((100 * current) / total);
+    kDebug() << percent;
 }

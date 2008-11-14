@@ -10,6 +10,11 @@
 #include "akujobs.h"
 #include "akuplugin.h"
 
+#include <QTimer>
+#include <QThread>
+
+#include <KDebug>
+
 namespace AkuJobs
 {
 
@@ -28,7 +33,11 @@ void LoadJob::start()
 
 void LoadJob::doWork()
 {
+//     QTimer *timer = new QTimer(QThread::currentThread());
+//     connect(timer, SIGNAL(timeout()), m_plugin, SLOT(emitPercent()));
+//     timer->start(500);
     m_plugin->loadArchive(m_fileName);
+//     timer->stop();
 }
 
 

@@ -18,10 +18,13 @@
 
 #include <QDir>
 #include <QDateTime>
+#include <QTimer>
+#include <QThread>
 
 AKU_PLUGIN_EXPORT(TarPlugin)
 
-TarPlugin::TarPlugin(QObject *parent, const QVariantList &args) : AkuPlugin(parent)
+TarPlugin::TarPlugin(QObject *parent, const QVariantList &args) : AkuPlugin(parent),
+                                                                  m_timer(0)
 {}
 
 TarPlugin::~TarPlugin()
@@ -64,14 +67,19 @@ bool TarPlugin::isWorkingProperly()
 
 void TarPlugin::loadArchive(const KUrl &filename)
 {
-    delete m_archive;
     m_archive = new KTar(filename.pathOrUrl());
-
 
     if (!m_archive->isOpen() && !m_archive->open(QIODevice::ReadOnly)) {
         emit error(i18n("An error occurred. Could not open archive <b>%1</b>").arg(m_archive->fileName()));
         return;
     }
+
+// //     if (!m_timer) {
+//         kDebug() << "STARTING TIMER";
+//         m_timer = new QTimer(QThread::currentThread());
+//         connect(m_timer, SIGNAL(timeout()), this, SLOT(emitPercent()));
+//         m_timer->start(1000);
+// //     }
 
     m_currentPath.clear();
     m_entries.clear();
@@ -80,10 +88,21 @@ void TarPlugin::loadArchive(const KUrl &filename)
 
     m_archive->close();
 
-
+//     kDebug() << "stopping timer";
+//     m_timer->stop();
     emit archiveLoaded(m_entries);
     m_entries.clear();
 
+}
+
+void TarPlugin::emitPercent()
+{
+    kDebug() << "percent";
+    if (!m_archive->isOpen()) {
+        return;
+    }
+
+    emit percent(m_archive->device()->pos(), 900000);
 }
 
 void TarPlugin::getEntries(const KArchiveEntry *rootEntry)

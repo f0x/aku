@@ -10,6 +10,8 @@
 #include "akuplugin.h"
 #include "akujobs.h"
 
+#include <KMessageBox>
+
 #include <QStringList>
 #include <QVector>
 
@@ -86,4 +88,7 @@ void AkuPlugin::load(const KUrl &fileName)
 }
 
 void AkuPlugin::extract(const KUrl &destination, const QStringList &files)
+{}
+
+void AkuPlugin::emitPercent()
 {}

@@ -18,6 +18,7 @@
 class KUrl;
 class KTar;
 class KArchiveEntry;
+class QTimer;
 
 class TarPlugin : public AkuPlugin
 {
@@ -44,9 +45,13 @@ class TarPlugin : public AkuPlugin
         KTar *m_archive;
         QVector<QStringList> m_entries;
         QString m_currentPath;
+        QTimer *m_timer;
 
         void getEntries(const KArchiveEntry *rootEntry);
         QString formatPermissions(mode_t permissions);
+
+    public slots:
+        void emitPercent();
 };
 
 #endif 

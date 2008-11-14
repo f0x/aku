@@ -63,6 +63,7 @@ class MainWindow : public KXmlGuiWindow
     void handleError(const QString &);
     void addRecentFile(KUrl);
     void changeView();
+    void handleProgress(uint current, uint total);
     
 };
 

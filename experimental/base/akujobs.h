@@ -37,6 +37,7 @@ class LoadJob : public KJob
 
 class AkuThread : public ThreadWeaver::Job
 {
+    Q_OBJECT
     public:
         AkuThread(LoadJob*);
 

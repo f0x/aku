@@ -107,6 +107,22 @@ class AKU_EXPORT AkuPlugin : public QObject
          */
         void error(const QString&);
 
+        /**
+         * emit this signal when you want to update percent status.
+         * This is pretty useful when the application implements a progressbar.
+         * @note emit this signal from within the reimplementation of emitPercent()
+         * @param processed the current value.
+         * @param total the total to reach.
+         */
+        void percent(uint processed, uint total);
+
+    public slots:
+        /**
+         * reimplement this slot and perform here percentage calculation
+         * of current progress. then call emit percent(uint processed, uint total);
+         */
+        virtual void emitPercent();
+
     private:
         class AkuPluginPrivate;
         AkuPluginPrivate *d;
