@@ -25,7 +25,14 @@
 AKU_PLUGIN_EXPORT(AcePlugin)
 
 // the list of files in the ace archive starts after this line
+
+// on Windows with unace32:
+#ifdef Q_WS_WIN
+const QString headerLine = " Date    |Time |Packed     |Size     |Ratio|File";
+#else
+// on Linux:
 const QString headerLine = "  Date    Time     Packed      Size  Ratio  File";
+#endif
 
 // name of the executable
 QString exeName;
@@ -109,7 +116,7 @@ void AcePlugin::loadArchive(const KUrl &fileName)
         // but we lose filename that starts with a whitespace.
         filePath = splitList[i].mid(44);
         // we have to truncate the pathname because the path is followed by many whitespaces
-        //while (filePath.at(filePath.size() - 1).isSpace()) {
+        // while (filePath.at(filePath.size() - 1).isSpace()) {
         //   filePath.truncate(filePath.size() - 1);
         //}
         for (int j = filePath.size() - 1; j >= 0; j--) {
@@ -124,7 +131,6 @@ void AcePlugin::loadArchive(const KUrl &fileName)
         attributes = splitList[i].split(QRegExp("\\s+"), QString::SkipEmptyParts);
 
         // NOTE: ace format
-        // Date    |Time |Packed     |Size     |Ratio|File
         
         file << filePath;
         file << attributes[3];  // size
@@ -144,11 +150,18 @@ void AcePlugin::loadArchive(const KUrl &fileName)
 
 bool AcePlugin::isWorkingProperly()
 {
+#ifdef Q_WS_WIN
+    if (!KStandardDirs::findExe("unace32").isEmpty()) {
+        exeName = "unace32";
+        return true;
+    }
+#else
     if (!KStandardDirs::findExe("unace").isEmpty()) {
         exeName = "unace";
         return true;
-    }
-    return true;
+    } 
+#endif
+    return false;
 }
 
 QStringList AcePlugin::additionalHeaderStrings()
