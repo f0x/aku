@@ -64,12 +64,11 @@ bool TarPlugin::isWorkingProperly()
 
 void TarPlugin::loadArchive(const KUrl &filename)
 {
-
+    delete m_archive;
     m_archive = new KTar(filename.pathOrUrl());
 
-    m_archive->open(QIODevice::ReadOnly);
 
-    if (!m_archive->isOpen()) {
+    if (!m_archive->isOpen() && !m_archive->open(QIODevice::ReadOnly)) {
         emit error(i18n("An error occurred. Could not open archive <b>%1</b>").arg(m_archive->fileName()));
         return;
     }
@@ -83,6 +82,7 @@ void TarPlugin::loadArchive(const KUrl &filename)
 
 
     emit archiveLoaded(m_entries);
+    m_entries.clear();
 
 }
 
@@ -103,12 +103,7 @@ void TarPlugin::getEntries(const KArchiveEntry *rootEntry)
     }
 
     if (rootEntry->name() != "/") { // even on win32 the rootEntry is "/"
-        m_currentPath.append(rootEntry->name());
-    }
-
-    // if we are here then the rootEntry is a dir.
-    if (!m_currentPath.isEmpty()) {
-        m_currentPath.append(QDir::separator());
+        m_currentPath.append(rootEntry->name() + QDir::separator());
     }
 
     const KArchiveDirectory *rootDir = static_cast<const KArchiveDirectory*>(rootEntry);

@@ -19,6 +19,7 @@ AkuTreeNode::AkuTreeNode(const QStringList &data, AkuTreeNode *parent) :
 AkuTreeNode::~AkuTreeNode()
 {
     qDeleteAll(childNodes);
+    childNodes.clear();
 }
 
 void AkuTreeNode::appendChild(AkuTreeNode *child)
