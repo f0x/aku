@@ -27,7 +27,9 @@ public:
 
 AkuPlugin::AkuPlugin(QObject *parent) : QObject(parent),
                                         d(new AkuPluginPrivate(this))
-{}
+{
+    qRegisterMetaType<QVector<QStringList> >();
+}
 
 AkuPlugin::~AkuPlugin()
 {}
@@ -79,7 +81,6 @@ QWidget* AkuPlugin::configurationWidget()
 
 void AkuPlugin::load(const KUrl &fileName)
 {
-    qRegisterMetaType<QVector<QStringList> >();
     KJob *job = new AkuJobs::LoadJob(fileName, this, this);
     job->start();
 }
