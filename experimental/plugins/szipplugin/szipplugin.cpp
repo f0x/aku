@@ -67,12 +67,12 @@ bool SzipPlugin::canDelete()
     return true;
 }
 
-void SzipPlugin::loadArchive(const KUrl &fileName)
+void SzipPlugin::loadArchive()
 {
     QProcess *process = new QProcess();
    
     QStringList options;
-    options << "l" << "-slt" << fileName.pathOrUrl();
+    options << "l" << "-slt" << m_fileName.pathOrUrl();
     process->start(exeName, options);
     process->waitForFinished();
     
@@ -142,6 +142,11 @@ bool SzipPlugin::isWorkingProperly()
         return true;
     }
     return false;
+}
+
+void SzipPlugin::init(const KUrl &fileName)
+{
+    m_fileName = fileName;
 }
 
 QStringList SzipPlugin::additionalHeaderStrings()
