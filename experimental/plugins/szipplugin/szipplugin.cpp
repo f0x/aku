@@ -130,7 +130,7 @@ void SzipPlugin::loadArchive()
        if (line.startsWith("Method =")) {
            file << line.mid(9);
            continue;
-       } 
+       }
        if (line.startsWith("Block =")) {
            file << line.mid(8);
            archive << file;

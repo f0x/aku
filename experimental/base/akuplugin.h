@@ -83,7 +83,7 @@ class AKU_EXPORT AkuPlugin : public QObject
 
         /**
          * Reimplement this method in order to perform standard initializing operations.
-         * Note that operations such as loadArchive and extractArchive are performed
+         * @note that operations such as loadArchive and extractArchive are performed
          * in an external thread so you might want to put in this function the initialization
          * of datas for every-time access. This method is called whenever a new archive needs
          * to be loaded.
