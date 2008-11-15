@@ -14,6 +14,8 @@ AkuExtractionDialog::AkuExtractionDialog(QWidget *parent) : KDialog(parent)
     QWidget *widget = new QWidget(this);
     ui.setupUi(widget);
     setMainWidget(widget);
+
+    setButtons(KDialog::Ok | KDialog::Cancel | KDialog::Default);
 }
 
 AkuExtractionDialog::~AkuExtractionDialog()
