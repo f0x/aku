@@ -24,8 +24,8 @@
 
 AKU_PLUGIN_EXPORT(SzipPlugin)
 
-// the list of files in the ace archive starts after this line
-const QString headerLine = "  Date    Time     Packed      Size  Ratio  File";
+// the list of files in the 7zip archive starts after this line
+const QString headerLine = "----------";
 
 // name of the executable
 QString exeName;
@@ -67,78 +67,69 @@ bool SzipPlugin::canDelete()
     return true;
 }
 
-void SzipPlugin::init(const KUrl &fileName)
+void SzipPlugin::loadArchive(const KUrl &fileName)
 {
-    m_fileName = fileName;
-}
-
-void SzipPlugin::loadArchive()
-{
-
     QProcess *process = new QProcess();
    
     QStringList options;
-    options << "l" << m_fileName.pathOrUrl();
+    options << "l" << "-slt" << fileName.pathOrUrl();
     process->start(exeName, options);
     process->waitForFinished();
-
+    
+    //QVector<QStringList> archive;
     QString output;
     output = process->readAllStandardOutput();
    
     int indexOfHeaderLine;
     indexOfHeaderLine = output.indexOf(headerLine);
-    
-    output.remove(0, indexOfHeaderLine);
-
-    QStringList splitList;
-    splitList = output.split("\n"); // split at the newline
-
-    // we have to remove the first two and the last three strings from the list
-    // the last string contains the general information of the archive
-
-    splitList.removeFirst();
-    splitList.removeFirst();
-    splitList.removeLast();
-    splitList.removeLast();
-    splitList.removeLast();
-
-    kDebug() << splitList;
+    output.remove(0, indexOfHeaderLine+10);
+    output.trimmed();
+    output = output.trimmed();
 
     QVector<QStringList> archive;
-    QString filePath;
-    QStringList attributes;
     QStringList file;
+    QStringList lines;
+    lines = output.split("\n");
+    float ratio;
+    QString ratioValue;    
 
-    for (int i = 0; i < splitList.size(); i++) {      
-        // a pathname starts at char 44. We can use the split string function with whitespace to take it,
-        // but we lose filename that starts with a whitespace.
-        filePath = splitList[i].mid(44);
-        // we have to truncate the pathname because the path is followed by many whitespaces
-        //while (filePath.at(filePath.size() - 1).isSpace()) {
-        //   filePath.truncate(filePath.size() - 1);
-        //}
-        for (int i = filePath.size() - 1; i >= 0; i--) {
-            if (filePath.at( i).isSpace()) {
-               continue;
-            }
-            filePath.truncate(i + 1);
-            break;
-        }
-        
-        splitList[i].truncate(43);
-        attributes = splitList[i].split(QRegExp("\\s+"), QString::SkipEmptyParts);
-        
-        file << filePath;
-        file << attributes[3];  // size
-        file << attributes[2];  // packed
-        file << attributes[4];  // ratio
+    foreach (const QString &line, lines) {
+       if (line.startsWith("Path =")) {
+           file << line.mid(7);
+       }
+       if (line.startsWith("Size =")) {
+           file << line.mid(7);
+       }
+       if (line.startsWith("Packed Size =")) {
+           file << line.mid(14);
+           // add the ratio value
 
-        QDateTime modified(QDate::fromString(attributes[0], QString("dd.MM.yy")), 
-                                       QTime::fromString(attributes[1], QString("hh:mm")));
-        file << modified.toString("dd-MM-yy hh:MM");
-
-        archive << (QStringList() << file);
-        file.clear();
+           ratio = 100 * file[2].toInt() / file[1].toInt();
+           ratioValue.setNum(ratio);
+           file << (ratioValue + "%");
+       }
+       if (line.startsWith("Modified =")) {
+           kDebug() << line.mid(11,10);
+           kDebug() << line.mid(22,5);
+           QDateTime modified(QDate::fromString(line.mid(11, 10), QString("yyyy-MM-dd")), 
+                              QTime::fromString(line.mid(22, 5), QString("hh:mm")));
+           file << KGlobal::locale()->formatDateTime(modified);
+       }
+       if (line.startsWith("Attributes =")) {
+           file << line.mid(13);
+       }
+       if (line.startsWith("CRC =")) {
+           file << line.mid(6);
+       } 
+       if (line.startsWith("Method =")) {
+           file << line.mid(9);
+       } 
+       if (line.startsWith("Block =")) {
+           file << line.mid(8);
+ 
+           archive << (QStringList() << file);
+           file.clear();
+       }  
     }
 
     emit archiveLoaded(archive);
@@ -146,16 +137,14 @@ void SzipPlugin::loadArchive()
 
 bool SzipPlugin::isWorkingProperly()
 {
-    if (!KStandardDirs::findExe("unace").isEmpty()) {
-        exeName = "unace";
+    if (!KStandardDirs::findExe("7z").isEmpty()) {
+        exeName = "7z";
         return true;
     }
-    else {
-        return true;
-    }
+    return false;
 }
 
 QStringList SzipPlugin::additionalHeaderStrings()
 {
-    return QStringList() << i18n("Ratio") << i18n("Modified");
+    return QStringList() << i18n("Ratio") << i18n("Modified") << i18n("Attributes") << i18n("CRC") << i18n("Method") << i18n("Block");
 }

@@ -35,13 +35,9 @@ class SzipPlugin : public AkuPlugin
 
         bool isWorkingProperly();
 
-        void loadArchive();
-        void init(const KUrl &fileName);
+        void loadArchive(const KUrl &fileName);
 
         QStringList additionalHeaderStrings();
-
-    private:
-        KUrl m_fileName;
 
 };
 
