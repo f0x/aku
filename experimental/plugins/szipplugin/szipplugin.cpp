@@ -91,7 +91,13 @@ void SzipPlugin::loadArchive()
     QStringList lines;
     lines = output.split("\n");
     float ratio;
-    QString ratioValue;    
+    QString ratioValue;   
+
+#ifdef Q_WS_WIN
+    for (int i = 0; i < lines.size(); i++) {
+        lines[i].resize(line.length() - 1);
+    }
+#endif 
 
     foreach (const QString &line, lines) {
        if (line.startsWith("Path =")) {
