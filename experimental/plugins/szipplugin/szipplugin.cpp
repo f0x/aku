@@ -133,10 +133,8 @@ void SzipPlugin::loadArchive()
        } 
        if (line.startsWith("Block =")) {
            file << line.mid(8);
- 
-           archive << (QStringList() << file);
+           archive << file;
            file.clear();
-           continue;
        }
     }
 
