@@ -95,7 +95,7 @@ void SzipPlugin::loadArchive()
 
 #ifdef Q_WS_WIN
     for (int i = 0; i < lines.size(); i++) {
-        lines[i].resize(line.length() - 1);
+        lines[i].resize(lines[i].length() - 1);
     }
 #endif 
 
