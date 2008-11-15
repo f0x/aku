@@ -19,8 +19,9 @@ set( aku_SRCS
      akuiconview.cpp
      akuiconwidget.cpp
      plugininfodelegate.cpp
+     akuextractiondialog.cpp
  )
-kde4_add_ui_files(aku_SRCS akuviewoptionwidget.ui)
+kde4_add_ui_files(aku_SRCS akuviewoptionwidget.ui extractiondialog.ui)
 
 kde4_add_executable(aku ${aku_SRCS})
 target_link_libraries(aku akucore ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS})

@@ -20,6 +20,7 @@ class OpenArchive;
 class AkuViewOptionWidget;
 class KPluginInfo;
 class QProgressBar;
+class AkuExtractionDialog;
 
 class MainWindow : public KXmlGuiWindow
 {
@@ -49,6 +50,7 @@ class MainWindow : public KXmlGuiWindow
     QAction *addDir;
     AkuViewOptionWidget *m_optionView;
     QProgressBar *m_progressBar;
+    AkuExtractionDialog *m_extractionDialog;
 
     KAction *actionDelete;
 
@@ -65,6 +67,7 @@ class MainWindow : public KXmlGuiWindow
     void changeView();
     void handleProgress(double current, double total);
     void completeOperations();
+    void extractionSlot();
     
 };
 

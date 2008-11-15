@@ -7,6 +7,7 @@
 #include "akuiconview.h"
 #include "akuviewoptionwidget.h"
 #include "akuiconwidget.h"
+#include "akuextractiondialog.h"
 
 #include <akuplugin.h>
 
@@ -56,6 +57,8 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent),
 
   openArchive = new OpenArchive(this);
   openArchive->setAvailablePlugins(m_plugins);
+
+  m_extractionDialog = new AkuExtractionDialog(this);
   setupOptionsWidget();
   setupActions();
   setupConnections();
@@ -97,6 +100,7 @@ void MainWindow::setupActions()
   actionExtract->setIcon(KIcon("archive-extract.png"));
   actionExtract->setText(i18n("Extract"));
   actionCollection()->addAction("extract", actionExtract);
+  connect(actionExtract, SIGNAL(triggered()), this, SLOT(extractionSlot()));
 
   actionAdd = new KActionMenu(this);
   actionAdd->setIcon(KIcon("archive-insert"));
@@ -168,6 +172,11 @@ void MainWindow::setupOptionsWidget()
     m_optionDialog->setCaption(i18n("Configuration"));
 
     m_optionDialog->resize(600, 400);
+}
+
+void MainWindow::extractionSlot()
+{
+    m_extractionDialog->exec();
 }
 
 void MainWindow::changeView()
