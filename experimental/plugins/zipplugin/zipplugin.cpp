@@ -64,11 +64,13 @@ bool ZipPlugin::isWorkingProperly()
     return true;
 }
 
-void ZipPlugin::loadArchive(const KUrl &filename)
+void ZipPlugin::init(const KUrl &fileName)
 {
+    m_archive = new KZip(fileName.pathOrUrl());
+}
 
-    m_archive = new KZip(filename.pathOrUrl());
-
+void ZipPlugin::loadArchive()
+{
     m_archive->open(QIODevice::ReadOnly);
 
     if (!m_archive->isOpen()) {

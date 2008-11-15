@@ -10,10 +10,13 @@
 #include "akuplugin.h"
 #include "akujobs.h"
 
-#include <KMessageBox>
+#include <KDebug>
+#include <KUrl>
 
 #include <QStringList>
 #include <QVector>
+
+#include <QTimer>
 
 Q_DECLARE_METATYPE(QVector<QStringList>)
 
@@ -21,16 +24,21 @@ class AkuPlugin::AkuPluginPrivate {
 
 public:
     AkuPluginPrivate(AkuPlugin *q):
-                     q(q)
-                     {}
+                     q(q),
+                     timer(new QTimer(q))
+    {}
 
     AkuPlugin *q;
+    QTimer *timer;
+    KUrl currentFile;
 };
 
 AkuPlugin::AkuPlugin(QObject *parent) : QObject(parent),
                                         d(new AkuPluginPrivate(this))
 {
     qRegisterMetaType<QVector<QStringList> >();
+    connect (this, SIGNAL(archiveLoaded(QVector<QStringList>)), this, SIGNAL(operationCompleted()));
+    connect (this, SIGNAL(operationCompleted()), this, SLOT(completeOperations()));
 }
 
 AkuPlugin::~AkuPlugin()
@@ -83,12 +91,30 @@ QWidget* AkuPlugin::configurationWidget()
 
 void AkuPlugin::load(const KUrl &fileName)
 {
-    KJob *job = new AkuJobs::LoadJob(fileName, this, this);
+    if (d->currentFile != fileName) {
+        kDebug() << "calling init";
+        init(fileName);
+    }
+
+    connect(d->timer, SIGNAL(timeout()), this, SLOT(emitPercent()));
+    d->timer->start(500);
+
+    KJob *job = new AkuJobs::LoadJob(this, this);
     job->start();
 }
 
-void AkuPlugin::extract(const KUrl &destination, const QStringList &files)
+void AkuPlugin::extract(const KUrl &fileName, const KUrl &destination, const QStringList &files)
 {}
 
 void AkuPlugin::emitPercent()
 {}
+
+void AkuPlugin::completeOperations()
+{
+    d->timer->stop();
+}
+
+void AkuPlugin::init(const KUrl &fileName)
+{
+    Q_UNUSED(fileName)
+}

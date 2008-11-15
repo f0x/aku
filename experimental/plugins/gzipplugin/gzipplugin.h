@@ -15,6 +15,7 @@
 #include <QVariantList>
 
 class KUrl;
+class QFile;
 
 class GZipPlugin : public AkuPlugin
 {
@@ -33,9 +34,13 @@ class GZipPlugin : public AkuPlugin
 
         bool isWorkingProperly();
 
-        void loadArchive(const KUrl &fileName);
+        void loadArchive();
+        void init(const KUrl &fileName);
 
         QStringList additionalHeaderStrings();
+
+        private:
+            QFile *gzFile;
 };
 
 #endif 

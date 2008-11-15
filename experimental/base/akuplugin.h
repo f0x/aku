@@ -52,9 +52,9 @@ class AKU_EXPORT AkuPlugin : public QObject
         /**
          * In the reimplementation of this function goes the real parsing process.
          * At the end of this function emit archiveLoaded() and pass
-         * the correct data.
+         * the correct data. Note that the archive path is given in the init() method.
          */
-        virtual void loadArchive(const KUrl &file) = 0;
+        virtual void loadArchive() = 0;
 
         /**
          * Return true if the plugin has all needed resources ready and working
@@ -79,7 +79,16 @@ class AKU_EXPORT AkuPlugin : public QObject
          * This method should be reimplemented in order to allow archive extraction.
          * If @param files is empty then the whole archive should be extracted.
          */
-//         virtual void extractArchive(const KUrl &destination, const QStringList &files) = 0;
+//         virtual void extractArchive(const QStringList &files) = 0;
+
+        /**
+         * Reimplement this method in order to perform standard initializing operations.
+         * Note that operations such as loadArchive and extractArchive are performed
+         * in an external thread so you might want to put in this function the initialization
+         * of datas for every-time access. This method is called whenever a new archive needs
+         * to be loaded.
+         */
+        virtual void init(const KUrl &fileName);
 
         /**
          * @internal used to load the archive in a threading way.
@@ -89,7 +98,7 @@ class AKU_EXPORT AkuPlugin : public QObject
         /**
          * @internal used to extract the archive.
          */
-        void extract(const KUrl &destination, const QStringList &files);
+        void extract(const KUrl &fileName, const KUrl &destination, const QStringList &files = QStringList());
 
     signals:
         /**
@@ -114,7 +123,13 @@ class AKU_EXPORT AkuPlugin : public QObject
          * @param processed the current value.
          * @param total the total to reach.
          */
-        void percent(uint processed, uint total);
+        void percent(double processed, double total);
+
+         /**
+          * @internal nobody should never care of this signal. 
+          * It is emitted automatically at the end of each operation.
+          */
+         void operationCompleted();
 
     public slots:
         /**
@@ -122,6 +137,10 @@ class AKU_EXPORT AkuPlugin : public QObject
          * of current progress. then call emit percent(uint processed, uint total);
          */
         virtual void emitPercent();
+
+    protected slots:
+        /// @internal
+        void completeOperations();
 
     private:
         class AkuPluginPrivate;

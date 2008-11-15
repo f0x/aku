@@ -18,7 +18,6 @@
 class KUrl;
 class KTar;
 class KArchiveEntry;
-class QTimer;
 
 class TarPlugin : public AkuPlugin
 {
@@ -37,7 +36,8 @@ class TarPlugin : public AkuPlugin
 
         bool isWorkingProperly();
 
-        void loadArchive(const KUrl &fileName);
+        void loadArchive();
+        void init(const KUrl &fileName);
 
         QStringList additionalHeaderStrings();
 
@@ -45,7 +45,7 @@ class TarPlugin : public AkuPlugin
         KTar *m_archive;
         QVector<QStringList> m_entries;
         QString m_currentPath;
-        QTimer *m_timer;
+        double size;
 
         void getEntries(const KArchiveEntry *rootEntry);
         QString formatPermissions(mode_t permissions);

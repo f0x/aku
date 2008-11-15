@@ -18,13 +18,11 @@
 
 #include <QDir>
 #include <QDateTime>
-#include <QTimer>
-#include <QThread>
 
 AKU_PLUGIN_EXPORT(TarPlugin)
 
 TarPlugin::TarPlugin(QObject *parent, const QVariantList &args) : AkuPlugin(parent),
-                                                                  m_timer(0)
+                                                                  size(0)
 {}
 
 TarPlugin::~TarPlugin()
@@ -65,21 +63,22 @@ bool TarPlugin::isWorkingProperly()
     return true;
 }
 
-void TarPlugin::loadArchive(const KUrl &filename)
+void TarPlugin::init(const KUrl &fileName)
 {
-    m_archive = new KTar(filename.pathOrUrl());
+    m_archive = new KTar(fileName.pathOrUrl());
 
+    QFile file(fileName.pathOrUrl());
+
+    size = (double)(file.size() * 1.7); // NOTE: absolutely arbitrary calculation of generic gzip compression ratio
+    kDebug() << "size" << size;
+}
+
+void TarPlugin::loadArchive()
+{
     if (!m_archive->isOpen() && !m_archive->open(QIODevice::ReadOnly)) {
         emit error(i18n("An error occurred. Could not open archive <b>%1</b>").arg(m_archive->fileName()));
         return;
     }
-
-// //     if (!m_timer) {
-//         kDebug() << "STARTING TIMER";
-//         m_timer = new QTimer(QThread::currentThread());
-//         connect(m_timer, SIGNAL(timeout()), this, SLOT(emitPercent()));
-//         m_timer->start(1000);
-// //     }
 
     m_currentPath.clear();
     m_entries.clear();
@@ -88,8 +87,6 @@ void TarPlugin::loadArchive(const KUrl &filename)
 
     m_archive->close();
 
-//     kDebug() << "stopping timer";
-//     m_timer->stop();
     emit archiveLoaded(m_entries);
     m_entries.clear();
 
@@ -102,7 +99,7 @@ void TarPlugin::emitPercent()
         return;
     }
 
-    emit percent(m_archive->device()->pos(), 900000);
+    emit percent((double)m_archive->device()->pos(), size);
 }
 
 void TarPlugin::getEntries(const KArchiveEntry *rootEntry)

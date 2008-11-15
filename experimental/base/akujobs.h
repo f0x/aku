@@ -24,7 +24,7 @@ class LoadJob : public KJob
 {
     Q_OBJECT
     public:
-        LoadJob(const KUrl& fileName, AkuPlugin *, QObject *parent = 0);
+        LoadJob( AkuPlugin *, QObject *parent = 0);
         ~LoadJob();
 
         void start();
@@ -32,7 +32,6 @@ class LoadJob : public KJob
 
     private:
         AkuPlugin *m_plugin;
-        KUrl m_fileName;
 };
 
 class AkuThread : public ThreadWeaver::Job

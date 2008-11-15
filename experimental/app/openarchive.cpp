@@ -17,7 +17,6 @@
 #include <KLocale>
 
 #include <QMap>
-#include <QTimer>
 
 OpenArchive::OpenArchive(QWidget *parent) : QObject(parent)
 {
@@ -40,9 +39,6 @@ void OpenArchive::load(const KUrl &url)
         if (m_availablePlugins[mimetype->name()]->isWorkingProperly()) {
             // this emit adds the url of the file loaded to recent files
             m_availablePlugins[mimetype->name()]->load(url);
-            QTimer *timer = new QTimer(this);
-            connect(timer, SIGNAL(timeout()), m_availablePlugins[mimetype->name()], SLOT(emitPercent()));
-            timer->start(500);
             emit fileLoaded(url);
         } else {
             KMessageBox::sorry(static_cast<QWidget*>(parent()),

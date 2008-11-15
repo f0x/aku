@@ -67,13 +67,18 @@ bool RarPlugin::canDelete()
     return true;
 }
 
-void RarPlugin::loadArchive(const KUrl &fileName)
+void RarPlugin::init(const KUrl &fileName)
+{
+    m_fileName = fileName;
+}
+
+void RarPlugin::loadArchive()
 {
 
     QProcess *process = new QProcess();
    
     QStringList options;
-    options << "v" << fileName.pathOrUrl();
+    options << "v" << m_fileName.pathOrUrl();
     process->start(exeName, options);
     process->waitForFinished();
 

@@ -67,13 +67,18 @@ bool SzipPlugin::canDelete()
     return true;
 }
 
-void SzipPlugin::loadArchive(const KUrl &fileName)
+void SzipPlugin::init(const KUrl &fileName)
+{
+    m_fileName = fileName;
+}
+
+void SzipPlugin::loadArchive()
 {
 
     QProcess *process = new QProcess();
    
     QStringList options;
-    options << "l" << fileName.pathOrUrl();
+    options << "l" << m_fileName.pathOrUrl();
     process->start(exeName, options);
     process->waitForFinished();
 

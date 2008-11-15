@@ -74,13 +74,18 @@ bool AcePlugin::canDelete()
     return true;
 }
 
-void AcePlugin::loadArchive(const KUrl &fileName)
+void AcePlugin::init(const KUrl &fileName)
+{
+    m_fileName = fileName;
+}
+
+void AcePlugin::loadArchive()
 {
 
     QProcess *process = new QProcess();
    
     QStringList options;
-    options << "l" << fileName.pathOrUrl();
+    options << "l" << m_fileName.pathOrUrl();
     process->start(exeName, options);
     process->waitForFinished();
 

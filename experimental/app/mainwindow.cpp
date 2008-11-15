@@ -23,13 +23,15 @@
 #include <KIcon>
 #include <KMessageBox>
 #include <KConfigGroup>
+#include <KStatusBar>
 
 #include <QListView>
 #include <QTreeView>
 #include <QProgressBar>
 
 MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent),
-                                          m_pluginView(new PluginView())
+                                          m_pluginView(new PluginView()),
+                                          m_progressBar(new QProgressBar(this))
 {
   m_model = new AkuTreeModel(QVector<QStringList>(), this);
   PluginLoader *loader = new PluginLoader(this);
@@ -46,6 +48,11 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent),
   iconWidget = new AkuIconWidget(splitter);
   treeView->setModel(m_model);
   iconWidget->view()->setModel(m_model);
+
+  statusBar()->insertPermanentWidget(0, m_progressBar);
+  m_progressBar->setMinimum(0);
+  m_progressBar->setMaximum(100);
+  m_progressBar->hide();
 
   openArchive = new OpenArchive(this);
   openArchive->setAvailablePlugins(m_plugins);
@@ -181,7 +188,8 @@ void MainWindow::addPlugin(AkuPlugin *plugin, const KPluginInfo &info)
     connect(plugin, SIGNAL(archiveLoaded(const QVector<QStringList> &)),
             this, SLOT(showArchive(const QVector<QStringList> &)));
     connect(plugin, SIGNAL(error(const QString &)), this, SLOT(handleError(const QString &)));
-    connect(plugin, SIGNAL(percent(uint, uint)), this, SLOT(handleProgress(uint, uint)));
+    connect(plugin, SIGNAL(percent(double, double)), this, SLOT(handleProgress(double, double)));
+    connect(plugin, SIGNAL(operationCompleted()), this, SLOT(completeOperations()));
 
     foreach (const QString &mimeName, plugin->mimeTypeNames()) {
         KMimeType::Ptr mime = KMimeType::mimeType(mimeName);
@@ -247,8 +255,18 @@ void MainWindow::handleError(const QString &error)
     KMessageBox::error(this, error, i18n("Plugin error"));
 }
 
-void MainWindow::handleProgress(uint current, uint total)
+void MainWindow::handleProgress(double current, double total)
 {
-    float percent = float((100 * current) / total);
-    kDebug() << percent;
+    if (!m_progressBar->isVisible()) {
+        m_progressBar->show();
+    }
+    kDebug() << current << total;
+    double percent = (double(100) * current) / total;
+    m_progressBar->setValue((uint)percent);
+    kDebug() << (uint)percent;
+}
+
+void MainWindow::completeOperations()
+{
+    m_progressBar->hide();
 }

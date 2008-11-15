@@ -39,7 +39,8 @@ class ZipPlugin : public AkuPlugin
 
         bool isWorkingProperly();
 
-        void loadArchive(const KUrl &fileName);
+        void loadArchive();
+        void init(const KUrl &fileName);
 
         QStringList additionalHeaderStrings();
 

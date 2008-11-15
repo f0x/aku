@@ -20,7 +20,8 @@
 
 AKU_PLUGIN_EXPORT(GZipPlugin)
 
-GZipPlugin::GZipPlugin(QObject *parent, const QVariantList &args) : AkuPlugin(parent)
+GZipPlugin::GZipPlugin(QObject *parent, const QVariantList &args) : AkuPlugin(parent),
+                                                                    gzFile(0)
 {}
 
 GZipPlugin::~GZipPlugin()
@@ -61,16 +62,22 @@ bool GZipPlugin::isWorkingProperly()
     return true;
 }
 
-void GZipPlugin::loadArchive(const KUrl &fileName)
+void GZipPlugin::init(const KUrl &fileName)
 {
-    QFile gzFile(fileName.pathOrUrl());
+    if (!gzFile) {
+        gzFile = new QFile(fileName.pathOrUrl());
+    }
+}
 
-    if(!gzFile.open(QIODevice::ReadOnly)) {
+void GZipPlugin::loadArchive()
+{
+
+    if(!gzFile->open(QIODevice::ReadOnly)) {
         emit error(i18n("Could not open file"));
     }
 
     char buffer[10];
-    gzFile.read(buffer, 10);
+    gzFile->read(buffer, 10);
 
     if ( (uint)buffer[0] != 31 && (uint)buffer[1] != 139) {
         emit error(i18n("Not valid gzip format"));
@@ -95,7 +102,7 @@ void GZipPlugin::loadArchive(const KUrl &fileName)
 
     // here we retrieve original file name
     while (c!='\0') {
-        gzFile.read(&c, 1);
+        gzFile->read(&c, 1);
         entryName.append(c);
     }
 
@@ -172,10 +179,10 @@ void GZipPlugin::loadArchive(const KUrl &fileName)
     QDateTime mDateTime = QDateTime::fromTime_t(mtime);
 
     // last 8 bytes contain crc32 + size (4 + 4)
-    gzFile.seek(gzFile.size() - 8);
+    gzFile->seek(gzFile->size() - 8);
     char endBlock[8];
-    gzFile.read(endBlock, 8);
-    gzFile.close();
+    gzFile->read(endBlock, 8);
+    gzFile->close();
 
     // size is 32 bit
     uint isize = (uchar)endBlock[4] | (uchar)endBlock[5] << 8 | (uchar)endBlock[6] << 16 | (uchar)endBlock[7] << 24;
@@ -183,7 +190,7 @@ void GZipPlugin::loadArchive(const KUrl &fileName)
 
     QStringList entry = QStringList() << entryName 
                                       << KGlobal::locale()->formatByteSize(isize) 
-                                      << KGlobal::locale()->formatByteSize(gzFile.size())
+                                      << KGlobal::locale()->formatByteSize(gzFile->size())
                                       << osType 
                                       << QString::number(crc32, 16)
                                       << KGlobal::locale()->formatDateTime(mDateTime);
