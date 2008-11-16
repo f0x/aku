@@ -24,7 +24,7 @@ set( aku_SRCS
 kde4_add_ui_files(aku_SRCS akuviewoptionwidget.ui extractiondialog.ui)
 
 kde4_add_executable(aku ${aku_SRCS})
-target_link_libraries(aku akucore ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS})
+target_link_libraries(aku akucore ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KFILE_LIBS})
 install(TARGETS aku DESTINATION ${BIN_INSTALL_DIR})
 install(FILES akuui.rc 
         DESTINATION ${DATA_INSTALL_DIR}/aku)

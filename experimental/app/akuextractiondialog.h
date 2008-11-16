@@ -12,6 +12,7 @@
 #define AKUEXTRACTIONDIALOG_H
 
 #include <KDialog>
+#include <KFileTreeView>
 
 #include "ui_extractiondialog.h"
 
@@ -24,6 +25,8 @@ class AkuExtractionDialog : public KDialog
 
     private:
         Ui::ExtractionDialog ui;
+        
+        KFileTreeView *dirView;
 
 };
 #endif

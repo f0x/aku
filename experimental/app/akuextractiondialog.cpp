@@ -14,7 +14,10 @@ AkuExtractionDialog::AkuExtractionDialog(QWidget *parent) : KDialog(parent)
     QWidget *widget = new QWidget(this);
     ui.setupUi(widget);
     setMainWidget(widget);
-
+    dirView = new KFileTreeView(widget);
+    dirView->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
+    ui.horizontalLayout->insertWidget(0, dirView);
+    
     setButtons(KDialog::Ok | KDialog::Cancel | KDialog::Default);
 }
 
