@@ -109,8 +109,8 @@ void AkuPlugin::extract(const KUrl &fileName, const KUrl &destination, const QSt
     }
 
     KJob *job = new AkuJobs::ExtractJob(this, destination, files, this);
-    connect(job, SIGNAL(finished(KJob *job)), this, SLOT(notifyExtractionComplete()));
-    connect(job, SIGNAL(finished(KJob *job)), this, SLOT(operationCompleted()));
+    connect(job, SIGNAL(finished(KJob *)), this, SIGNAL(notifyExtractionComplete()));
+    connect(job, SIGNAL(finished(KJob *)), this, SIGNAL(operationCompleted()));
     job->start();
 }
 

@@ -13,7 +13,10 @@
 #include <KDebug>
 #include <QDir>
 #include <QHeaderView>
+
 #include <kinputdialog.h>
+#include <KIO/Job>
+#include <KIcon>
 
 AkuExtractionDialog::AkuExtractionDialog(QWidget *parent) : KDialog(parent)
 {
@@ -27,18 +30,23 @@ AkuExtractionDialog::AkuExtractionDialog(QWidget *parent) : KDialog(parent)
     dirView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     dirView->setDirOnlyMode(true);
     ui.horizontalLayout->insertWidget(0, dirView);
+
     dirView-> setColumnHidden (1, true);
     dirView-> setColumnHidden (3, true);
     dirView-> setColumnHidden (4, true);
     dirView-> setColumnHidden (5, true);
     dirView-> setColumnHidden (6, true);
+
     dirView->header()->setResizeMode(0, QHeaderView::ResizeToContents );
     dirView->resizeColumnToContents(0);
+
     dirView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     dirView->setCurrentUrl(KUrl(QDir::homePath()));
     
     setButtons(KDialog::Ok | KDialog::Cancel | KDialog::Default);
     setCaption(i18n("Extraction path and options"));
+
+    ui.buttonNewDir->setIcon(KIcon("folder-new"));
 
     connect(this, SIGNAL(okClicked()), this, SLOT(slotExtraction()));
     connect(dirView, SIGNAL(currentChanged(const KUrl &)), this, SLOT(updateCombo(const KUrl &)));
@@ -64,6 +72,15 @@ void AkuExtractionDialog::createNewDir()
 {
     QString newDir;
     newDir = KInputDialog::getText(i18n("New Folder"), i18n("Enter a name for the new folder"),
-                                   "test", 0 , this);
+                                   "New Folder", 0 , this);
+
+    if (newDir.isEmpty()) {
+        return;
+    }
+
+    KUrl dir = dirView->selectedUrl();
+    dir.addPath(newDir);
+    KIO::mkdir(dir);
+    dirView->setCurrentUrl(dir);
     
 }
