@@ -10,6 +10,9 @@
 #include "akuextractiondialog.h"
 
 #include <KLocale>
+#include <KDebug>
+#include <QDir>
+#include <QHeaderView>
 
 AkuExtractionDialog::AkuExtractionDialog(QWidget *parent) : KDialog(parent)
 {
@@ -22,13 +25,22 @@ AkuExtractionDialog::AkuExtractionDialog(QWidget *parent) : KDialog(parent)
     dirView = new KFileTreeView(widget);
     dirView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     dirView->setDirOnlyMode(true);
-
     ui.horizontalLayout->insertWidget(0, dirView);
+    dirView-> setColumnHidden (1, true);
+    dirView-> setColumnHidden (3, true);
+    dirView-> setColumnHidden (4, true);
+    dirView-> setColumnHidden (5, true);
+    dirView-> setColumnHidden (6, true);
+    dirView->header()->setResizeMode(0, QHeaderView::ResizeToContents );
+    dirView->resizeColumnToContents(0);
+    dirView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    dirView->setCurrentUrl(KUrl(QDir::homePath()));
     
     setButtons(KDialog::Ok | KDialog::Cancel | KDialog::Default);
-    setCaption(i18n("Extraction"));
+    setCaption(i18n("Extraction path and options"));
 
     connect(this, SIGNAL(okClicked()), this, SLOT(slotExtraction()));
+    connect(dirView, SIGNAL(currentChanged(const KUrl &)), this, SLOT(updateCombo(const KUrl &)));
 }
 
 AkuExtractionDialog::~AkuExtractionDialog()
@@ -39,4 +51,9 @@ void AkuExtractionDialog::slotExtraction()
     // TODO: check whether the url has write permissions for
     //       the current user or not.
     emit extractionClicked(dirView->selectedUrl());
+}
+
+void AkuExtractionDialog::updateCombo(const KUrl localPath)
+{
+    ui.comboHistoryBox->setEditText(localPath.path());
 }
