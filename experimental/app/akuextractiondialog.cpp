@@ -9,16 +9,21 @@
 */ 
 #include "akuextractiondialog.h"
 
+#include <KLocale>
+
 AkuExtractionDialog::AkuExtractionDialog(QWidget *parent) : KDialog(parent)
 {
     QWidget *widget = new QWidget(this);
     ui.setupUi(widget);
     setMainWidget(widget);
+
     dirView = new KFileTreeView(widget);
-    dirView->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
+    dirView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
     ui.horizontalLayout->insertWidget(0, dirView);
     
     setButtons(KDialog::Ok | KDialog::Cancel | KDialog::Default);
+    setCaption(i18n("Extraction"));
 }
 
 AkuExtractionDialog::~AkuExtractionDialog()
