@@ -46,6 +46,8 @@ class MainWindow : public KXmlGuiWindow
     QAction *viewIcon;
     QAction *addFile;
     QAction *addDir;
+    QAction *actionHome;
+    QAction *actionDesktop;
     AkuViewOptionWidget *m_optionView;
     QProgressBar *m_progressBar;
     AkuExtractionDialog *m_extractionDialog;
@@ -71,7 +73,7 @@ class MainWindow : public KXmlGuiWindow
     void doExtraction(const KUrl &destination);
     void load(const KUrl &);
     void extractionCompleteSlot();
-    
+    void loadSettings();
 };
 
 #endif

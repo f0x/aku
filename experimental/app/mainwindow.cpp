@@ -59,6 +59,7 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent),
   setupActions();
   setupConnections();
   setupGUI(QSize(650,460)); 
+  loadSettings();
 }
 
 MainWindow::~MainWindow()
@@ -124,6 +125,21 @@ void MainWindow::setupConnections()
 {
   connect(viewTree, SIGNAL(triggered()), this, SLOT(changeView()));
   connect(viewIcon, SIGNAL(triggered()), this, SLOT(changeView()));
+}
+
+void MainWindow::loadSettings()
+{  
+   actionHome = new QAction(QDir().homePath(), this);
+   actionDesktop = new QAction(KGlobalSettings::desktopPath(), this);
+    
+   actionHome->setIcon(KIcon("user-home"));
+   actionDesktop->setIcon(KIcon("user-desktop"));
+   
+   actionHome->setData(QVariant(QDir().homePath()));
+   actionDesktop->setData(QVariant(KGlobalSettings::desktopPath()));   
+   actionExtract->addAction(actionHome);
+   actionExtract->addAction(actionDesktop);
+
 }
 
 void MainWindow::openDialog()
@@ -217,6 +233,7 @@ void MainWindow::doExtraction(const KUrl &destination)
 {
     // TODO: retrieve selected files to extract
     m_plugins[m_currentPlugin]->extract(m_currentUrl, destination);
+    
 }
 
 void MainWindow::changeView()
