@@ -114,6 +114,10 @@ void MainWindow::setupActions()
   actionDelete->setIcon(KIcon("archive-remove.png"));
   actionDelete->setText(i18n("Remove"));
   actionCollection()->addAction("delete", actionDelete);
+
+  actionExtract->setEnabled(false);
+  actionDelete->setEnabled(false);
+  actionAdd->setEnabled(false);
 }
 
 void MainWindow::setupConnections()
@@ -267,26 +271,26 @@ void MainWindow::showArchive(const QVector<QStringList> &archive)
         return;
     }
    
-    actionExtract->setEnabled(true);
-    actionDelete->setEnabled(true);
-    actionAdd->setEnabled(true);
+    actionExtract->setEnabled(false);
+    actionDelete->setEnabled(false);
+    actionAdd->setEnabled(false);
    
     // here we set additional per-plugin headers
     AkuPlugin *sender = static_cast<AkuPlugin*>(this->sender());
     m_model->setAdditionalHeaders(sender->additionalHeaderStrings());
  
-    if (!sender->canExtract()) {
-        actionExtract->setEnabled(false);
+    if (sender->canExtract()) {
+        actionExtract->setEnabled(true);
         actionExtract->setToolTip(i18n("Not supported by the current plugin"));
     }
 
-    if (!sender->canDelete()) {
-        actionDelete->setEnabled(false);
+    if (sender->canDelete()) {
+        actionDelete->setEnabled(true);
         actionDelete->setToolTip(i18n("Not supported by the current plugin"));
     }  
   
-    if (!sender->canAdd()) {
-        actionAdd->setEnabled(false);
+    if (sender->canAdd()) {
+        actionAdd->setEnabled(true);
         actionAdd->setToolTip(i18n("Not supported by the current plugin"));
     }    
 
