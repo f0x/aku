@@ -34,6 +34,7 @@ class AkuExtractionDialog : public KDialog
     private slots:
         void slotExtraction();
         void updateCombo(const KUrl localPath);
+        void createNewDir();
 
 };
 #endif

@@ -13,6 +13,7 @@
 #include <KDebug>
 #include <QDir>
 #include <QHeaderView>
+#include <kinputdialog.h>
 
 AkuExtractionDialog::AkuExtractionDialog(QWidget *parent) : KDialog(parent)
 {
@@ -41,6 +42,7 @@ AkuExtractionDialog::AkuExtractionDialog(QWidget *parent) : KDialog(parent)
 
     connect(this, SIGNAL(okClicked()), this, SLOT(slotExtraction()));
     connect(dirView, SIGNAL(currentChanged(const KUrl &)), this, SLOT(updateCombo(const KUrl &)));
+    connect(ui.buttonNewDir, SIGNAL(clicked()), this, SLOT(createNewDir()));
 }
 
 AkuExtractionDialog::~AkuExtractionDialog()
@@ -56,4 +58,12 @@ void AkuExtractionDialog::slotExtraction()
 void AkuExtractionDialog::updateCombo(const KUrl localPath)
 {
     ui.comboHistoryBox->setEditText(localPath.path());
+}
+
+void AkuExtractionDialog::createNewDir()
+{
+    QString newDir;
+    newDir = KInputDialog::getText(i18n("New Folder"), i18n("Enter a name for the new folder"),
+                                   "test", 0 , this);
+    
 }
