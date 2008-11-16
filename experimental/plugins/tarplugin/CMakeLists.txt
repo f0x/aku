@@ -2,6 +2,7 @@ project(tarplugin)
 
 set(tarplugin_SRCS
     tarplugin.cpp
+    ../karchiveutils/karchiveutils.cpp
 )
 
 kde4_add_plugin(aku_tarplugin ${tarplugin_SRCS})

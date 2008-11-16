@@ -9,6 +9,7 @@
 */ 
 
 #include "zipplugin.h"
+#include "../karchiveutils/karchiveutils.h"
 
 #include <QDir>
 
@@ -102,7 +103,7 @@ void ZipPlugin::getEntries(const KArchiveEntry *rootEntry)
                                     << QString::number(fileEntry->encoding()) // method
                                     << fileEntry->user() // owner
                                     << fileEntry->group() // group
-                                    << formatPermissions(fileEntry->permissions()) // permissions
+                                    << KArchiveUtils::formatPermissions(fileEntry->permissions()) // permissions
                                     << KGlobal::locale()->formatDateTime(fileEntry->datetime())
         );
         return;
@@ -126,69 +127,6 @@ QStringList ZipPlugin::additionalHeaderStrings()
 {
     return QStringList() << i18n("CRC") << i18n("Method") << i18n("Owner")
                          << i18n("Group") << i18n("Permissions") << i18n("CreationTime");
-}
-
-QString ZipPlugin::formatPermissions(mode_t permissions)
-{
-    QString pString = "---------"; // permission string
-
-    // we should convert mode_t to human readable permissions
-
-    // Owner permissions:
-    // S_IRWXU = rwx
-    // S_IRUSR = r
-    // S_IWUSR = w
-    // S_IXUSR = x
-
-    // Group permissions
-    // S_IRWXG = rwx
-    // S_IRGRP = r
-    // S_IWGRP = w
-    // S_IXGRP = x
-
-    // Others permissions
-    // S_IRWXO = rwx
-    // S_IROTH = r
-    // S_IWOTH = w
-    // S_IXOTH = x
-
-    // owner
-    uint own = permissions & S_IRWXU;
-    if (own & S_IRUSR) {
-        pString.replace(0, 1, "r");
-    }
-    if (own & S_IWUSR){
-        pString.replace(1, 1, "w");
-    }
-    if (own & S_IXUSR) {
-        pString.replace(2, 1, "x");
-    }
-
-    uint grp = permissions & S_IRWXG;
-    if (grp& S_IRGRP) {
-        pString.replace(3, 1, "r");
-    }
-    if (grp & S_IWGRP){
-        pString.replace(4, 1, "w");
-    }
-    if (grp & S_IXGRP) {
-        pString.replace(5, 1, "x");
-    }
-
-    uint oth = permissions & S_IRWXO;
-    if (oth & S_IROTH) {
-        pString.replace(6, 1, "r");
-    }
-    if (oth & S_IWOTH){
-        pString.replace(7, 1, "w");
-    }
-    if (oth & S_IXOTH) {
-        pString.replace(8, 1, "x");
-    }
-
-    
-    return pString;
-
 }
 
 QWidget* ZipPlugin::configurationWidget()

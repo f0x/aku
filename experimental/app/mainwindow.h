@@ -16,7 +16,6 @@ class QListView;
 class AkuTreeView;
 class AkuIconWidget;
 class AkuTreeModel;
-class OpenArchive;
 class AkuViewOptionWidget;
 class KPluginInfo;
 class QProgressBar;
@@ -35,7 +34,6 @@ class MainWindow : public KXmlGuiWindow
     AkuTreeView *treeView;
     AkuIconWidget *iconWidget;
     AkuTreeModel *m_model;
-    OpenArchive *openArchive;
     KDialog *m_optionDialog;
     PluginView *m_pluginView;
     QMap<QString, AkuPlugin*> m_plugins;
@@ -68,6 +66,8 @@ class MainWindow : public KXmlGuiWindow
     void handleProgress(double current, double total);
     void completeOperations();
     void extractionSlot();
+    void doExtraction();
+    void load(const KUrl &);
     
 };
 

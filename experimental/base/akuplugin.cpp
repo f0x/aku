@@ -104,7 +104,11 @@ void AkuPlugin::load(const KUrl &fileName)
 }
 
 void AkuPlugin::extract(const KUrl &fileName, const KUrl &destination, const QStringList &files)
-{}
+{
+    Q_UNUSED(fileName)
+    Q_UNUSED(destination)
+    Q_UNUSED(files)
+}
 
 void AkuPlugin::emitPercent()
 {}
@@ -117,4 +121,10 @@ void AkuPlugin::completeOperations()
 void AkuPlugin::init(const KUrl &fileName)
 {
     Q_UNUSED(fileName)
+}
+
+void AkuPlugin::extractArchive(const KUrl &destination, const QStringList &files)
+{
+    Q_UNUSED(destination)
+    Q_UNUSED(files)
 }

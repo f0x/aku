@@ -79,7 +79,7 @@ class AKU_EXPORT AkuPlugin : public QObject
          * This method should be reimplemented in order to allow archive extraction.
          * If @param files is empty then the whole archive should be extracted.
          */
-//         virtual void extractArchive(const QStringList &files) = 0;
+        virtual void extractArchive(const KUrl &destination, const QStringList &files);
 
         /**
          * Reimplement this method in order to perform standard initializing operations.

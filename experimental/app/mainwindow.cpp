@@ -3,7 +3,6 @@
 #include "pluginview.h"
 #include "akutreemodel.h"
 #include "akutreeview.h"
-#include "openarchive.h"
 #include "akuiconview.h"
 #include "akuviewoptionwidget.h"
 #include "akuiconwidget.h"
@@ -25,6 +24,7 @@
 #include <KMessageBox>
 #include <KConfigGroup>
 #include <KStatusBar>
+#include <KFileItem>
 
 #include <QListView>
 #include <QTreeView>
@@ -55,10 +55,6 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent),
   m_progressBar->setMaximum(100);
   m_progressBar->hide();
 
-  openArchive = new OpenArchive(this);
-  openArchive->setAvailablePlugins(m_plugins);
-
-  m_extractionDialog = new AkuExtractionDialog(this);
   setupOptionsWidget();
   setupActions();
   setupConnections();
@@ -81,7 +77,7 @@ void MainWindow::setupActions()
   KStandardAction::preferences(m_optionDialog, SLOT(exec()), actionCollection());
 
   // Open Recent Files
-  actionRecentFiles = KStandardAction::openRecent( openArchive, SLOT(load(const KUrl&)), actionCollection());
+  actionRecentFiles = KStandardAction::openRecent( this, SLOT(load(const KUrl&)), actionCollection());
   actionRecentFiles->loadEntries(KConfigGroup(KGlobal::config()->group("RecentFiles")));
 
   actionViewChoose = new KActionMenu(this);
@@ -122,7 +118,6 @@ void MainWindow::setupActions()
 
 void MainWindow::setupConnections()
 {
-  connect(openArchive, SIGNAL(fileLoaded(KUrl)), this, SLOT(addRecentFile(KUrl)));
   connect(viewTree, SIGNAL(triggered()), this, SLOT(changeView()));
   connect(viewIcon, SIGNAL(triggered()), this, SLOT(changeView()));
 }
@@ -135,8 +130,39 @@ void MainWindow::openDialog()
                                "*.rar|Rar archives\n*.7z|7-zip archives\n*.zip|Zip archives\n*.bz2|Tar archives (bzip)"
                                "\n*.gz|Tar archives (gzip)\n*.tar|Tar archives\n*.ace|Ace archives\n*.*|All files"), this);
   if (!url.isEmpty()) {
-    openArchive -> load(url);
+    load(url);
   }
+}
+
+void MainWindow::load(const KUrl &url)
+{
+    if (!KFileItem(KFileItem::Unknown, KFileItem::Unknown, url).isReadable()) {
+        // TODO: show an error
+        return;
+    }
+
+    KMimeType::Ptr mimetype = KMimeType::findByUrl(url);
+    kDebug() << mimetype -> name();
+
+    if (m_plugins.contains(mimetype->name())) {
+        if (m_plugins[mimetype->name()]->isWorkingProperly()) {
+            // this emit adds the url of the file loaded to recent files
+            m_plugins[mimetype->name()]->load(url);
+            addRecentFile(url);
+        } else {
+            KMessageBox::sorry(this,
+                           i18n("The correct plugin to open <b>%1</b> mimetype was found but appears to not be working properly. "
+                                "Please check the installation", mimetype->name()), 
+                           i18n("Unable to load archive"));
+        }
+
+    } else {
+        KMessageBox::detailedSorry(this,
+                           i18n("Sorry, no available plugin to open: <b>%1</b>.", url.pathOrUrl() ),
+                           i18n("Install a plugin for <b>%1</b> mimetype in order to load the archive."
+                           , mimetype->name()), 
+                           i18n("Unable to load archive"));
+    }
 }
 
 void MainWindow::addRecentFile(KUrl recent)
@@ -176,7 +202,14 @@ void MainWindow::setupOptionsWidget()
 
 void MainWindow::extractionSlot()
 {
+    m_extractionDialog = new AkuExtractionDialog(this);
+    connect(m_extractionDialog, SIGNAL(okClicked()), this, SLOT(doExtraction()));
     m_extractionDialog->exec();
+}
+
+void MainWindow::doExtraction()
+{
+    
 }
 
 void MainWindow::changeView()

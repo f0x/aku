@@ -13,6 +13,8 @@
 
 AkuExtractionDialog::AkuExtractionDialog(QWidget *parent) : KDialog(parent)
 {
+    setAttribute(Qt::WA_DeleteOnClose);
+
     QWidget *widget = new QWidget(this);
     ui.setupUi(widget);
     setMainWidget(widget);

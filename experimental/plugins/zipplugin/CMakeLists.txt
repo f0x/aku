@@ -7,6 +7,7 @@ include_directories(
 
 set(zipplugin_SRCS
     zipplugin.cpp
+    ../karchiveutils/karchiveutils.cpp
 )
 
 kde4_add_ui_files(zipplugin_SRCS zipconfig.ui)

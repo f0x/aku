@@ -39,6 +39,8 @@ class TarPlugin : public AkuPlugin
         void loadArchive();
         void init(const KUrl &fileName);
 
+        void extractArchive(const KUrl &destination, const QStringList &files);
+
         QStringList additionalHeaderStrings();
 
     private:
@@ -48,7 +50,6 @@ class TarPlugin : public AkuPlugin
         double size;
 
         void getEntries(const KArchiveEntry *rootEntry);
-        QString formatPermissions(mode_t permissions);
 
     public slots:
         void emitPercent();

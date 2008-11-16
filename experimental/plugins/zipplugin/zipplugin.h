@@ -55,7 +55,6 @@ class ZipPlugin : public AkuPlugin
         QString m_currentPath;
 
         void getEntries(const KArchiveEntry *rootEntry);
-        QString formatPermissions(mode_t permissions);
 
 };
 
