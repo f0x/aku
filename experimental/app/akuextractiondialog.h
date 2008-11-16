@@ -28,5 +28,11 @@ class AkuExtractionDialog : public KDialog
         
         KFileTreeView *dirView;
 
+    signals:
+        void extractionClicked(const KUrl &destination);
+
+    private slots:
+        void slotExtraction();
+
 };
 #endif

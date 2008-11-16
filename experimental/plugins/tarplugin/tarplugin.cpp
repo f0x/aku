@@ -145,9 +145,5 @@ void TarPlugin::extractArchive(const KUrl &destination, const QStringList &files
         return;
     }
 
-    if (files.isEmpty()) {
-        const KArchiveDirectory *mainDir = static_cast<const KArchiveDirectory*>(m_archive->directory());
-        mainDir->copyTo(destination.pathOrUrl());
-        return;
-    }
+    KArchiveUtils::extractArchive(m_archive, destination, files);
 }

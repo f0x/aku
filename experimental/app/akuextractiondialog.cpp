@@ -21,12 +21,22 @@ AkuExtractionDialog::AkuExtractionDialog(QWidget *parent) : KDialog(parent)
 
     dirView = new KFileTreeView(widget);
     dirView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    dirView->setDirOnlyMode(true);
 
     ui.horizontalLayout->insertWidget(0, dirView);
     
     setButtons(KDialog::Ok | KDialog::Cancel | KDialog::Default);
     setCaption(i18n("Extraction"));
+
+    connect(this, SIGNAL(okClicked()), this, SLOT(slotExtraction()));
 }
 
 AkuExtractionDialog::~AkuExtractionDialog()
 {}
+
+void AkuExtractionDialog::slotExtraction()
+{
+    // TODO: check whether the url has write permissions for
+    //       the current user or not.
+    emit extractionClicked(dirView->selectedUrl());
+}

@@ -92,7 +92,6 @@ QWidget* AkuPlugin::configurationWidget()
 void AkuPlugin::load(const KUrl &fileName)
 {
     if (d->currentFile != fileName) {
-        kDebug() << "calling init";
         init(fileName);
     }
 
@@ -105,9 +104,14 @@ void AkuPlugin::load(const KUrl &fileName)
 
 void AkuPlugin::extract(const KUrl &fileName, const KUrl &destination, const QStringList &files)
 {
-    Q_UNUSED(fileName)
-    Q_UNUSED(destination)
-    Q_UNUSED(files)
+    if (d->currentFile != fileName) {
+        init(fileName);
+    }
+
+    KJob *job = new AkuJobs::ExtractJob(this, destination, files, this);
+    connect(job, SIGNAL(finished(KJob *job)), this, SLOT(notifyExtractionComplete()));
+    connect(job, SIGNAL(finished(KJob *job)), this, SLOT(operationCompleted()));
+    job->start();
 }
 
 void AkuPlugin::emitPercent()

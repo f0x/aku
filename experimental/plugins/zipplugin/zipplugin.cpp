@@ -133,3 +133,13 @@ QWidget* ZipPlugin::configurationWidget()
 {
     return m_widget;
 }
+
+void ZipPlugin::extractArchive(const KUrl &destination, const QStringList &files)
+{
+    if (!m_archive->isOpen() && !m_archive->open(QIODevice::ReadOnly)) {
+        emit error(i18n("An error occurred. Could not open archive <b>%1</b> for extraction").arg(m_archive->fileName()));
+        return;
+    }
+
+    KArchiveUtils::extractArchive(m_archive, destination, files);
+}

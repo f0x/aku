@@ -16,33 +16,63 @@
 #include <ThreadWeaver/Job>
 #include <ThreadWeaver/Weaver>
 
+#include <QStringList>
+
 class AkuPlugin;
 
 namespace AkuJobs
 {
-class LoadJob : public KJob
+
+class AkuJob : public KJob
 {
     Q_OBJECT
     public:
-        LoadJob( AkuPlugin *, QObject *parent = 0);
-        ~LoadJob();
+        AkuJob(QObject *parent = 0) : KJob(parent)
+        {}
+        virtual ~AkuJob() {}
 
         void start();
+        virtual void doWork() = 0;
+};
+
+
+class LoadJob : public AkuJob
+{
+    Q_OBJECT
+    public:
+        LoadJob(AkuPlugin *, QObject *parent = 0);
+        ~LoadJob();
+
         void doWork();
 
     private:
         AkuPlugin *m_plugin;
 };
 
+class ExtractJob : public AkuJob
+{
+    Q_OBJECT
+    public:
+        ExtractJob(AkuPlugin *, const KUrl &destination, QStringList files = QStringList(), QObject *parent = 0);
+        ~ExtractJob();
+
+        void doWork();
+
+    private:
+        AkuPlugin *m_plugin;
+        KUrl m_destination;
+        QStringList m_files;
+};
+
 class AkuThread : public ThreadWeaver::Job
 {
     Q_OBJECT
     public:
-        AkuThread(LoadJob*);
+        AkuThread(AkuJob*);
 
     private:
         void run();
-        LoadJob *m_job;
+        AkuJob *m_job;
 };
 };
 

@@ -42,6 +42,8 @@ class ZipPlugin : public AkuPlugin
         void loadArchive();
         void init(const KUrl &fileName);
 
+        void extractArchive(const KUrl &destination, const QStringList &files);
+
         QStringList additionalHeaderStrings();
 
         QWidget* configurationWidget();

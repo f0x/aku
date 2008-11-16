@@ -49,6 +49,8 @@ class MainWindow : public KXmlGuiWindow
     AkuViewOptionWidget *m_optionView;
     QProgressBar *m_progressBar;
     AkuExtractionDialog *m_extractionDialog;
+    QString m_currentPlugin;
+    KUrl m_currentUrl;
 
     KAction *actionDelete;
 
@@ -66,8 +68,9 @@ class MainWindow : public KXmlGuiWindow
     void handleProgress(double current, double total);
     void completeOperations();
     void extractionSlot();
-    void doExtraction();
+    void doExtraction(const KUrl &destination);
     void load(const KUrl &);
+    void extractionCompleteSlot();
     
 };
 

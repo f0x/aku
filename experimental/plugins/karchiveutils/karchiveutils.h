@@ -12,9 +12,13 @@
 
 #include <KArchive>
 
+class KUrl;
+class QStringList;
+
 namespace KArchiveUtils
 {
     QString formatPermissions(mode_t permissions);
+    void extractArchive(KArchive *archive, const KUrl &destination, const QStringList &files = QStringList());
     
 };
 

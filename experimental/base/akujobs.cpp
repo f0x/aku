@@ -12,21 +12,22 @@
 
 #include <KDebug>
 
+
 namespace AkuJobs
 {
 
-LoadJob::LoadJob(AkuPlugin *plugin, QObject *parent) :
-                  KJob(parent), m_plugin(plugin)
-{}
-
-LoadJob::~LoadJob()
-{}
-
-void LoadJob::start()
+void AkuJob::start()
 {
     AkuThread *thread = new AkuThread(this);
     ThreadWeaver::Weaver::instance()->enqueue(thread);
 }
+
+LoadJob::LoadJob(AkuPlugin *plugin, QObject *parent) :
+                  AkuJob(parent), m_plugin(plugin)
+{}
+
+LoadJob::~LoadJob()
+{}
 
 void LoadJob::doWork()
 {
@@ -34,8 +35,20 @@ void LoadJob::doWork()
 
 }
 
+ExtractJob::ExtractJob(AkuPlugin *plugin, const KUrl &destination, QStringList files, QObject *parent) :
+                  AkuJob(parent), m_plugin(plugin), m_destination(destination), m_files(files)
+{}
 
-AkuThread::AkuThread(LoadJob *job) : m_job(job)
+ExtractJob::~ExtractJob()
+{}
+
+void ExtractJob::doWork()
+{
+    m_plugin->extractArchive(m_destination, m_files);
+
+}
+
+AkuThread::AkuThread(AkuJob *job) : m_job(job)
 {
 }
 

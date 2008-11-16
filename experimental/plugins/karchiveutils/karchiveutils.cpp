@@ -10,11 +10,15 @@
 
 #include "karchiveutils.h"
 
+#include <QStringList>
+
+#include <KUrl>
+
 namespace KArchiveUtils
 {
 QString formatPermissions(mode_t permissions)
 {
-QString pString = "---------"; // permission string
+    QString pString = "---------"; // permission string
 
     // we should convert mode_t to human readable permissions
 
@@ -72,6 +76,15 @@ QString pString = "---------"; // permission string
 
     
     return pString;
+}
+
+void extractArchive(KArchive *m_archive, const KUrl &destination, const QStringList &files)
+{
+    if (files.isEmpty()) {
+        const KArchiveDirectory *mainDir = static_cast<const KArchiveDirectory*>(m_archive->directory());
+        mainDir->copyTo(destination.pathOrUrl());
+        return;
+    }
 }
 
 }

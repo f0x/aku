@@ -130,6 +130,7 @@ void MainWindow::openDialog()
                                "*.rar|Rar archives\n*.7z|7-zip archives\n*.zip|Zip archives\n*.bz2|Tar archives (bzip)"
                                "\n*.gz|Tar archives (gzip)\n*.tar|Tar archives\n*.ace|Ace archives\n*.*|All files"), this);
   if (!url.isEmpty()) {
+    m_currentUrl = url;
     load(url);
   }
 }
@@ -147,6 +148,7 @@ void MainWindow::load(const KUrl &url)
     if (m_plugins.contains(mimetype->name())) {
         if (m_plugins[mimetype->name()]->isWorkingProperly()) {
             // this emit adds the url of the file loaded to recent files
+            m_currentPlugin = mimetype->name();
             m_plugins[mimetype->name()]->load(url);
             addRecentFile(url);
         } else {
@@ -203,13 +205,14 @@ void MainWindow::setupOptionsWidget()
 void MainWindow::extractionSlot()
 {
     m_extractionDialog = new AkuExtractionDialog(this);
-    connect(m_extractionDialog, SIGNAL(okClicked()), this, SLOT(doExtraction()));
+    connect(m_extractionDialog, SIGNAL(extractionClicked(const KUrl &)), this, SLOT(doExtraction(const KUrl &)));
     m_extractionDialog->exec();
 }
 
-void MainWindow::doExtraction()
+void MainWindow::doExtraction(const KUrl &destination)
 {
-    
+    // TODO: retrieve selected files to extract
+    m_plugins[m_currentPlugin]->extract(m_currentUrl, destination);
 }
 
 void MainWindow::changeView()
@@ -232,6 +235,7 @@ void MainWindow::addPlugin(AkuPlugin *plugin, const KPluginInfo &info)
     connect(plugin, SIGNAL(error(const QString &)), this, SLOT(handleError(const QString &)));
     connect(plugin, SIGNAL(percent(double, double)), this, SLOT(handleProgress(double, double)));
     connect(plugin, SIGNAL(operationCompleted()), this, SLOT(completeOperations()));
+    connect(plugin, SIGNAL(notifyExtractionComplete()), this, SLOT(extractionCompleteSlot()));
 
     foreach (const QString &mimeName, plugin->mimeTypeNames()) {
         KMimeType::Ptr mime = KMimeType::mimeType(mimeName);
@@ -295,6 +299,11 @@ void MainWindow::handleError(const QString &error)
 {
     AkuPlugin *sender = static_cast<AkuPlugin *>(this->sender());
     KMessageBox::error(this, error, i18n("Plugin error"));
+}
+
+void MainWindow::extractionCompleteSlot()
+{
+    KMessageBox::information(this, i18n("Extraction process complete"), i18n("Extraction"));
 }
 
 void MainWindow::handleProgress(double current, double total)

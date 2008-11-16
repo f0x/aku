@@ -131,6 +131,11 @@ class AKU_EXPORT AkuPlugin : public QObject
           */
          void operationCompleted();
 
+         /**
+          * @internal notifies the end of the extraction process.
+          */
+         void notifyExtractionComplete();
+
     public slots:
         /**
          * reimplement this slot and perform here percentage calculation
