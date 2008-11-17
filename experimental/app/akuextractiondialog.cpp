@@ -19,7 +19,8 @@
 #include <KIO/Job>
 #include <KIcon>
 
-AkuExtractionDialog::AkuExtractionDialog(QWidget *parent) : KDialog(parent)
+AkuExtractionDialog::AkuExtractionDialog(QWidget *parent) : KDialog(parent),
+                                                            m_wparent(0), m_awidget(0)
 {
     setAttribute(Qt::WA_DeleteOnClose);
 
@@ -72,7 +73,11 @@ AkuExtractionDialog::AkuExtractionDialog(QWidget *parent) : KDialog(parent)
 }
 
 AkuExtractionDialog::~AkuExtractionDialog()
-{}
+{
+    if (m_awidget) {
+        m_awidget->setParent(static_cast<QWidget*>(m_wparent));
+    }
+}
 
 void AkuExtractionDialog::slotExtraction()
 {
@@ -108,9 +113,7 @@ void AkuExtractionDialog::setAdvancedWidget(QWidget *widget)
         return;
     }
 
-    for (int i = 0; i < ui.advancedLayout->count(); i++) {
-        ui.advancedLayout->removeItem(ui.advancedLayout->itemAt(i));
-    }
-
+    m_wparent = widget->parent();
+    m_awidget = widget;
     ui.advancedLayout->addWidget(widget);
 }

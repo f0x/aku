@@ -29,6 +29,8 @@ class AkuExtractionDialog : public KDialog
         Ui::ExtractionDialog ui;
         
         KFileTreeView *dirView;
+        QObject *m_wparent;
+        QWidget *m_awidget;
 
     signals:
         void extractionClicked(const KUrl &destination);
