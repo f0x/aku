@@ -297,8 +297,11 @@ void MainWindow::showArchive(const QVector<QStringList> &archive)
     }
    
     actionExtract->setEnabled(false);
+    actionExtract->setToolTip(i18n("Not supported by the current plugin"));
     actionDelete->setEnabled(false);
+    actionDelete->setToolTip(i18n("Not supported by the current plugin"));
     actionAdd->setEnabled(false);
+    actionAdd->setToolTip(i18n("Not supported by the current plugin"));
    
     // here we set additional per-plugin headers
     AkuPlugin *sender = static_cast<AkuPlugin*>(this->sender());
@@ -306,18 +309,18 @@ void MainWindow::showArchive(const QVector<QStringList> &archive)
  
     if (sender->canExtract()) {
         actionExtract->setEnabled(true);
-        actionExtract->setToolTip(i18n("Not supported by the current plugin"));
+        actionExtract->setToolTip("");
     }
 
     if (sender->canDelete()) {
         actionDelete->setEnabled(true);
-        actionDelete->setToolTip(i18n("Not supported by the current plugin"));
+        actionDelete->setToolTip("");
     }  
   
     if (sender->canAdd()) {
         actionAdd->setEnabled(true);
-        actionAdd->setToolTip(i18n("Not supported by the current plugin"));
-    }    
+        actionAdd->setToolTip("");
+    }
 
     currentArchive = archive;
 
