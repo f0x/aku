@@ -189,7 +189,10 @@ void MainWindow::load(const KUrl &url)
 
 void MainWindow::addRecentFile(KUrl recent)
 {
-   actionRecentFiles -> addUrl(recent);
+    if (actionRecentFiles->maxItems() >= actionRecentFiles->urls().count()) {
+        actionRecentFiles->removeUrl(actionRecentFiles->urls().first());
+    }
+    actionRecentFiles -> addUrl(recent);
 }
 
 void MainWindow::setupOptionsWidget()
