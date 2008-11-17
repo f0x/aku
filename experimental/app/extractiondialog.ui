@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>398</width>
-    <height>371</height>
+    <width>470</width>
+    <height>294</height>
    </rect>
   </property>
   <property name="minimumSize" >
@@ -62,17 +62,14 @@
              </property>
              <property name="sizeHint" stdset="0" >
               <size>
-               <width>16</width>
-               <height>5</height>
+               <width>20</width>
+               <height>13</height>
               </size>
              </property>
             </spacer>
            </item>
            <item>
             <layout class="QGridLayout" name="gridLayout" >
-             <property name="horizontalSpacing" >
-              <number>4</number>
-             </property>
              <item row="0" column="0" >
               <widget class="QLabel" name="labelHigh" >
                <property name="sizePolicy" >
@@ -91,11 +88,11 @@
                 <string>Overwrite Mode:</string>
                </property>
                <property name="alignment" >
-                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                </property>
               </widget>
              </item>
-             <item row="0" column="2" >
+             <item row="0" column="1" >
               <widget class="KComboBox" name="comboHigh" >
                <property name="sizePolicy" >
                 <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
@@ -135,8 +132,8 @@
                </property>
                <property name="sizeHint" stdset="0" >
                 <size>
-                 <width>177</width>
-                 <height>5</height>
+                 <width>20</width>
+                 <height>13</height>
                 </size>
                </property>
               </spacer>
@@ -159,11 +156,11 @@
                 <string>File Paths:</string>
                </property>
                <property name="alignment" >
-                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                </property>
               </widget>
              </item>
-             <item row="2" column="2" >
+             <item row="2" column="1" >
               <widget class="QCheckBox" name="checkFullPath" >
                <property name="sizePolicy" >
                 <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
@@ -189,8 +186,8 @@
                </property>
                <property name="sizeHint" stdset="0" >
                 <size>
-                 <width>177</width>
-                 <height>5</height>
+                 <width>20</width>
+                 <height>13</height>
                 </size>
                </property>
               </spacer>
@@ -198,7 +195,7 @@
              <item row="4" column="0" >
               <widget class="QLabel" name="labelLow" >
                <property name="sizePolicy" >
-                <sizepolicy vsizetype="Preferred" hsizetype="Fixed" >
+                <sizepolicy vsizetype="Preferred" hsizetype="Minimum" >
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
@@ -213,11 +210,11 @@
                 <string>Miscellaneous:</string>
                </property>
                <property name="alignment" >
-                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                </property>
               </widget>
              </item>
-             <item row="4" column="2" >
+             <item row="4" column="1" >
               <widget class="QCheckBox" name="checkDestinationPath" >
                <property name="sizePolicy" >
                 <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
@@ -230,22 +227,6 @@
                </property>
               </widget>
              </item>
-             <item row="0" column="1" >
-              <spacer name="horizontalSpacer_4" >
-               <property name="orientation" >
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeType" >
-                <enum>QSizePolicy::Minimum</enum>
-               </property>
-               <property name="sizeHint" stdset="0" >
-                <size>
-                 <width>10</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
             </layout>
            </item>
            <item>
@@ -254,12 +235,12 @@
               <enum>Qt::Vertical</enum>
              </property>
              <property name="sizeType" >
-              <enum>QSizePolicy::Fixed</enum>
+              <enum>QSizePolicy::Minimum</enum>
              </property>
              <property name="sizeHint" stdset="0" >
               <size>
                <width>20</width>
-               <height>8</height>
+               <height>13</height>
               </size>
              </property>
             </spacer>
