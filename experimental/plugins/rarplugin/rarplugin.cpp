@@ -75,15 +75,15 @@ void RarPlugin::init(const KUrl &fileName)
 void RarPlugin::loadArchive()
 {
 
-    QProcess *process = new QProcess();
+    QProcess process;
    
     QStringList options;
     options << "v" << m_fileName.pathOrUrl();
-    process->start(exeName, options);
-    process->waitForFinished();
+    process.start(exeName, options);
+    process.waitForFinished();
 
     QString output;
-    output = process->readAllStandardOutput();
+    output = process.readAllStandardOutput();
    
     int indexOfHeaderLine;
     indexOfHeaderLine = output.indexOf(headerLine);
@@ -178,4 +178,18 @@ QStringList RarPlugin::additionalHeaderStrings()
     return QStringList() << i18n("Ratio") << i18n("Modified")
                          << i18n("Attributes") << i18n("CRC")
                          << i18n("Method") << i18n("Version") << i18n("Mimetype");
+}
+
+void RarPlugin::extractArchive(const KUrl &destination, const QStringList &files)
+{
+//    Usage:     unrar <command> -<switch 1> -<switch N> <archive> <files...>
+//               <@listfiles...> <path_to_extract\> 
+    QProcess process;
+    QStringList options;
+    options = files;
+    options.insert(files.size(), destination.pathOrUrl());
+    options.insert(0, "x");
+    options.insert(1, m_fileName.pathOrUrl());
+    process.start(exeName, options);
+    process.waitForFinished();
 }

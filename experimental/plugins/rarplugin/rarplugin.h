@@ -40,6 +40,8 @@ class RarPlugin : public AkuPlugin
 
         QStringList additionalHeaderStrings();
 
+        void extractArchive(const KUrl &destination, const QStringList &files);
+
     private:
         KUrl m_fileName;
 
