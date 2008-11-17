@@ -69,7 +69,7 @@
                   </font>
                  </property>
                  <property name="text" >
-                  <string>TextLabel</string>
+                  <string>Overwrite Mode</string>
                  </property>
                 </widget>
                </item>
@@ -80,6 +80,26 @@
                    <pointsize>9</pointsize>
                   </font>
                  </property>
+                 <item>
+                  <property name="text" >
+                   <string>Ask before overwrite</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text" >
+                   <string>Overwrite without prompt</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text" >
+                   <string>Skip existing files</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text" >
+                   <string>Rename automatically</string>
+                  </property>
+                 </item>
                 </widget>
                </item>
                <item>
@@ -91,17 +111,65 @@
                   </font>
                  </property>
                  <property name="text" >
-                  <string>TextLabel</string>
+                  <string>File Paths</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="KComboBox" name="comboLow" >
-                 <property name="font" >
-                  <font>
-                   <pointsize>9</pointsize>
-                  </font>
+                <widget class="QGroupBox" name="groupBox" >
+                 <property name="sizePolicy" >
+                  <sizepolicy vsizetype="Expanding" hsizetype="Preferred" >
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
                  </property>
+                 <property name="title" >
+                  <string/>
+                 </property>
+                 <property name="flat" >
+                  <bool>false</bool>
+                 </property>
+                 <property name="checkable" >
+                  <bool>false</bool>
+                 </property>
+                 <widget class="QRadioButton" name="radioFullPath" >
+                  <property name="geometry" >
+                   <rect>
+                    <x>10</x>
+                    <y>10</y>
+                    <width>96</width>
+                    <height>21</height>
+                   </rect>
+                  </property>
+                  <property name="sizePolicy" >
+                   <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="text" >
+                   <string>Extract full paths</string>
+                  </property>
+                 </widget>
+                 <widget class="QRadioButton" name="radioNoFullPath" >
+                  <property name="geometry" >
+                   <rect>
+                    <x>10</x>
+                    <y>40</y>
+                    <width>96</width>
+                    <height>21</height>
+                   </rect>
+                  </property>
+                  <property name="sizePolicy" >
+                   <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="text" >
+                   <string>Do not extract full paths</string>
+                  </property>
+                 </widget>
                 </widget>
                </item>
                <item>
@@ -113,28 +181,14 @@
                   </font>
                  </property>
                  <property name="text" >
-                  <string>TextLabel</string>
+                  <string>Miscellaneous</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QCheckBox" name="checkHigh" >
+                <widget class="QCheckBox" name="checkDestinationPath" >
                  <property name="text" >
-                  <string>CheckBox</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QCheckBox" name="checkMiddle" >
-                 <property name="text" >
-                  <string>CheckBox</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QCheckBox" name="checkLow" >
-                 <property name="text" >
-                  <string>CheckBox</string>
+                  <string>Open destination path</string>
                  </property>
                 </widget>
                </item>
