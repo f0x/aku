@@ -29,7 +29,7 @@ AkuExtractionDialog::AkuExtractionDialog(QWidget *parent) : KDialog(parent)
     dirView = new KFileTreeView(widget);
     dirView->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     dirView->setDirOnlyMode(true);
-    ui.generalVerticalLayout->insertWidget(2, dirView);
+    ui.generalVerticalLayout->insertWidget(1, dirView);
 
     //dirView->setColumnHidden(1, true);
     //dirView->setColumnHidden(2, true);
@@ -40,6 +40,10 @@ AkuExtractionDialog::AkuExtractionDialog(QWidget *parent) : KDialog(parent)
 
     dirView->header()->setResizeMode(0, QHeaderView::ResizeToContents );
     dirView->resizeColumnToContents(0);
+    dirView->header()->setResizeMode(1, QHeaderView::ResizeToContents );
+    dirView->resizeColumnToContents(1);
+    dirView->header()->setResizeMode(2, QHeaderView::ResizeToContents );
+    dirView->resizeColumnToContents(2);
 
     dirView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     dirView->setCurrentUrl(KUrl(QDir::homePath()));

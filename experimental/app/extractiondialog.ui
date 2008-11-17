@@ -53,9 +53,6 @@
             </widget>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_2" />
-           </item>
-           <item>
             <layout class="QGridLayout" name="gridLayout" >
              <item row="0" column="0" >
               <widget class="QLabel" name="labelHigh" >
@@ -72,7 +69,7 @@
                 </font>
                </property>
                <property name="text" >
-                <string>Overwrite Mode</string>
+                <string>Overwrite Mode:</string>
                </property>
                <property name="alignment" >
                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -124,7 +121,7 @@
                 </font>
                </property>
                <property name="text" >
-                <string>File Paths</string>
+                <string>File Paths:</string>
                </property>
                <property name="alignment" >
                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -146,7 +143,7 @@
                 </font>
                </property>
                <property name="text" >
-                <string>Miscellaneous</string>
+                <string>Miscellaneous:</string>
                </property>
                <property name="alignment" >
                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -192,7 +189,7 @@
                </property>
                <property name="sizeHint" stdset="0" >
                 <size>
-                 <width>20</width>
+                 <width>10</width>
                  <height>20</height>
                 </size>
                </property>
