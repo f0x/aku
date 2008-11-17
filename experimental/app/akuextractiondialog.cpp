@@ -55,8 +55,6 @@ AkuExtractionDialog::AkuExtractionDialog(QWidget *parent) : KDialog(parent)
 
     connect(this, SIGNAL(okClicked()), this, SLOT(slotExtraction()));
     connect(dirView, SIGNAL(currentChanged(const KUrl &)), this, SLOT(updateCombo(const KUrl &)));
-
-    resize(400, height());
     //connect(ui.buttonNewDir, SIGNAL(clicked()), this, SLOT(createNewDir()));
 }
 
