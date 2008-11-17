@@ -75,11 +75,6 @@
                </item>
                <item>
                 <widget class="KComboBox" name="comboHigh" >
-                 <property name="font" >
-                  <font>
-                   <pointsize>9</pointsize>
-                  </font>
-                 </property>
                  <item>
                   <property name="text" >
                    <string>Ask before overwrite</string>
