@@ -45,6 +45,7 @@ AkuTooltip::AkuTooltip(QWidget *parent) : QWidget(parent)
     connect(m_timeLine, SIGNAL(frameChanged(int)), this, SLOT(animate(int)));
     connect(m_timeLine, SIGNAL(finished()), this, SLOT(slotFinish()));
 
+    m_base->setGeometry(0, -height(), width(), height());
     hide();
 }
 
