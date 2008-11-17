@@ -31,8 +31,8 @@ AkuExtractionDialog::AkuExtractionDialog(QWidget *parent) : KDialog(parent)
     dirView->setDirOnlyMode(true);
     ui.generalVerticalLayout->insertWidget(2, dirView);
 
-    dirView->setColumnHidden(1, true);
-    dirView->setColumnHidden(2, true);
+    //dirView->setColumnHidden(1, true);
+    //dirView->setColumnHidden(2, true);
     dirView->setColumnHidden(3, true);
     dirView->setColumnHidden(4, true);
     dirView->setColumnHidden(5, true);
