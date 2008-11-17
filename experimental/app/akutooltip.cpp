@@ -28,6 +28,7 @@ AkuTooltip::AkuTooltip(QWidget *parent) : QWidget(parent)
     m_base->setAutoFillBackground(true);
     QPalette p = m_base->palette();
     p.setColor(QPalette::Window, Qt::white);
+    p.setColor(QPalette::WindowText, Qt::black);
     m_base->setPalette(p);
 
     QLabel *icon = new QLabel(m_base);
@@ -36,6 +37,7 @@ AkuTooltip::AkuTooltip(QWidget *parent) : QWidget(parent)
     m_tipLabel = new QLabel(m_base);
     m_tipLabel->setWordWrap(true);
     m_tipLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    m_tipLabel->setPalette(p);
 
     m_closeButton = new QToolButton(m_base);
     m_closeButton->setIcon(KIcon("dialog-close"));
