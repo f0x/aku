@@ -18,14 +18,14 @@ class AkuTreeModel;
 
 class AkuTreeView : public QTreeView
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    AkuTreeView(QWidget *parent);
-    ~AkuTreeView();
+    public:
+      AkuTreeView(QWidget *parent);
+      ~AkuTreeView();
 
-    AkuTreeModel* model();
-
+      AkuTreeModel* model();
+      QStringList selectedPaths();
 };
 
 #endif

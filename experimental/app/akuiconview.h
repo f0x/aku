@@ -27,6 +27,7 @@ class AkuIconView : public QListView
         void setIconSize(int size);
         int viewItemSize();
         int iconSize();
+        QStringList selectedPaths();
 
     private:
          int m_gridSize;

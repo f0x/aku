@@ -79,3 +79,26 @@ void AkuIconView::browseUp()
 {
     setRootIndex(rootIndex().parent());
 }
+
+QStringList AkuIconView::selectedPaths()
+{
+    QStringList paths;
+    foreach (const QModelIndex &index, selectedIndexes()) {
+
+        if (index.column() > 0) {
+            continue;
+        }
+
+        QString path;
+        path = index.data().toString();
+
+        QModelIndex parent = index.parent();
+        while (parent.isValid()) {
+            path.prepend(parent.data().toString() + '/');
+            parent = parent.parent();
+        }
+        paths << path;
+    }
+
+    return paths;
+}

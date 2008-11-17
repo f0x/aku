@@ -80,10 +80,25 @@ QString formatPermissions(mode_t permissions)
 
 void extractArchive(KArchive *m_archive, const KUrl &destination, const QStringList &files)
 {
+    const KArchiveDirectory *mainDir = static_cast<const KArchiveDirectory*>(m_archive->directory());
+
     if (files.isEmpty()) {
-        const KArchiveDirectory *mainDir = static_cast<const KArchiveDirectory*>(m_archive->directory());
         mainDir->copyTo(destination.pathOrUrl());
         return;
+    }
+
+    foreach (const QString &file, files) {
+        const KArchiveEntry *entry = static_cast<const KArchiveEntry*>(mainDir->entry(file));
+
+        if (!entry) {
+            continue;
+        }
+
+        if (entry->isFile()) {
+            static_cast<const KArchiveFile*>(entry)->copyTo(destination.pathOrUrl());
+            continue;
+        }
+        static_cast<const KArchiveDirectory*>(entry)->copyTo(destination.pathOrUrl());
     }
 }
 

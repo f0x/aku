@@ -9,7 +9,6 @@ include_directories(${KDE4_INCLUDES})
 set( aku_SRCS
      main.cpp
      mainwindow.cpp
-#      openarchive.cpp 
      akutreeview.cpp
      pluginview.cpp
      ../base/pluginloader.cpp

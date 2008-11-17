@@ -65,7 +65,7 @@ void AkuExtractionDialog::slotExtraction()
 
 void AkuExtractionDialog::updateCombo(const KUrl localPath)
 {
-    ui.comboHistoryBox->setEditText(localPath.path());
+    ui.comboHistoryBox->setEditUrl(localPath);
 }
 
 void AkuExtractionDialog::createNewDir()

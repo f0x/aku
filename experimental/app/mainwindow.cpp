@@ -232,7 +232,11 @@ void MainWindow::extractionSlot()
 void MainWindow::doExtraction(const KUrl &destination)
 {
     // TODO: retrieve selected files to extract
-    m_plugins[m_currentPlugin]->extract(m_currentUrl, destination);
+    QStringList files = treeView->selectedPaths();
+    if (iconWidget->isVisible()) {
+       files = iconWidget->view()->selectedPaths();
+    }
+    m_plugins[m_currentPlugin]->extract(m_currentUrl, destination, files);
     
 }
 
