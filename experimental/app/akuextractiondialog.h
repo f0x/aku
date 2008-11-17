@@ -23,6 +23,8 @@ class AkuExtractionDialog : public KDialog
         AkuExtractionDialog(QWidget *parent = 0);
         ~AkuExtractionDialog();
 
+        void setAdvancedWidget(QWidget *);
+
     private:
         Ui::ExtractionDialog ui;
         

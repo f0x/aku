@@ -84,7 +84,7 @@ QStringList AkuPlugin::additionalHeaderStrings()
     return QStringList();
 }
 
-QWidget* AkuPlugin::configurationWidget()
+QWidget* AkuPlugin::extractionWidget()
 {
     return 0;
 }

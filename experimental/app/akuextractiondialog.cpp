@@ -87,5 +87,17 @@ void AkuExtractionDialog::createNewDir()
     dir.addPath(newDir);
     KIO::mkdir(dir);
     dirView->setCurrentUrl(dir);
-    
+}
+
+void AkuExtractionDialog::setAdvancedWidget(QWidget *widget)
+{
+    if (!widget) {
+        return;
+    }
+
+    for (int i = 0; i < ui.advancedLayout->count(); i++) {
+        ui.advancedLayout->removeItem(ui.advancedLayout->itemAt(i));
+    }
+
+    ui.advancedLayout->addWidget(widget);
 }

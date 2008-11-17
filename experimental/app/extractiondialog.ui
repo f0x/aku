@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>553</width>
-    <height>297</height>
+    <width>398</width>
+    <height>371</height>
    </rect>
   </property>
   <property name="minimumSize" >
@@ -263,14 +263,7 @@
         </attribute>
         <layout class="QVBoxLayout" name="verticalLayout_7" >
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout_4" >
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_5" />
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_4" />
-           </item>
-          </layout>
+          <layout class="QVBoxLayout" name="advancedLayout" />
          </item>
         </layout>
        </widget>

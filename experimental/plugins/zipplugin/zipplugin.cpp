@@ -129,7 +129,7 @@ QStringList ZipPlugin::additionalHeaderStrings()
                          << i18n("Group") << i18n("Permissions") << i18n("CreationTime");
 }
 
-QWidget* ZipPlugin::configurationWidget()
+QWidget* ZipPlugin::extractionWidget()
 {
     return m_widget;
 }

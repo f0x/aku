@@ -189,7 +189,7 @@ void MainWindow::load(const KUrl &url)
 
 void MainWindow::addRecentFile(KUrl recent)
 {
-    if (actionRecentFiles->maxItems() >= actionRecentFiles->urls().count()) {
+    if (actionRecentFiles->maxItems() >= actionRecentFiles->urls().count() && !actionRecentFiles->urls().contains(recent)) {
         actionRecentFiles->removeUrl(actionRecentFiles->urls().first());
     }
     actionRecentFiles -> addUrl(recent);
@@ -229,6 +229,7 @@ void MainWindow::extractionSlot()
 {
     m_extractionDialog = new AkuExtractionDialog(this);
     connect(m_extractionDialog, SIGNAL(extractionClicked(const KUrl &)), this, SLOT(doExtraction(const KUrl &)));
+    m_extractionDialog->setAdvancedWidget(m_plugins[m_currentPlugin]->extractionWidget());
     m_extractionDialog->exec();
 }
 
@@ -284,7 +285,7 @@ void MainWindow::addPlugin(AkuPlugin *plugin, const KPluginInfo &info)
                       plugin->canRename(),
                       plugin->isWorkingProperly(),
                       info,
-                      plugin->configurationWidget()
+                      plugin->extractionWidget()
                      );
     }
 }

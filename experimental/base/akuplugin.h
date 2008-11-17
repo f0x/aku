@@ -70,10 +70,10 @@ class AKU_EXPORT AkuPlugin : public QObject
 
         /**
          * The widget will be correctly embedded in the main application.
-         * @return the configuration widget for the specific plugin or 0 if
+         * @return the extraction option widget for the specific plugin or 0 if
          * there is no reimplementation.
          */
-        virtual QWidget* configurationWidget();
+        virtual QWidget* extractionWidget();
 
         /**
          * This method should be reimplemented in order to allow archive extraction.

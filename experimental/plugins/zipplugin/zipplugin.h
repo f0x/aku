@@ -46,7 +46,7 @@ class ZipPlugin : public AkuPlugin
 
         QStringList additionalHeaderStrings();
 
-        QWidget* configurationWidget();
+        QWidget* extractionWidget();
 
 
     private:
