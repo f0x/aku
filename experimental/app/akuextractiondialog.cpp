@@ -8,6 +8,7 @@
    version 2 of the License, or (at your option) any later version.
 */ 
 #include "akuextractiondialog.h"
+#include "akutooltip.h"
 
 #include <KLocale>
 #include <KDebug>
@@ -38,15 +39,20 @@ AkuExtractionDialog::AkuExtractionDialog(QWidget *parent) : KDialog(parent)
     dirView->setColumnHidden(5, true);
     dirView->setColumnHidden(6, true);
 
-    dirView->header()->setResizeMode(0, QHeaderView::ResizeToContents  );
-    dirView->resizeColumnToContents(0);
-    dirView->header()->setResizeMode(1, QHeaderView::ResizeToContents );
-    dirView->resizeColumnToContents(1);
-    dirView->header()->setResizeMode(2, QHeaderView::Fixed );
+    dirView->header()->setResizeMode(QHeaderView::Stretch);
+    dirView->header()->setResizeMode(0, QHeaderView::ResizeToContents);
     dirView->resizeColumnToContents(2);
 
     dirView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     dirView->setCurrentUrl(KUrl(QDir::homePath()));
+
+    const int minWidth = dirView->columnWidth(0) +
+                         dirView->columnWidth(1) +
+                         dirView->columnWidth(2);
+
+//     kDebug() << minWidth << sizeHint().width();
+
+    dirView->setMinimumSize(minWidth, 0);
     
     setButtons(KDialog::Ok | KDialog::Cancel | KDialog::Default);
     setCaption(i18n("Extraction path and options"));
@@ -55,6 +61,13 @@ AkuExtractionDialog::AkuExtractionDialog(QWidget *parent) : KDialog(parent)
 
     connect(this, SIGNAL(okClicked()), this, SLOT(slotExtraction()));
     connect(dirView, SIGNAL(currentChanged(const KUrl &)), this, SLOT(updateCombo(const KUrl &)));
+
+    AkuTooltip *tip = new AkuTooltip(this);
+    ui.verticalLayout->insertWidget(0, tip);
+    tip->setTooltip(i18n("The destination path will be created if necessary"));
+    tip->showTip();
+
+    resize(400, height());
     //connect(ui.buttonNewDir, SIGNAL(clicked()), this, SLOT(createNewDir()));
 }
 

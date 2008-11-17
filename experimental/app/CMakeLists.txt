@@ -19,6 +19,7 @@ set( aku_SRCS
      akuiconwidget.cpp
      plugininfodelegate.cpp
      akuextractiondialog.cpp
+     akutooltip.cpp
  )
 kde4_add_ui_files(aku_SRCS akuviewoptionwidget.ui extractiondialog.ui)
 
