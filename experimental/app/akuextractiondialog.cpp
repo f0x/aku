@@ -47,11 +47,11 @@ AkuExtractionDialog::AkuExtractionDialog(QWidget *parent) : KDialog(parent)
     setButtons(KDialog::Ok | KDialog::Cancel | KDialog::Default);
     setCaption(i18n("Extraction path and options"));
 
-    ui.buttonNewDir->setIcon(KIcon("folder-new"));
+    //ui.buttonNewDir->setIcon(KIcon("folder-new"));
 
     connect(this, SIGNAL(okClicked()), this, SLOT(slotExtraction()));
     connect(dirView, SIGNAL(currentChanged(const KUrl &)), this, SLOT(updateCombo(const KUrl &)));
-    connect(ui.buttonNewDir, SIGNAL(clicked()), this, SLOT(createNewDir()));
+    //connect(ui.buttonNewDir, SIGNAL(clicked()), this, SLOT(createNewDir()));
 }
 
 AkuExtractionDialog::~AkuExtractionDialog()

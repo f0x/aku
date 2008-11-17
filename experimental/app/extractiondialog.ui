@@ -5,9 +5,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>490</width>
-    <height>452</height>
+    <width>535</width>
+    <height>341</height>
    </rect>
+  </property>
+  <property name="minimumSize" >
+   <size>
+    <width>400</width>
+    <height>0</height>
+   </size>
   </property>
   <property name="windowTitle" >
    <string>Extraction path and options</string>
@@ -37,13 +43,6 @@
          <item>
           <layout class="QVBoxLayout" name="generalVerticalLayout" >
            <item>
-            <widget class="QLabel" name="label" >
-             <property name="text" >
-              <string>Destination path (will be created if does not exist)</string>
-             </property>
-            </widget>
-           </item>
-           <item>
             <widget class="KHistoryComboBox" name="comboHistoryBox" >
              <property name="sizePolicy" >
               <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
@@ -54,28 +53,7 @@
             </widget>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_2" >
-             <item>
-              <widget class="KPushButton" name="buttonNewDir" >
-               <property name="text" >
-                <string>New Directory</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer name="horizontalSpacer_2" >
-               <property name="orientation" >
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0" >
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-            </layout>
+            <layout class="QHBoxLayout" name="horizontalLayout_2" />
            </item>
            <item>
             <spacer name="horizontalSpacer" >
@@ -110,14 +88,14 @@
                 </font>
                </property>
                <property name="text" >
-                <string>Overwrite Mode:</string>
+                <string>Overwrite Mode</string>
                </property>
                <property name="alignment" >
                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                </property>
               </widget>
              </item>
-             <item row="0" column="1" >
+             <item row="0" column="2" >
               <widget class="KComboBox" name="comboHigh" >
                <property name="sizePolicy" >
                 <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
@@ -162,36 +140,10 @@
                 </font>
                </property>
                <property name="text" >
-                <string>File Paths:</string>
+                <string>File Paths</string>
                </property>
                <property name="alignment" >
                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="1" >
-              <widget class="QRadioButton" name="radioFullPath" >
-               <property name="sizePolicy" >
-                <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text" >
-                <string>Extract full paths</string>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="1" >
-              <widget class="QRadioButton" name="radioNoFullPath" >
-               <property name="sizePolicy" >
-                <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text" >
-                <string>Do not extract full paths</string>
                </property>
               </widget>
              </item>
@@ -210,14 +162,14 @@
                 </font>
                </property>
                <property name="text" >
-                <string>Miscellaneous:</string>
+                <string>Miscellaneous</string>
                </property>
                <property name="alignment" >
                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                </property>
               </widget>
              </item>
-             <item row="6" column="1" >
+             <item row="6" column="2" >
               <widget class="QCheckBox" name="checkDestinationPath" >
                <property name="sizePolicy" >
                 <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
@@ -262,6 +214,51 @@
                </property>
               </spacer>
              </item>
+             <item row="0" column="1" >
+              <spacer name="horizontalSpacer_4" >
+               <property name="orientation" >
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeType" >
+                <enum>QSizePolicy::Minimum</enum>
+               </property>
+               <property name="sizeHint" stdset="0" >
+                <size>
+                 <width>20</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="5" column="2" >
+              <widget class="QRadioButton" name="radioNoFullPath" >
+               <property name="sizePolicy" >
+                <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text" >
+                <string>Do not extract full paths</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="2" >
+              <widget class="QRadioButton" name="radioFullPath" >
+               <property name="sizePolicy" >
+                <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text" >
+                <string>Extract full paths</string>
+               </property>
+               <property name="checked" >
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
             </layout>
            </item>
            <item>
@@ -269,10 +266,13 @@
              <property name="orientation" >
               <enum>Qt::Vertical</enum>
              </property>
+             <property name="sizeType" >
+              <enum>QSizePolicy::Fixed</enum>
+             </property>
              <property name="sizeHint" stdset="0" >
               <size>
                <width>20</width>
-               <height>40</height>
+               <height>20</height>
               </size>
              </property>
             </spacer>
