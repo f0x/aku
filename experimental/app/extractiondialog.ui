@@ -111,60 +111,29 @@
                 </widget>
                </item>
                <item>
-                <widget class="QGroupBox" name="groupBox" >
+                <widget class="QRadioButton" name="radioFullPath" >
                  <property name="sizePolicy" >
-                  <sizepolicy vsizetype="Expanding" hsizetype="Preferred" >
+                  <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
-                 <property name="title" >
-                  <string/>
+                 <property name="text" >
+                  <string>Extract full paths</string>
                  </property>
-                 <property name="flat" >
-                  <bool>false</bool>
+                </widget>
+               </item>
+               <item>
+                <widget class="QRadioButton" name="radioNoFullPath" >
+                 <property name="sizePolicy" >
+                  <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
                  </property>
-                 <property name="checkable" >
-                  <bool>false</bool>
+                 <property name="text" >
+                  <string>Do not extract full paths</string>
                  </property>
-                 <widget class="QRadioButton" name="radioFullPath" >
-                  <property name="geometry" >
-                   <rect>
-                    <x>10</x>
-                    <y>10</y>
-                    <width>96</width>
-                    <height>21</height>
-                   </rect>
-                  </property>
-                  <property name="sizePolicy" >
-                   <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="text" >
-                   <string>Extract full paths</string>
-                  </property>
-                 </widget>
-                 <widget class="QRadioButton" name="radioNoFullPath" >
-                  <property name="geometry" >
-                   <rect>
-                    <x>10</x>
-                    <y>40</y>
-                    <width>96</width>
-                    <height>21</height>
-                   </rect>
-                  </property>
-                  <property name="sizePolicy" >
-                   <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
-                    <horstretch>0</horstretch>
-                    <verstretch>0</verstretch>
-                   </sizepolicy>
-                  </property>
-                  <property name="text" >
-                   <string>Do not extract full paths</string>
-                  </property>
-                 </widget>
                 </widget>
                </item>
                <item>

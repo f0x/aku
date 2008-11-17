@@ -27,7 +27,7 @@ AkuExtractionDialog::AkuExtractionDialog(QWidget *parent) : KDialog(parent)
     setMainWidget(widget);
 
     dirView = new KFileTreeView(widget);
-    dirView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    dirView->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Expanding);
     dirView->setDirOnlyMode(true);
     ui.horizontalLayout->insertWidget(0, dirView);
 
