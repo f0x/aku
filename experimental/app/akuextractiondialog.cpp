@@ -27,7 +27,7 @@ AkuExtractionDialog::AkuExtractionDialog(QWidget *parent) : KDialog(parent)
     setMainWidget(widget);
 
     dirView = new KFileTreeView(widget);
-    dirView->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+    dirView->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
     dirView->setDirOnlyMode(true);
     ui.generalVerticalLayout->insertWidget(1, dirView);
 
@@ -38,11 +38,11 @@ AkuExtractionDialog::AkuExtractionDialog(QWidget *parent) : KDialog(parent)
     dirView->setColumnHidden(5, true);
     dirView->setColumnHidden(6, true);
 
-    dirView->header()->setResizeMode(0, QHeaderView::ResizeToContents );
+    dirView->header()->setResizeMode(0, QHeaderView::ResizeToContents  );
     dirView->resizeColumnToContents(0);
     dirView->header()->setResizeMode(1, QHeaderView::ResizeToContents );
     dirView->resizeColumnToContents(1);
-    dirView->header()->setResizeMode(2, QHeaderView::ResizeToContents );
+    dirView->header()->setResizeMode(2, QHeaderView::Fixed );
     dirView->resizeColumnToContents(2);
 
     dirView->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -55,6 +55,8 @@ AkuExtractionDialog::AkuExtractionDialog(QWidget *parent) : KDialog(parent)
 
     connect(this, SIGNAL(okClicked()), this, SLOT(slotExtraction()));
     connect(dirView, SIGNAL(currentChanged(const KUrl &)), this, SLOT(updateCombo(const KUrl &)));
+
+    resize(400, height());
     //connect(ui.buttonNewDir, SIGNAL(clicked()), this, SLOT(createNewDir()));
 }
 
