@@ -12,7 +12,7 @@
 
 #include <QWidget>
 class QLabel;
-class KPushButton;
+class QToolButton;
 class QTimeLine;
 
 class AkuTooltip : public QWidget
@@ -30,7 +30,7 @@ class AkuTooltip : public QWidget
     private:
         QWidget *m_base;
         QLabel *m_tipLabel;
-        KPushButton *m_closeButton;
+        QToolButton *m_closeButton;
         QTimeLine *m_timeLine;
         bool m_hiding;
 

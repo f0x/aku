@@ -12,8 +12,7 @@
 
 #include <QPalette>
 #include <QLabel>
-// #include <QFontMetrics>
-// #include <QApplication>
+#include <QToolButton>
 #include <QTimeLine>
 
 #include <KPushButton>
@@ -38,7 +37,9 @@ AkuTooltip::AkuTooltip(QWidget *parent) : QWidget(parent)
     m_tipLabel->setWordWrap(true);
     m_tipLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
-    m_closeButton = new KPushButton(KIcon("dialog-close"), i18n("Close"), m_base);
+    m_closeButton = new QToolButton(m_base);
+    m_closeButton->setIcon(KIcon("dialog-close"));
+    m_closeButton->setAutoRaise(true);
     connect(m_closeButton, SIGNAL(clicked()), this, SLOT(hideTip()));
 
     m_timeLine = new QTimeLine(DURATION, this);
