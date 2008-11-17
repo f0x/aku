@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>563</width>
-    <height>434</height>
+    <width>490</width>
+    <height>452</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -17,6 +17,12 @@
     <layout class="QVBoxLayout" name="verticalLayout" >
      <item>
       <widget class="KTabWidget" name="ktabwidget" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Expanding" hsizetype="Preferred" >
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="tabShape" >
         <enum>QTabWidget::Rounded</enum>
        </property>
@@ -27,9 +33,9 @@
         <attribute name="title" >
          <string>General</string>
         </attribute>
-        <layout class="QVBoxLayout" name="verticalLayout_6" >
+        <layout class="QVBoxLayout" name="verticalLayout_3" >
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout_2" >
+          <layout class="QVBoxLayout" name="generalVerticalLayout" >
            <item>
             <widget class="QLabel" name="label" >
              <property name="text" >
@@ -38,140 +44,14 @@
             </widget>
            </item>
            <item>
-            <widget class="KHistoryComboBox" name="comboHistoryBox" />
-           </item>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout" >
-             <item>
-              <spacer name="horizontalSpacer" >
-               <property name="orientation" >
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeType" >
-                <enum>QSizePolicy::Fixed</enum>
-               </property>
-               <property name="sizeHint" stdset="0" >
-                <size>
-                 <width>20</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item>
-              <layout class="QVBoxLayout" name="verticalLayout_3" >
-               <item>
-                <widget class="QLabel" name="labelHigh" >
-                 <property name="font" >
-                  <font>
-                   <weight>75</weight>
-                   <bold>true</bold>
-                  </font>
-                 </property>
-                 <property name="text" >
-                  <string>Overwrite Mode</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="KComboBox" name="comboHigh" >
-                 <item>
-                  <property name="text" >
-                   <string>Ask before overwrite</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text" >
-                   <string>Overwrite without prompt</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text" >
-                   <string>Skip existing files</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text" >
-                   <string>Rename automatically</string>
-                  </property>
-                 </item>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="labelMiddle" >
-                 <property name="font" >
-                  <font>
-                   <weight>75</weight>
-                   <bold>true</bold>
-                  </font>
-                 </property>
-                 <property name="text" >
-                  <string>File Paths</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QRadioButton" name="radioFullPath" >
-                 <property name="sizePolicy" >
-                  <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text" >
-                  <string>Extract full paths</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QRadioButton" name="radioNoFullPath" >
-                 <property name="sizePolicy" >
-                  <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="text" >
-                  <string>Do not extract full paths</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="labelLow" >
-                 <property name="font" >
-                  <font>
-                   <weight>75</weight>
-                   <bold>true</bold>
-                  </font>
-                 </property>
-                 <property name="text" >
-                  <string>Miscellaneous</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QCheckBox" name="checkDestinationPath" >
-                 <property name="text" >
-                  <string>Open destination path</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <spacer name="verticalSpacer" >
-                 <property name="orientation" >
-                  <enum>Qt::Vertical</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0" >
-                  <size>
-                   <width>20</width>
-                   <height>40</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-              </layout>
-             </item>
-            </layout>
+            <widget class="KHistoryComboBox" name="comboHistoryBox" >
+             <property name="sizePolicy" >
+              <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+            </widget>
            </item>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_2" >
@@ -184,6 +64,223 @@
              </item>
              <item>
               <spacer name="horizontalSpacer_2" >
+               <property name="orientation" >
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0" >
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer" >
+             <property name="orientation" >
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeType" >
+              <enum>QSizePolicy::Fixed</enum>
+             </property>
+             <property name="sizeHint" stdset="0" >
+              <size>
+               <width>20</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <layout class="QGridLayout" name="gridLayout" >
+             <item row="0" column="0" >
+              <widget class="QLabel" name="labelHigh" >
+               <property name="sizePolicy" >
+                <sizepolicy vsizetype="Preferred" hsizetype="Minimum" >
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font" >
+                <font>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text" >
+                <string>Overwrite Mode:</string>
+               </property>
+               <property name="alignment" >
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1" >
+              <widget class="KComboBox" name="comboHigh" >
+               <property name="sizePolicy" >
+                <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <item>
+                <property name="text" >
+                 <string>Ask before overwrite</string>
+                </property>
+               </item>
+               <item>
+                <property name="text" >
+                 <string>Overwrite without prompt</string>
+                </property>
+               </item>
+               <item>
+                <property name="text" >
+                 <string>Skip existing files</string>
+                </property>
+               </item>
+               <item>
+                <property name="text" >
+                 <string>Rename automatically</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="2" column="0" >
+              <widget class="QLabel" name="labelMiddle" >
+               <property name="sizePolicy" >
+                <sizepolicy vsizetype="Preferred" hsizetype="Minimum" >
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font" >
+                <font>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text" >
+                <string>File Paths:</string>
+               </property>
+               <property name="alignment" >
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1" >
+              <widget class="QRadioButton" name="radioFullPath" >
+               <property name="sizePolicy" >
+                <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text" >
+                <string>Extract full paths</string>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="1" >
+              <widget class="QRadioButton" name="radioNoFullPath" >
+               <property name="sizePolicy" >
+                <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text" >
+                <string>Do not extract full paths</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="0" >
+              <widget class="QLabel" name="labelLow" >
+               <property name="sizePolicy" >
+                <sizepolicy vsizetype="Preferred" hsizetype="Minimum" >
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font" >
+                <font>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text" >
+                <string>Miscellaneous:</string>
+               </property>
+               <property name="alignment" >
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="1" >
+              <widget class="QCheckBox" name="checkDestinationPath" >
+               <property name="sizePolicy" >
+                <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text" >
+                <string>Open destination path</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0" >
+              <spacer name="verticalSpacer_2" >
+               <property name="orientation" >
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeType" >
+                <enum>QSizePolicy::Fixed</enum>
+               </property>
+               <property name="sizeHint" stdset="0" >
+                <size>
+                 <width>20</width>
+                 <height>10</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item row="5" column="0" >
+              <spacer name="verticalSpacer_3" >
+               <property name="orientation" >
+                <enum>Qt::Vertical</enum>
+               </property>
+               <property name="sizeType" >
+                <enum>QSizePolicy::Fixed</enum>
+               </property>
+               <property name="sizeHint" stdset="0" >
+                <size>
+                 <width>20</width>
+                 <height>10</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <spacer name="verticalSpacer" >
+             <property name="orientation" >
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0" >
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout" >
+             <item>
+              <spacer name="horizontalSpacer_3" >
                <property name="orientation" >
                 <enum>Qt::Horizontal</enum>
                </property>
