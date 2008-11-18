@@ -56,7 +56,7 @@ bool AcePlugin::canExtract()
 
 bool AcePlugin::canAdd()
 {
-    return true;
+    return false;
 }
 
 bool AcePlugin::canCreate()
@@ -71,22 +71,22 @@ bool AcePlugin::canLock()
 
 bool AcePlugin::canRename()
 {
-    return true;
+    return false;
 }
 
 bool AcePlugin::canEncrypt()
 {
-    return true;
+    return false;
 }
 
 bool AcePlugin::canAddComment()
 {
-    return true;
+    return false;
 }
 
 bool AcePlugin::canDelete()
 {
-    return true;
+    return false;
 }
 
 void AcePlugin::init(const KUrl &fileName)

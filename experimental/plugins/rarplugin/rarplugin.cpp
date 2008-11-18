@@ -30,9 +30,26 @@ const QString headerLine = "----------------------------------------------------
 // name of the executable
 QString exeName;
 
+bool rarCreate = false;
+bool rarRename = false;
+bool rarDelete = false;
+bool rarAddComment = false;
+bool rarEncrypt = false;
+bool rarLock = false;
+bool rarAdd = false;
 
 RarPlugin::RarPlugin(QObject *parent, const QVariantList &args) : AkuPlugin(parent)
-{}
+{
+    if (!KStandardDirs::findExe("rar").isEmpty()) {
+        rarCreate = true;
+        rarRename = true;
+        rarDelete = true;
+        rarAddComment = true;
+        rarEncrypt = true;
+        rarLock = true;
+        rarAdd = true;
+    }
+}
 
 RarPlugin::~RarPlugin()
 {}
@@ -49,37 +66,37 @@ bool RarPlugin::canExtract()
 
 bool RarPlugin::canAdd()
 {
-    return true;
+    return rarAdd;
 }
 
 bool RarPlugin::canCreate()
 {
-    return false;
+    return rarCreate;
 }
 
 bool RarPlugin::canRename()
 {
-    return true;
+    return rarRename;
 }
 
 bool RarPlugin::canDelete()
 {
-    return true;
+    return rarDelete;
 }
 
 bool RarPlugin::canAddComment()
 {
-    return true;
+    return rarAddComment;
 }
 
 bool RarPlugin::canEncrypt()
 {
-    return true;
+    return rarEncrypt;
 }
 
 bool RarPlugin::canLock()
 {
-    return true;
+    return rarLock;
 }
 
 void RarPlugin::init(const KUrl &fileName)
