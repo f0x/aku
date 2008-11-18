@@ -32,6 +32,7 @@ LoadJob::~LoadJob()
 void LoadJob::doWork()
 {
     m_plugin->loadArchive();
+    emit operationCompleted();
 
 }
 
@@ -45,6 +46,7 @@ ExtractJob::~ExtractJob()
 void ExtractJob::doWork()
 {
     m_plugin->extractArchive(m_destination, m_files);
+    emit operationCompleted();
 }
 
 AkuThread::AkuThread(AkuJob *job) : m_job(job)

@@ -122,6 +122,7 @@ void AkuPlugin::load(const KUrl &fileName)
     connect (d->helper, SIGNAL(progressUpdate(double, double)), this, SIGNAL(progressUpdate(double, double)));
 
     KJob *job = new AkuJobs::LoadJob(this, this);
+    connect(job, SIGNAL(operationCompleted()), this, SIGNAL(operationCompleted()));
     job->start();
 }
 
@@ -133,9 +134,16 @@ void AkuPlugin::extract(const KUrl &fileName, const KUrl &destination, const QSt
 
     setCurrentOperation(Extracting);
 
+    if (!d->helper) {
+        d->helper = new AkuJobs::AkuHelper(this);
+    }
+    connect (d->helper, SIGNAL(error(const QString &)), this, SIGNAL(error(const QString &)));
+    connect (d->helper, SIGNAL(archiveLoaded(QVector<QStringList>)), this, SIGNAL(archiveLoaded(QVector<QStringList>)));
+    connect (d->helper, SIGNAL(progressUpdate(double, double)), this, SIGNAL(progressUpdate(double, double)));
+
     KJob *job = new AkuJobs::ExtractJob(this, destination, files, this);
-    connect(job, SIGNAL(finished(KJob *)), this, SIGNAL(notifyExtractionComplete()));
-    connect(job, SIGNAL(finished(KJob *)), this, SIGNAL(operationCompleted()));
+    connect(job, SIGNAL(operationCompleted()), this, SIGNAL(notifyExtractionComplete()));
+    connect(job, SIGNAL(operationCompleted()), this, SIGNAL(operationCompleted()));
 
     job->start();
 }
@@ -185,6 +193,7 @@ void AkuPlugin::onArchiveLoaded(QVector<QStringList> data)
 
 void AkuPlugin::onProgressUpdate(double current, double total)
 {
+    kDebug() << "onProgressUpdate" << current << total;
     if (!d->helper) {
         return;
     }

@@ -34,6 +34,9 @@ class AkuJob : public KJob
 
         void start();
         virtual void doWork() = 0;
+
+    signals:
+        void operationCompleted();
 };
 
 

@@ -136,5 +136,31 @@ void TarPlugin::extractArchive(const KUrl &destination, const QStringList &files
 
     m_filesCount = files.count();
 
-    KArchiveUtils::self()->extractArchive(m_archive, destination, files);
+//     KArchiveUtils::self()->extractArchive(m_archive, destination, files);
+
+    const KArchiveDirectory *mainDir = static_cast<const KArchiveDirectory*>(m_archive->directory());
+
+    if (files.isEmpty()) {
+        mainDir->copyTo(destination.pathOrUrl());
+        return;
+    }
+
+    m_currentExtracting = 0;
+
+    foreach (const QString &file, files) {
+        const KArchiveEntry *entry = static_cast<const KArchiveEntry*>(mainDir->entry(file));
+
+        if (!entry) {
+            continue;
+        }
+
+        if (entry->isFile()) {
+            static_cast<const KArchiveFile*>(entry)->copyTo(destination.pathOrUrl());
+            continue;
+        }
+        static_cast<const KArchiveDirectory*>(entry)->copyTo(destination.pathOrUrl());
+
+        m_currentExtracting++;
+        onProgressUpdate(m_currentExtracting, m_filesCount);
+    }
 }
