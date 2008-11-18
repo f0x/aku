@@ -11,21 +11,33 @@
 #define KARCHIVEUTILS_H
 
 #include <KArchive>
+#include <KSharedPtr>
 
 class KUrl;
 class QStringList;
 
-// namespace KArchiveUtils
-// {
-//     
-// };
 
-class KArchiveUtils : public QObject
+class KArchiveUtils : public QObject, public QSharedData
 {
     Q_OBJECT
     public:
-        static QString formatPermissions(mode_t permissions);
-        static void extractArchive(KArchive *archive, const KUrl &destination, const QStringList &files = QStringList(), int *current = 0);
+
+        typedef KSharedPtr< KArchiveUtils > Ptr;
+
+        virtual ~KArchiveUtils() {}
+
+        QString formatPermissions(mode_t permissions);
+        void extractArchive(KArchive *archive, const KUrl &destination, const QStringList &files = QStringList());
+        int currentExtractionIndex();
+
+        static KArchiveUtils::Ptr self();
+
+    private:
+        int m_current;
+
+    protected:
+        KArchiveUtils(QObject *parent = 0) : QObject(parent), m_current(0)
+        {}
 };
 
 #endif 

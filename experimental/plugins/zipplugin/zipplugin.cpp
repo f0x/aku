@@ -75,7 +75,7 @@ void ZipPlugin::loadArchive()
     m_archive->open(QIODevice::ReadOnly);
 
     if (!m_archive->isOpen()) {
-        emit error(i18n("An error occurred. Could not open archive <b>%1</b>").arg(m_archive->fileName()));
+        onError(i18n("An error occurred. Could not open archive <b>%1</b>", m_archive->fileName()));
         return;
     }
 
@@ -103,7 +103,7 @@ void ZipPlugin::getEntries(const KArchiveEntry *rootEntry)
                                     << QString::number(fileEntry->encoding()) // method
                                     << fileEntry->user() // owner
                                     << fileEntry->group() // group
-                                    << KArchiveUtils::formatPermissions(fileEntry->permissions()) // permissions
+                                    << KArchiveUtils::self()->formatPermissions(fileEntry->permissions()) // permissions
                                     << KGlobal::locale()->formatDateTime(fileEntry->datetime())
         );
         return;
@@ -137,10 +137,10 @@ QWidget* ZipPlugin::extractionWidget()
 void ZipPlugin::extractArchive(const KUrl &destination, const QStringList &files)
 {
     if (!m_archive->isOpen() && !m_archive->open(QIODevice::ReadOnly)) {
-        emit error(i18n("An error occurred. Could not open archive <b>%1</b> for extraction").arg(m_archive->fileName()));
+        onError(i18n("An error occurred. Could not open archive <b>%1</b>", m_archive->fileName()));
         return;
     }
 
     m_filesCount = files.count();
-    KArchiveUtils::extractArchive(m_archive, destination, files, &m_currentExtracting);
+    KArchiveUtils::self()->extractArchive(m_archive, destination, files);
 }

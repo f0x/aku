@@ -291,7 +291,7 @@ void MainWindow::addPlugin(AkuPlugin *plugin, const KPluginInfo &info)
     connect(plugin, SIGNAL(archiveLoaded(const QVector<QStringList> &)),
             this, SLOT(showArchive(const QVector<QStringList> &)));
     connect(plugin, SIGNAL(error(const QString &)), this, SLOT(handleError(const QString &)));
-    connect(plugin, SIGNAL(percent(double, double)), this, SLOT(handleProgress(double, double)));
+    connect(plugin, SIGNAL(progressUpdate(double, double)), this, SLOT(handleProgress(double, double)));
     connect(plugin, SIGNAL(operationCompleted()), this, SLOT(completeOperations()));
     connect(plugin, SIGNAL(notifyExtractionComplete()), this, SLOT(extractionCompleteSlot()));
 

@@ -70,13 +70,12 @@ void TarPlugin::init(const KUrl &fileName)
     QFile file(fileName.pathOrUrl());
 
     size = (double)(file.size() * 1.7); // NOTE: absolutely arbitrary calculation of generic gzip compression ratio
-    kDebug() << "size" << size;
 }
 
 void TarPlugin::loadArchive()
 {
     if (!m_archive->isOpen() && !m_archive->open(QIODevice::ReadOnly)) {
-        emit error(i18n("An error occurred. Could not open archive <b>%1</b>").arg(m_archive->fileName()));
+        onError(i18n("An error occurred. Could not open archive <b>%1</b>", m_archive->fileName()));
         return;
     }
 
@@ -87,28 +86,10 @@ void TarPlugin::loadArchive()
 
     m_archive->close();
 
-    emit archiveLoaded(m_entries);
+    onArchiveLoaded(m_entries);
+
     m_entries.clear();
 
-}
-
-void TarPlugin::emitPercent()
-{
-    kDebug() << "emitPercent";
-
-    if (currentOperation() == AkuPlugin::Loading) {
-        kDebug() << "percent";
-        if (!m_archive->isOpen()) {
-            return;
-        }
-        emit percent((double)m_archive->device()->pos(), size);
-//         return;
-    }
-
-    if (currentOperation() == AkuPlugin::Extracting) {
-        kDebug() << m_currentExtracting;
-        emit percent((double)m_currentExtracting, (double)m_filesCount);
-    }
 }
 
 void TarPlugin::getEntries(const KArchiveEntry *rootEntry)
@@ -121,7 +102,7 @@ void TarPlugin::getEntries(const KArchiveEntry *rootEntry)
                                     << QString() // compressed size WARNING: not supported by KTar
                                     << fileEntry->user() // owner
                                     << fileEntry->group() // group
-                                    << KArchiveUtils::formatPermissions(fileEntry->permissions()) // permissions
+                                    << KArchiveUtils::self()->formatPermissions(fileEntry->permissions()) // permissions
                                     << KGlobal::locale()->formatDateTime(fileEntry->datetime())
         );
         return;
@@ -149,11 +130,11 @@ QStringList TarPlugin::additionalHeaderStrings()
 void TarPlugin::extractArchive(const KUrl &destination, const QStringList &files)
 {
     if (!m_archive->isOpen() && !m_archive->open(QIODevice::ReadOnly)) {
-        emit error(i18n("An error occurred. Could not open archive <b>%1</b> for extraction").arg(m_archive->fileName()));
+        onError(i18n("An error occurred. Could not open archive <b>%1</b>", m_archive->fileName()));
         return;
     }
 
     m_filesCount = files.count();
 
-    KArchiveUtils::extractArchive(m_archive, destination, files, &m_currentExtracting);
+    KArchiveUtils::self()->extractArchive(m_archive, destination, files);
 }
