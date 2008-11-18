@@ -20,6 +20,7 @@ class AkuViewOptionWidget;
 class KPluginInfo;
 class QProgressBar;
 class AkuExtractionDialog;
+class QLabel;
 
 class MainWindow : public KXmlGuiWindow
 {
@@ -53,6 +54,8 @@ class MainWindow : public KXmlGuiWindow
     AkuExtractionDialog *m_extractionDialog;
     QString m_currentPlugin;
     KUrl m_currentUrl;
+    QLabel *m_statusLabel;
+    QLabel *m_statusIcon;
 
     KAction *actionDelete;
     KAction *actionEncrypt;
@@ -78,6 +81,7 @@ class MainWindow : public KXmlGuiWindow
     void load(const KUrl &);
     void extractionCompleteSlot();
     void loadSettings();
+    void slotPluginStateChanged();
 };
 
 #endif

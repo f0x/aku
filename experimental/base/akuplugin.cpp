@@ -23,7 +23,8 @@ class AkuPlugin::AkuPluginPrivate {
 public:
     AkuPluginPrivate(AkuPlugin *q):
                      q(q),
-                     helper(0)
+                     helper(0),
+                     currentOp(AkuPlugin::NoOperation)
     {}
 
     AkuPlugin *q;
@@ -170,7 +171,12 @@ AkuPlugin::CurrentOperation AkuPlugin::currentOperation()
 
 void AkuPlugin::setCurrentOperation(CurrentOperation op)
 {
-    d->currentOp = op;
+    kDebug() << "setting operation";
+    if (d->currentOp != op) {
+        d->currentOp = op;
+        kDebug() << "emitting state changed";
+        emit stateChanged();
+    }
 }
 
 void AkuPlugin::onError(const QString &error)
@@ -193,7 +199,6 @@ void AkuPlugin::onArchiveLoaded(QVector<QStringList> data)
 
 void AkuPlugin::onProgressUpdate(double current, double total)
 {
-    kDebug() << "onProgressUpdate" << current << total;
     if (!d->helper) {
         return;
     }

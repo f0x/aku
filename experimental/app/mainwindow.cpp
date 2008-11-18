@@ -25,14 +25,18 @@
 #include <KConfigGroup>
 #include <KStatusBar>
 #include <KFileItem>
+#include <KIconLoader>
 
 #include <QListView>
 #include <QTreeView>
 #include <QProgressBar>
+#include <QLabel>
 
 MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent),
                                           m_pluginView(new PluginView()),
-                                          m_progressBar(new QProgressBar(this))
+                                          m_progressBar(new QProgressBar(this)),
+                                          m_statusLabel(new QLabel(this)),
+                                          m_statusIcon(new QLabel(this))
 {
   m_model = new AkuTreeModel(QVector<QStringList>(), this);
   PluginLoader *loader = new PluginLoader(this);
@@ -54,6 +58,12 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent),
   m_progressBar->setMinimum(0);
   m_progressBar->setMaximum(100);
   m_progressBar->hide();
+
+  statusBar()->insertPermanentWidget(0, m_statusLabel);
+  m_statusLabel->hide();
+
+  statusBar()->insertPermanentWidget(0, m_statusIcon);
+  m_statusIcon->hide();
 
   setupOptionsWidget();
   setupActions();
@@ -294,6 +304,7 @@ void MainWindow::addPlugin(AkuPlugin *plugin, const KPluginInfo &info)
     connect(plugin, SIGNAL(progressUpdate(double, double)), this, SLOT(handleProgress(double, double)));
     connect(plugin, SIGNAL(operationCompleted()), this, SLOT(completeOperations()));
     connect(plugin, SIGNAL(notifyExtractionComplete()), this, SLOT(extractionCompleteSlot()));
+    connect(plugin, SIGNAL(stateChanged()), this, SLOT(slotPluginStateChanged()));
 
     foreach (const QString &mimeName, plugin->mimeTypeNames()) {
         KMimeType::Ptr mime = KMimeType::mimeType(mimeName);
@@ -319,6 +330,27 @@ void MainWindow::addPlugin(AkuPlugin *plugin, const KPluginInfo &info)
                       info,
                       plugin->extractionWidget()
                      );
+    }
+}
+
+void MainWindow::slotPluginStateChanged()
+{
+    kDebug() << "state changed";
+    AkuPlugin *sender = static_cast<AkuPlugin *>(this->sender());
+    switch (sender->currentOperation()) {
+        case AkuPlugin::Extracting :
+            m_statusLabel->setText("<b>"+i18n("Extraction in progress...")+"</b>");
+            m_statusLabel->show();
+            m_statusIcon->setPixmap(KIconLoader::global()->loadIcon("document-open", KIconLoader::Small));
+            m_statusIcon->show();
+            break;
+        case AkuPlugin::Loading :
+            m_statusLabel->setText("<b>"+i18n("Loading archive...")+"</b>");
+            m_statusLabel->show();
+            m_statusIcon->setPixmap(KIconLoader::global()->loadIcon("archive-extract", KIconLoader::Small));
+            m_statusIcon->show();
+            break;
+        default : ;
     }
 }
 
@@ -384,4 +416,6 @@ void MainWindow::handleProgress(double current, double total)
 void MainWindow::completeOperations()
 {
     m_progressBar->hide();
+    m_statusLabel->hide();
+    m_statusIcon->hide();
 }

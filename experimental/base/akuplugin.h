@@ -32,6 +32,7 @@ class AKU_EXPORT AkuPlugin : public QObject
          * of each operation. The state can be retrieved using currentOperation().
           */
         enum CurrentOperation { 
+                                NoOperation,
                                 Loading,
                                 Extracting,
                                 Adding,
@@ -156,6 +157,12 @@ class AKU_EXPORT AkuPlugin : public QObject
           * @internal notifies the end of the extraction process.
           */
          void notifyExtractionComplete();
+
+         /**
+          * this signal is emitted each time the state changes. No need to 
+          * manually emit this signal. The state can be retrieved using currentOperation().
+          */
+         void stateChanged();
 
     public slots:
         /**
