@@ -16,7 +16,7 @@
 
 #include <QProcess>
 #include <QDateTime>
-// #include <QFile>
+#include <QDir>
 
 #include <KLocale>
 #include <KDebug>
@@ -156,6 +156,9 @@ void RarPlugin::loadArchive()
         } else {
             QStringList attributes = (splitList.at(i)).split(" ", QString::SkipEmptyParts);
             for (int j = 0; j < attributes.size(); j++) {
+                //if ((j == 5) && (attributes[j].startsWith("d"))) {
+                //    file[0].append(QDir().separator());;
+                //}                
 
                 if (j == 4) {
                     QDateTime modified(QDate::fromString(file[4], QString("dd-MM-yy")), 
@@ -209,7 +212,7 @@ QStringList RarPlugin::additionalHeaderStrings()
 {
     return QStringList() << i18n("Ratio") << i18n("Modified")
                          << i18n("Attributes") << i18n("CRC")
-                         << i18n("Method") << i18n("Version") << i18n("Mimetype");
+                         << i18n("Method") << i18n("Version");
 }
 
 void RarPlugin::extractArchive(const KUrl &destination, const QStringList &files)
@@ -223,5 +226,6 @@ void RarPlugin::extractArchive(const KUrl &destination, const QStringList &files
     options.insert(0, "x");
     options.insert(1, m_fileName.pathOrUrl());
     process.start(exeName, options);
+    kDebug() << options;
     process.waitForFinished();
 }
