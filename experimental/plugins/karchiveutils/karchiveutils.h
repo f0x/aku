@@ -15,11 +15,17 @@
 class KUrl;
 class QStringList;
 
-namespace KArchiveUtils
+// namespace KArchiveUtils
+// {
+//     
+// };
+
+class KArchiveUtils : public QObject
 {
-    QString formatPermissions(mode_t permissions);
-    void extractArchive(KArchive *archive, const KUrl &destination, const QStringList &files = QStringList());
-    
+    Q_OBJECT
+    public:
+        static QString formatPermissions(mode_t permissions);
+        static void extractArchive(KArchive *archive, const KUrl &destination, const QStringList &files = QStringList(), int *current = 0);
 };
 
 #endif 

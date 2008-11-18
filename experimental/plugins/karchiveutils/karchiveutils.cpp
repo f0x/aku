@@ -14,9 +14,7 @@
 
 #include <KUrl>
 
-namespace KArchiveUtils
-{
-QString formatPermissions(mode_t permissions)
+QString KArchiveUtils::formatPermissions(mode_t permissions)
 {
     QString pString = "---------"; // permission string
 
@@ -78,7 +76,7 @@ QString formatPermissions(mode_t permissions)
     return pString;
 }
 
-void extractArchive(KArchive *m_archive, const KUrl &destination, const QStringList &files)
+void KArchiveUtils::extractArchive(KArchive *m_archive, const KUrl &destination, const QStringList &files, int *current)
 {
     const KArchiveDirectory *mainDir = static_cast<const KArchiveDirectory*>(m_archive->directory());
 
@@ -86,6 +84,8 @@ void extractArchive(KArchive *m_archive, const KUrl &destination, const QStringL
         mainDir->copyTo(destination.pathOrUrl());
         return;
     }
+
+    *current = 0;
 
     foreach (const QString &file, files) {
         const KArchiveEntry *entry = static_cast<const KArchiveEntry*>(mainDir->entry(file));
@@ -99,7 +99,7 @@ void extractArchive(KArchive *m_archive, const KUrl &destination, const QStringL
             continue;
         }
         static_cast<const KArchiveDirectory*>(entry)->copyTo(destination.pathOrUrl());
-    }
-}
 
+        *current = *current + 1;
+    }
 }

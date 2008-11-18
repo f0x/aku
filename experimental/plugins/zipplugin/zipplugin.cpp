@@ -141,5 +141,6 @@ void ZipPlugin::extractArchive(const KUrl &destination, const QStringList &files
         return;
     }
 
-    KArchiveUtils::extractArchive(m_archive, destination, files);
+    m_filesCount = files.count();
+    KArchiveUtils::extractArchive(m_archive, destination, files, &m_currentExtracting);
 }

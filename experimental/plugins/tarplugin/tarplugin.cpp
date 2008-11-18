@@ -9,7 +9,6 @@
 */
 
 #include "tarplugin.h"
-#include "../karchiveutils/karchiveutils.h"
 
 #include <KLocale>
 #include <KUrl>
@@ -23,7 +22,7 @@
 AKU_PLUGIN_EXPORT(TarPlugin)
 
 TarPlugin::TarPlugin(QObject *parent, const QVariantList &args) : AkuPlugin(parent),
-                                                                  size(0)
+                                                                  size(0), m_currentExtracting(0)
 {}
 
 TarPlugin::~TarPlugin()
@@ -95,12 +94,21 @@ void TarPlugin::loadArchive()
 
 void TarPlugin::emitPercent()
 {
-    kDebug() << "percent";
-    if (!m_archive->isOpen()) {
-        return;
+    kDebug() << "emitPercent";
+
+    if (currentOperation() == AkuPlugin::Loading) {
+        kDebug() << "percent";
+        if (!m_archive->isOpen()) {
+            return;
+        }
+        emit percent((double)m_archive->device()->pos(), size);
+//         return;
     }
 
-    emit percent((double)m_archive->device()->pos(), size);
+    if (currentOperation() == AkuPlugin::Extracting) {
+        kDebug() << m_currentExtracting;
+        emit percent((double)m_currentExtracting, (double)m_filesCount);
+    }
 }
 
 void TarPlugin::getEntries(const KArchiveEntry *rootEntry)
@@ -145,5 +153,7 @@ void TarPlugin::extractArchive(const KUrl &destination, const QStringList &files
         return;
     }
 
-    KArchiveUtils::extractArchive(m_archive, destination, files);
+    m_filesCount = files.count();
+
+    KArchiveUtils::extractArchive(m_archive, destination, files, &m_currentExtracting);
 }
