@@ -165,3 +165,19 @@ QStringList SzipPlugin::additionalHeaderStrings()
 {
     return QStringList() << i18n("Ratio") << i18n("Modified") << i18n("Attributes") << i18n("CRC") << i18n("Method") << i18n("Block");
 }
+
+void SzipPlugin::extractArchive(const KUrl &destination, const QStringList &files)
+{
+//  Usage: 7z <command> [<switches>...] <archive_name> [<file_names>...]
+//            [<@listfiles...>] 
+    QProcess process;
+    QStringList options;
+    options = files;
+    options.insert(0, "x");
+    options.insert(1, "-o" + destination.pathOrUrl());
+    options.insert(3, m_fileName.pathOrUrl());
+    process.start(exeName, options);
+    kDebug() << exeName;
+    kDebug() << options;
+    process.waitForFinished();
+}

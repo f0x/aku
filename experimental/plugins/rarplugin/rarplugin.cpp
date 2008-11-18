@@ -187,7 +187,7 @@ void RarPlugin::extractArchive(const KUrl &destination, const QStringList &files
     QProcess process;
     QStringList options;
     options = files;
-    options.insert(files.size(), destination.pathOrUrl());
+    options.insert(options.size(), destination.pathOrUrl());
     options.insert(0, "x");
     options.insert(1, m_fileName.pathOrUrl());
     process.start(exeName, options);

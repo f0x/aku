@@ -16,7 +16,7 @@
 
 #include <QProcess>
 #include <QDateTime>
-// #include <QFile>
+#include <QDir>
 
 #include <KLocale>
 #include <KDebug>
@@ -173,3 +173,21 @@ QStringList AcePlugin::additionalHeaderStrings()
 {
     return QStringList() << i18n("Ratio") << i18n("Modified");
 }
+
+void AcePlugin::extractArchive(const KUrl &destination, const QStringList &files)
+{
+//  Usage:
+//  UNACE <command> [-<sw1> ...] <archive> [<base_dir>\] [<files>/@<filelist>]
+
+    QProcess process;
+    QStringList options;
+    options = files;
+    options.insert(0, "x");
+    options.insert(1, m_fileName.pathOrUrl());
+    options.insert(options.size(), destination.pathOrUrl() + QDir().separator());
+    process.start(exeName, options);
+    kDebug() << exeName;
+    kDebug() << options;
+    process.waitForFinished();
+}
+
