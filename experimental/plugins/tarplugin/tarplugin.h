@@ -15,6 +15,8 @@
 #include <QVariantList>
 #include <QVector>
 
+#include "../karchiveutils/karchiveutils.h"
+
 class KUrl;
 class KTar;
 class KArchiveEntry;
@@ -48,6 +50,8 @@ class TarPlugin : public AkuPlugin
         QVector<QStringList> m_entries;
         QString m_currentPath;
         double size;
+        int m_currentExtracting;
+        int m_filesCount;
 
         void getEntries(const KArchiveEntry *rootEntry);
 

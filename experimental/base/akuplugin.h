@@ -27,6 +27,17 @@ class AKU_EXPORT AkuPlugin : public QObject
     Q_OBJECT
 
     public:
+        /**
+         * Defines current operation. The state will automagically be set at the begin
+         * of each operation. The state can be retrieved using currentOperation().
+          */
+        enum CurrentOperation { 
+                                Loading,
+                                Extracting,
+                                Adding,
+                                Deleting
+                               };
+
         AkuPlugin(QObject *parent);
         virtual ~AkuPlugin();
 
@@ -100,6 +111,11 @@ class AKU_EXPORT AkuPlugin : public QObject
          */
         void extract(const KUrl &fileName, const KUrl &destination, const QStringList &files = QStringList());
 
+        /**
+         * @return the operation in progress.
+         */
+        CurrentOperation currentOperation();
+
     signals:
         /**
          * emit this signal when the data is ready to be used.
@@ -146,6 +162,10 @@ class AKU_EXPORT AkuPlugin : public QObject
     protected slots:
         /// @internal
         void completeOperations();
+
+    protected:
+        /// @internal
+        void setCurrentOperation(CurrentOperation op);
 
     private:
         class AkuPluginPrivate;

@@ -31,6 +31,7 @@ public:
     AkuPlugin *q;
     QTimer *timer;
     KUrl currentFile;
+    CurrentOperation currentOp;
 };
 
 AkuPlugin::AkuPlugin(QObject *parent) : QObject(parent),
@@ -95,6 +96,8 @@ void AkuPlugin::load(const KUrl &fileName)
         init(fileName);
     }
 
+    setCurrentOperation(Loading);
+
     connect(d->timer, SIGNAL(timeout()), this, SLOT(emitPercent()));
     d->timer->start(500);
 
@@ -108,9 +111,15 @@ void AkuPlugin::extract(const KUrl &fileName, const KUrl &destination, const QSt
         init(fileName);
     }
 
+    setCurrentOperation(Extracting);
+
     KJob *job = new AkuJobs::ExtractJob(this, destination, files, this);
     connect(job, SIGNAL(finished(KJob *)), this, SIGNAL(notifyExtractionComplete()));
     connect(job, SIGNAL(finished(KJob *)), this, SIGNAL(operationCompleted()));
+
+    connect(d->timer, SIGNAL(timeout()), this, SLOT(emitPercent()));
+    d->timer->start(500);
+
     job->start();
 }
 
@@ -131,4 +140,14 @@ void AkuPlugin::extractArchive(const KUrl &destination, const QStringList &files
 {
     Q_UNUSED(destination)
     Q_UNUSED(files)
+}
+
+AkuPlugin::CurrentOperation AkuPlugin::currentOperation()
+{
+    return d->currentOp;
+}
+
+void AkuPlugin::setCurrentOperation(CurrentOperation op)
+{
+    d->currentOp = op;
 }

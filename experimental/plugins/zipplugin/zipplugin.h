@@ -55,6 +55,8 @@ class ZipPlugin : public AkuPlugin
         KZip *m_archive;
         QVector<QStringList> m_entries;
         QString m_currentPath;
+        int m_currentExtracting;
+        int m_filesCount;
 
         void getEntries(const KArchiveEntry *rootEntry);
 
