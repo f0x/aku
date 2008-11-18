@@ -118,6 +118,8 @@ void TarPlugin::getEntries(const KArchiveEntry *rootEntry)
         getEntries(rootDir->entry(entry));
     }
 
+    m_currentPath.remove(rootDir->name() + QDir::separator());
+
 }
 
 QStringList TarPlugin::additionalHeaderStrings()
