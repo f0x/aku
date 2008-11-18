@@ -54,9 +54,6 @@ class TarPlugin : public AkuPlugin
         int m_filesCount;
 
         void getEntries(const KArchiveEntry *rootEntry);
-
-    public slots:
-        void emitPercent();
 };
 
 #endif 

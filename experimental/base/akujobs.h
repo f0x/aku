@@ -17,6 +17,7 @@
 #include <ThreadWeaver/Weaver>
 
 #include <QStringList>
+#include <QVector>
 
 class AkuPlugin;
 
@@ -73,6 +74,27 @@ class AkuThread : public ThreadWeaver::Job
     private:
         void run();
         AkuJob *m_job;
+};
+
+class AkuHelper : public QObject
+{
+    Q_OBJECT
+    public:
+        AkuHelper(AkuPlugin *);
+        ~AkuHelper();
+
+    private:
+        AkuPlugin *m_plugin;
+
+    signals:
+        void error(const QString &);
+        void archiveLoaded(QVector<QStringList>);
+        void progressUpdate(double, double);
+
+    public slots:
+        void onError(const QString &);
+        void onArchiveLoaded(QVector<QStringList>);
+        void onProgressUpdate(double, double);
 };
 };
 

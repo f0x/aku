@@ -134,19 +134,17 @@ class AKU_EXPORT AkuPlugin : public QObject
         void archiveLoaded(const QVector<QStringList> &archive);
 
         /**
-         * emit this signal when an error occurs. Pass the error
-         * as QString so that it will be displayed by the main app.
+         * This signal is emitted after calling onError. Never emit this signal directly.
          */
         void error(const QString&);
 
         /**
-         * emit this signal when you want to update percent status.
-         * This is pretty useful when the application implements a progressbar.
-         * @note emit this signal from within the reimplementation of emitPercent()
+         * this is emitted when the progress status changes.
+         * @note never emit this signal directly, use onProgressUpdate instead
          * @param processed the current value.
          * @param total the total to reach.
          */
-        void percent(double processed, double total);
+        void progressUpdate(double processed, double total);
 
          /**
           * @internal nobody should never care of this signal. 
@@ -164,7 +162,17 @@ class AKU_EXPORT AkuPlugin : public QObject
          * reimplement this slot and perform here percentage calculation
          * of current progress. then call emit percent(uint processed, uint total);
          */
-        virtual void emitPercent();
+        void onProgressUpdate(double processed, double total);
+
+        /**
+         * Call this slot whenever an error occurs and pass the error as QString
+         */
+        void onError(const QString &);
+
+        /**
+         * Call this slot when the archive is correctly loaded.
+         */
+        void onArchiveLoaded(QVector<QStringList>);
 
     protected slots:
         /// @internal

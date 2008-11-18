@@ -16,8 +16,6 @@
 #include <QStringList>
 #include <QVector>
 
-#include <QTimer>
-
 Q_DECLARE_METATYPE(QVector<QStringList>)
 
 class AkuPlugin::AkuPluginPrivate {
@@ -25,13 +23,13 @@ class AkuPlugin::AkuPluginPrivate {
 public:
     AkuPluginPrivate(AkuPlugin *q):
                      q(q),
-                     timer(new QTimer(q))
+                     helper(0)
     {}
 
     AkuPlugin *q;
-    QTimer *timer;
     KUrl currentFile;
     CurrentOperation currentOp;
+    AkuJobs::AkuHelper *helper;
 };
 
 AkuPlugin::AkuPlugin(QObject *parent) : QObject(parent),
@@ -43,7 +41,9 @@ AkuPlugin::AkuPlugin(QObject *parent) : QObject(parent),
 }
 
 AkuPlugin::~AkuPlugin()
-{}
+{
+    delete d;
+}
 
 QStringList AkuPlugin::mimeTypeNames()
 {
@@ -113,8 +113,13 @@ void AkuPlugin::load(const KUrl &fileName)
 
     setCurrentOperation(Loading);
 
-    connect(d->timer, SIGNAL(timeout()), this, SLOT(emitPercent()));
-    d->timer->start(500);
+    // TODO: see whether to delete previous one or not
+    if (!d->helper) {
+        d->helper = new AkuJobs::AkuHelper(this);
+    }
+    connect (d->helper, SIGNAL(error(const QString &)), this, SIGNAL(error(const QString &)));
+    connect (d->helper, SIGNAL(archiveLoaded(QVector<QStringList>)), this, SIGNAL(archiveLoaded(QVector<QStringList>)));
+    connect (d->helper, SIGNAL(progressUpdate(double, double)), this, SIGNAL(progressUpdate(double, double)));
 
     KJob *job = new AkuJobs::LoadJob(this, this);
     job->start();
@@ -132,18 +137,11 @@ void AkuPlugin::extract(const KUrl &fileName, const KUrl &destination, const QSt
     connect(job, SIGNAL(finished(KJob *)), this, SIGNAL(notifyExtractionComplete()));
     connect(job, SIGNAL(finished(KJob *)), this, SIGNAL(operationCompleted()));
 
-    connect(d->timer, SIGNAL(timeout()), this, SLOT(emitPercent()));
-    d->timer->start(500);
-
     job->start();
 }
 
-void AkuPlugin::emitPercent()
-{}
-
 void AkuPlugin::completeOperations()
 {
-    d->timer->stop();
 }
 
 void AkuPlugin::init(const KUrl &fileName)
@@ -165,4 +163,31 @@ AkuPlugin::CurrentOperation AkuPlugin::currentOperation()
 void AkuPlugin::setCurrentOperation(CurrentOperation op)
 {
     d->currentOp = op;
+}
+
+void AkuPlugin::onError(const QString &error)
+{
+    if (!d->helper) {
+        return;
+    }
+
+    d->helper->onError(error);
+}
+
+void AkuPlugin::onArchiveLoaded(QVector<QStringList> data)
+{
+    if (!d->helper) {
+        return;
+    }
+
+    d->helper->onArchiveLoaded(data);
+}
+
+void AkuPlugin::onProgressUpdate(double current, double total)
+{
+    if (!d->helper) {
+        return;
+    }
+
+    d->helper->onProgressUpdate(current, total);
 }

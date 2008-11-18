@@ -13,6 +13,7 @@
 #include <QStringList>
 
 #include <KUrl>
+#include <KDebug>
 
 QString KArchiveUtils::formatPermissions(mode_t permissions)
 {
@@ -76,7 +77,7 @@ QString KArchiveUtils::formatPermissions(mode_t permissions)
     return pString;
 }
 
-void KArchiveUtils::extractArchive(KArchive *m_archive, const KUrl &destination, const QStringList &files, int *current)
+void KArchiveUtils::extractArchive(KArchive *m_archive, const KUrl &destination, const QStringList &files)
 {
     const KArchiveDirectory *mainDir = static_cast<const KArchiveDirectory*>(m_archive->directory());
 
@@ -85,7 +86,7 @@ void KArchiveUtils::extractArchive(KArchive *m_archive, const KUrl &destination,
         return;
     }
 
-    *current = 0;
+    m_current = 0;
 
     foreach (const QString &file, files) {
         const KArchiveEntry *entry = static_cast<const KArchiveEntry*>(mainDir->entry(file));
@@ -100,6 +101,21 @@ void KArchiveUtils::extractArchive(KArchive *m_archive, const KUrl &destination,
         }
         static_cast<const KArchiveDirectory*>(entry)->copyTo(destination.pathOrUrl());
 
-        *current = *current + 1;
+        m_current++;
     }
+}
+
+KArchiveUtils::Ptr KArchiveUtils::self()
+{
+    static KArchiveUtils::Ptr instance;
+    if (!instance) {
+       instance = new KArchiveUtils;
+    }
+
+    return instance;
+}
+
+int KArchiveUtils::currentExtractionIndex()
+{
+    return m_current;
 }
