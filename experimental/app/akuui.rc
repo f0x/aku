@@ -31,4 +31,16 @@
       <Action name="lasttip" />
    </Menu>
   </MenuBar>-->
+<MenuBar>
+   <Menu name="commands" ><text>Commands</text>
+      <Action name="addDir" />
+      <Action name="addFile" />
+      <Action name="delete" />
+      <Action name="rename" />
+      <Separator/>
+      <Action name="encryptArchive" />
+      <Action name="lock" />
+      <Action name="addComment" />
+   </Menu>
+</MenuBar>
 </gui>

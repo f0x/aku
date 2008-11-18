@@ -67,6 +67,21 @@ bool RarPlugin::canDelete()
     return true;
 }
 
+bool RarPlugin::canAddComment()
+{
+    return true;
+}
+
+bool RarPlugin::canEncrypt()
+{
+    return true;
+}
+
+bool RarPlugin::canLock()
+{
+    return true;
+}
+
 void RarPlugin::init(const KUrl &fileName)
 {
     m_fileName = fileName;

@@ -35,7 +35,11 @@ class AKU_EXPORT AkuPlugin : public QObject
                                 Loading,
                                 Extracting,
                                 Adding,
-                                Deleting
+                                Deleting,
+                                Renaming,
+                                AddingComment,
+                                Encrypting,
+                                Locking
                                };
 
         AkuPlugin(QObject *parent);
@@ -59,6 +63,9 @@ class AKU_EXPORT AkuPlugin : public QObject
         virtual bool canRename();
         virtual bool canDelete();
         virtual bool canAdd();
+        virtual bool canAddComment();
+        virtual bool canLock();
+        virtual bool canEncrypt();
 
         /**
          * In the reimplementation of this function goes the real parsing process.

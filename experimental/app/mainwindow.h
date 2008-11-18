@@ -42,10 +42,10 @@ class MainWindow : public KXmlGuiWindow
     KActionMenu *actionViewChoose;
     KActionMenu *actionAdd;
     KActionMenu *actionExtract;
-    QAction *viewTree;
-    QAction *viewIcon;
-    QAction *addFile;
-    QAction *addDir;
+    KAction *viewTree;
+    KAction *viewIcon;
+    KAction *addFile;
+    KAction *addDir;
     QAction *actionHome;
     QAction *actionDesktop;
     AkuViewOptionWidget *m_optionView;
@@ -55,6 +55,10 @@ class MainWindow : public KXmlGuiWindow
     KUrl m_currentUrl;
 
     KAction *actionDelete;
+    KAction *actionEncrypt;
+    KAction *actionAddComment;
+    KAction *actionLock;
+    KAction *actionRename;
 
     void setupActions();
     void setupOptionsWidget();

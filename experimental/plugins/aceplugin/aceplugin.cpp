@@ -64,7 +64,22 @@ bool AcePlugin::canCreate()
     return false;
 }
 
+bool AcePlugin::canLock()
+{
+    return false;
+}
+
 bool AcePlugin::canRename()
+{
+    return true;
+}
+
+bool AcePlugin::canEncrypt()
+{
+    return true;
+}
+
+bool AcePlugin::canAddComment()
 {
     return true;
 }

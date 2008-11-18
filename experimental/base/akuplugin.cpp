@@ -75,6 +75,21 @@ bool AkuPlugin::canDelete()
     return false;
 }
 
+bool AkuPlugin::canAddComment()
+{
+    return false;
+}
+
+bool AkuPlugin::canEncrypt()
+{
+    return false;
+}
+
+bool AkuPlugin::canLock()
+{
+    return false;
+}
+
 bool AkuPlugin::isWorkingProperly()
 {
     return false;

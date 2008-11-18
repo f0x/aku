@@ -67,6 +67,22 @@ bool SzipPlugin::canDelete()
     return true;
 }
 
+bool SzipPlugin::canEncrypt()
+{
+    return true;
+}
+
+bool SzipPlugin::canAddComment()
+{
+    return true;
+}
+
+bool SzipPlugin::canLock()
+{
+    return false;
+}
+
+
 void SzipPlugin::loadArchive()
 {
     QProcess *process = new QProcess();

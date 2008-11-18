@@ -32,6 +32,9 @@ class RarPlugin : public AkuPlugin
         bool canRename();
         bool canDelete();
         bool canAdd();
+        bool canEncrypt();
+        bool canAddComment();
+        bool canLock();
 
         bool isWorkingProperly();
 

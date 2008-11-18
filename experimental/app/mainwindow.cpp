@@ -86,9 +86,9 @@ void MainWindow::setupActions()
   actionViewChoose->setText(i18n("View"));
   actionCollection()->addAction("view", actionViewChoose);
   actionViewChoose->setDelayed(false);
-  viewTree = new QAction(i18n("Tree View"), this);
+  viewTree = new KAction(i18n("Tree View"), this);
   viewTree->setIcon(KIcon("view-list-tree"));
-  viewIcon = new QAction(i18n("Icon View"), this);
+  viewIcon = new KAction(i18n("Icon View"), this);
   viewIcon->setIcon(KIcon("view-list-icons"));
   actionViewChoose->addAction(viewTree);
   actionViewChoose->addAction(viewIcon);
@@ -104,9 +104,9 @@ void MainWindow::setupActions()
   actionAdd->setText(i18n("Add to archive"));
   actionCollection()->addAction("add", actionAdd);
   actionAdd->setDelayed(false);
-  addFile = new QAction(i18n("Add file(s)"), this);
+  addFile = new KAction(i18n("Add file(s)"), this);
   addFile->setIcon(KIcon("archive-insert"));
-  addDir = new QAction(i18n("Add dir"), this);
+  addDir = new KAction(i18n("Add dir"), this);
   addDir->setIcon(KIcon("archive-insert-directory"));
   actionAdd->addAction(addFile);
   actionAdd->addAction(addDir);
@@ -116,9 +116,38 @@ void MainWindow::setupActions()
   actionDelete->setText(i18n("Remove"));
   actionCollection()->addAction("delete", actionDelete);
 
+  actionEncrypt = new KAction(this);
+  actionEncrypt->setText(i18n("Encrypt this archive"));
+  actionEncrypt->setIcon(KIcon("dialog-password"));
+  actionCollection()->addAction("encryptArchive", actionEncrypt);
+
+  actionLock = new KAction(this);
+  actionLock->setText(i18n("Lock Archive"));
+  actionLock->setIcon(KIcon("document-encrypt"));
+  actionCollection()->addAction("lock", actionLock);
+  
+  actionAddComment = new KAction(this);
+  actionAddComment->setText(i18n("Add Archive Comment"));
+  actionAddComment->setIcon(KIcon("view-pim-notes"));
+  actionCollection()->addAction("addComment", actionAddComment);
+
+  actionRename = new KAction(this);
+  actionRename->setText(i18n("Rename"));
+  //actionRename->setIcon(KIcon(""));
+  actionCollection()->addAction("rename", actionRename);
+
+  actionCollection()->addAction("addDir", addDir);
+  actionCollection()->addAction("addFile", addFile);
+
+  addDir->setEnabled(false);
+  addFile->setEnabled(false);
+  actionRename->setEnabled(false);
+  actionAddComment->setEnabled(false);
+  actionEncrypt->setEnabled(false);
   actionExtract->setEnabled(false);
   actionDelete->setEnabled(false);
   actionAdd->setEnabled(false);
+  actionLock -> setEnabled(false);
 }
 
 void MainWindow::setupConnections()
@@ -280,9 +309,12 @@ void MainWindow::addPlugin(AkuPlugin *plugin, const KPluginInfo &info)
                       mime->name(),
                       mime->comment(),
                       plugin->canExtract(),
-                      plugin->canDelete(),
                       plugin->canCreate(),
+                      plugin->canDelete(),
                       plugin->canRename(),
+                      plugin->canEncrypt(),
+                      plugin->canAddComment(),
+                      plugin->canLock(),
                       plugin->isWorkingProperly(),
                       info,
                       plugin->extractionWidget()

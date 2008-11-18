@@ -24,8 +24,9 @@ PluginView::PluginView(QWidget *parent) : QTreeView(parent)
 {
     QStandardItemModel *model = new QStandardItemModel();
     model->setHorizontalHeaderLabels(QStringList()<<i18n("Archive Plugin")<<
-                                     i18n("Extraction")<<i18n("Creation")<<i18n("Rename")<<
-                                     i18n("Delete")<<i18n("Working Properly")<<i18n("Configuration"));
+                                     i18n("Extraction")<<i18n("Creation")<<i18n("Delete")<<i18n("Rename")
+                                     <<i18n("Encryption")<<i18n("Comment")<<i18n("Lock")<<i18n("Working Properly")
+                                     <<i18n("Configuration"));
     setModel(model);
     setItemDelegate(new PluginInfoDelegate);
     setRootIsDecorated(false);
@@ -38,8 +39,8 @@ PluginView::~PluginView()
 {}
 
 void PluginView::addPluginInfo(const QString &suffix, const QString &comment,
-                               bool extraction, bool deletion, bool creation,
-                               bool renaming, bool working, const KPluginInfo &info, QWidget *config)
+                               bool extraction, bool creation, bool deletion, 
+                               bool renaming, bool encrypting, bool addComment, bool locking, bool working, const KPluginInfo &info, QWidget *config)
 {
     QList<QStandardItem*> items;
 
@@ -56,15 +57,27 @@ void PluginView::addPluginInfo(const QString &suffix, const QString &comment,
     items << item;
 
     item = new QStandardItem();
-    item->setData(deletion, PluginInfoDelegate::PluginPropertyRole);
-    items << item;
-
-    item = new QStandardItem();
     item->setData(creation, PluginInfoDelegate::PluginPropertyRole);
     items << item;
 
     item = new QStandardItem();
+    item->setData(deletion, PluginInfoDelegate::PluginPropertyRole);
+    items << item;
+
+    item = new QStandardItem();
     item->setData(renaming, PluginInfoDelegate::PluginPropertyRole);
+    items << item;
+ 
+    item = new QStandardItem();
+    item->setData(encrypting, PluginInfoDelegate::PluginPropertyRole);
+    items << item;
+  
+    item = new QStandardItem();
+    item->setData(addComment, PluginInfoDelegate::PluginPropertyRole);
+    items << item;
+
+    item = new QStandardItem();
+    item->setData(locking, PluginInfoDelegate::PluginPropertyRole);
     items << item;
 
     item = new QStandardItem();
