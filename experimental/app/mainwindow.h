@@ -82,6 +82,7 @@ class MainWindow : public KXmlGuiWindow
     void extractionCompleteSlot();
     void loadSettings();
     void slotPluginStateChanged();
+    void recentDirSlot();
 };
 
 #endif

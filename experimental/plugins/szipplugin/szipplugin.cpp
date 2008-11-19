@@ -118,19 +118,25 @@ void SzipPlugin::loadArchive()
     foreach (const QString &line, lines) {
        if (line.startsWith("Path =")) {
            file << line.mid(7);
+           kDebug() << file;
            continue;
        }
        if (line.startsWith("Size =")) {
            file << line.mid(7);
+           kDebug() << file;
            continue;
        }
        if (line.startsWith("Packed Size =")) {
            file << line.mid(14);
            // add the ratio value
-
-           ratio = 100 * file[2].toInt() / file[1].toInt();
-           ratioValue.setNum(ratio);
-           file << (ratioValue + "%");
+           if (file[1].toInt() != 0) {
+               ratio = 100 * file[2].toInt() / file[1].toInt();
+               ratioValue.setNum(ratio);
+               file << (ratioValue + "%");
+               continue;
+           }
+           file << QString(0 + "%");
+           kDebug() << file;
            continue;
        }
        if (line.startsWith("Modified =")) {
@@ -139,22 +145,27 @@ void SzipPlugin::loadArchive()
            QDateTime modified(QDate::fromString(line.mid(11, 10), QString("yyyy-MM-dd")), 
                               QTime::fromString(line.mid(22, 5), QString("hh:mm")));
            file << KGlobal::locale()->formatDateTime(modified);
+           kDebug() << file;
            continue;
        }
        if (line.startsWith("Attributes =")) {
            file << line.mid(13);
+           kDebug() << file;
            continue;
        }
        if (line.startsWith("CRC =")) {
            file << line.mid(6);
+           kDebug() << file;
            continue;
        } 
        if (line.startsWith("Method =")) {
            file << line.mid(9);
+           kDebug() << file;
            continue;
        }
        if (line.startsWith("Block =")) {
            file << line.mid(8);
+           kDebug() << file;
            archive << file;
            file.clear();
        }

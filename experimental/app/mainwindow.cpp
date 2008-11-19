@@ -173,14 +173,14 @@ void MainWindow::setupConnections()
 
 void MainWindow::loadSettings()
 {  
-   actionHome = new QAction(QDir().homePath(), this);
+   actionHome = new QAction(QDir::homePath(), this);
    actionDesktop = new QAction(KGlobalSettings::desktopPath(), this);
     
    actionHome->setIcon(KIcon("user-home"));
    actionDesktop->setIcon(KIcon("user-desktop"));
    
-   actionHome->setData(QVariant(QDir().homePath()));
-   actionDesktop->setData(QVariant(KGlobalSettings::desktopPath()));   
+   actionHome->setData(KUrl(QDir::homePath()));
+   actionDesktop->setData(KUrl(KGlobalSettings::desktopPath()));   
    KAction *actionLabel = new KAction(this);
    actionLabel->setText(i18n("Quick extracto to"));
    actionLabel->setIcon(KIcon("archive-extract"));
@@ -189,18 +189,20 @@ void MainWindow::loadSettings()
    actionExtract->addSeparator();
    actionExtract->addAction(actionHome);
    actionExtract->addAction(actionDesktop);
+   connect(actionHome, SIGNAL(triggered()), this, SLOT(recentDirSlot()));
+   connect(actionDesktop, SIGNAL(triggered()), this, SLOT(recentDirSlot()));
 
-   KConfig config;
    QStringList actionPaths;
-   actionPaths = KConfigGroup(&config, "Extraction dialog").readEntry("destinationDirs", QStringList());
+   actionPaths = KConfigGroup(KGlobal::config(), "Favourite Dirs").readEntry("destinationDirs", QStringList());
    foreach (const KUrl &path, actionPaths) {
        KAction *recentDir = new KAction(this);
        recentDir->setData(QVariant(path));
        recentDir->setText(path.pathOrUrl());
        recentDir->setIcon(KIcon("folder-blue"));
        actionExtract->addAction(recentDir);
+       connect(recentDir, SIGNAL(triggered()), this, SLOT(recentDirSlot()));
    }
-   // connect (recentDir, SIGNAL(triggered()) 
+//    // connect (recentDir, SIGNAL(triggered()) 
 
 }
 
@@ -295,6 +297,13 @@ void MainWindow::extractionSlot()
     m_extractionDialog->exec();
 }
 
+void MainWindow::recentDirSlot()
+{
+    KAction *sender = static_cast<KAction*>(this->sender());
+    KUrl url(sender->data().toString());
+    doExtraction(url);
+}
+
 void MainWindow::doExtraction(const KUrl &destination)
 {
     // TODO: retrieve selected files to extract
@@ -304,9 +313,19 @@ void MainWindow::doExtraction(const KUrl &destination)
     }
     m_plugins[m_currentPlugin]->extract(m_currentUrl, destination, files);
     
-    KConfig config;
-    KConfigGroup options(&config, "Extraction dialog");
-    options.writeEntry("destinationDirs", destination);
+    KConfigGroup options(KGlobal::config()->group("Favourite Dirs"));
+    QStringList urlList = options.readEntry("destinationDirs", QStringList());
+
+    if (urlList.contains(destination.path()) && 
+        destination == KUrl(KGlobalSettings::desktopPath()) &&
+        destination == KUrl(QDir::homePath())) {
+        kDebug() << "already in";
+        return;
+    }
+
+    urlList.prepend(destination.path());
+    kDebug() << urlList;
+    options.writeEntry("destinationDirs", urlList);
 }
 
 void MainWindow::changeView()
