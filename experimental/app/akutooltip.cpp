@@ -91,7 +91,7 @@ void AkuTooltip::slotFinish()
     if (m_hiding) {
         close();
     } else {
-        QTimer::singleShot(3000, this, SLOT(hideTip()));
+        QTimer::singleShot(5000, this, SLOT(hideTip()));
     }
 }
 
