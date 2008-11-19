@@ -165,7 +165,7 @@ void AcePlugin::loadArchive()
         file.clear();
     }
 
-    emit archiveLoaded(archive);
+    onArchiveLoaded(archive);
 }
 
 bool AcePlugin::isWorkingProperly()

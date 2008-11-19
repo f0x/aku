@@ -187,7 +187,7 @@ void RarPlugin::loadArchive()
  
 //    kDebug() << archive;
 
-    emit archiveLoaded(archive);
+    onArchiveLoaded(archive);
 }
 
 bool RarPlugin::isWorkingProperly()

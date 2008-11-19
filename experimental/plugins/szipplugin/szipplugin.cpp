@@ -160,7 +160,7 @@ void SzipPlugin::loadArchive()
        }
     }
 
-    emit archiveLoaded(archive);
+    onArchiveLoaded(archive);
 }
 
 bool SzipPlugin::isWorkingProperly()
