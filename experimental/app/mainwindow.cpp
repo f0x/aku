@@ -179,8 +179,8 @@ void MainWindow::loadSettings()
    actionHome->setIcon(KIcon("user-home"));
    actionDesktop->setIcon(KIcon("user-desktop"));
    
-   actionHome->setData(KUrl(QDir::homePath()));
-   actionDesktop->setData(KUrl(KGlobalSettings::desktopPath()));   
+   actionHome->setData(QDir::homePath());
+   actionDesktop->setData(KGlobalSettings::desktopPath());   
    KAction *actionLabel = new KAction(this);
    actionLabel->setText(i18n("Quick extracto to"));
    actionLabel->setIcon(KIcon("archive-extract"));
@@ -253,9 +253,10 @@ void MainWindow::load(const KUrl &url)
 
 void MainWindow::addRecentFile(KUrl recent)
 {
-    if (actionRecentFiles->maxItems() >= actionRecentFiles->urls().count() && !actionRecentFiles->urls().contains(recent)) {
-        actionRecentFiles->removeUrl(actionRecentFiles->urls().first());
-    }
+// FIXME: does not work
+//     if (actionRecentFiles->maxItems() > actionRecentFiles->urls().count() && !actionRecentFiles->urls().contains(recent)) {
+//         actionRecentFiles->removeUrl(actionRecentFiles->urls().first());
+//     }
     actionRecentFiles -> addUrl(recent);
 }
 
@@ -307,6 +308,7 @@ void MainWindow::recentDirSlot()
 void MainWindow::doExtraction(const KUrl &destination)
 {
     // TODO: retrieve selected files to extract
+    kDebug() << "extracting to" << destination;
     QStringList files = treeView->selectedPaths();
     if (iconWidget->isVisible()) {
        files = iconWidget->view()->selectedPaths();
