@@ -181,8 +181,26 @@ void MainWindow::loadSettings()
    
    actionHome->setData(QVariant(QDir().homePath()));
    actionDesktop->setData(QVariant(KGlobalSettings::desktopPath()));   
+   KAction *actionLabel = new KAction(this);
+   actionLabel->setText(i18n("Quick extracto to"));
+   actionLabel->setIcon(KIcon("archive-extract"));
+   actionLabel->setEnabled(false);
+   actionExtract->addAction(actionLabel);
+   actionExtract->addSeparator();
    actionExtract->addAction(actionHome);
    actionExtract->addAction(actionDesktop);
+
+   KConfig config;
+   QStringList actionPaths;
+   actionPaths = KConfigGroup(&config, "Extraction dialog").readEntry("destinationDirs", QStringList());
+   foreach (const KUrl &path, actionPaths) {
+       KAction *recentDir = new KAction(this);
+       recentDir->setData(QVariant(path));
+       recentDir->setText(path.pathOrUrl());
+       recentDir->setIcon(KIcon("folder-blue"));
+       actionExtract->addAction(recentDir);
+   }
+   // connect (recentDir, SIGNAL(triggered()) 
 
 }
 
@@ -286,6 +304,9 @@ void MainWindow::doExtraction(const KUrl &destination)
     }
     m_plugins[m_currentPlugin]->extract(m_currentUrl, destination, files);
     
+    KConfig config;
+    KConfigGroup options(&config, "Extraction dialog");
+    options.writeEntry("destinationDirs", destination);
 }
 
 void MainWindow::changeView()
