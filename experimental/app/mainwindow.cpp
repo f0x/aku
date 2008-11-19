@@ -7,6 +7,7 @@
 #include "akuviewoptionwidget.h"
 #include "akuiconwidget.h"
 #include "akuextractiondialog.h"
+#include "akutooltip.h"
 
 #include <akuplugin.h>
 
@@ -26,6 +27,7 @@
 #include <KStatusBar>
 #include <KFileItem>
 #include <KIconLoader>
+#include <KVBox>
 
 #include <QListView>
 #include <QTreeView>
@@ -44,10 +46,13 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent),
   connect(loader, SIGNAL(pluginLoaded(AkuPlugin*, const KPluginInfo &)),
           this, SLOT(addPlugin(AkuPlugin*, const KPluginInfo &)));
 
+  KVBox *baseWd = new KVBox(this);
+  setCentralWidget(baseWd);
+
   loader->loadAllPlugins();
 
-  splitter = new QSplitter(this);
-  setCentralWidget(splitter);
+  splitter = new QSplitter(baseWd);
+  setCentralWidget(baseWd);
 
   treeView = new AkuTreeView(splitter);
   iconWidget = new AkuIconWidget(splitter);
@@ -399,7 +404,9 @@ void MainWindow::handleError(const QString &error)
 
 void MainWindow::extractionCompleteSlot()
 {
-    KMessageBox::information(this, i18n("Extraction process complete"), i18n("Extraction"));
+    AkuTooltip *tip = new AkuTooltip(centralWidget());
+    tip->setTooltip(i18n("Extraction process completed"));
+    tip->showTip();
 }
 
 void MainWindow::handleProgress(double current, double total)

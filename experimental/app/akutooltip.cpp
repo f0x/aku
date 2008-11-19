@@ -14,6 +14,7 @@
 #include <QLabel>
 #include <QToolButton>
 #include <QTimeLine>
+#include <QTimer>
 
 #include <KPushButton>
 #include <KIconLoader>
@@ -22,10 +23,16 @@
 
 const int DURATION = 750; // ms
 
-AkuTooltip::AkuTooltip(QWidget *parent) : QWidget(parent)
+AkuTooltip::AkuTooltip(QWidget *parent) : QWidget(parent),
+                                          m_mouseIn(false)
 {
+    setAttribute(Qt::WA_DeleteOnClose);
+
     m_base = new KHBox(this);
     m_base->setAutoFillBackground(true);
+
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+
     QPalette p = m_base->palette();
     p.setColor(QPalette::Window, Qt::white);
     p.setColor(QPalette::WindowText, Qt::black);
@@ -70,6 +77,10 @@ void AkuTooltip::showTip()
 
 void AkuTooltip::hideTip()
 {
+    if (m_mouseIn) {
+        return;
+    }
+
     m_hiding = true;
     m_timeLine->setFrameRange(0, -height());
     m_timeLine->start();
@@ -78,8 +89,23 @@ void AkuTooltip::hideTip()
 void AkuTooltip::slotFinish()
 {
     if (m_hiding) {
-        hide();
+        close();
+    } else {
+        QTimer::singleShot(3000, this, SLOT(hideTip()));
     }
+}
+
+void AkuTooltip::enterEvent(QEvent *event)
+{
+    m_mouseIn = true;
+    QWidget::enterEvent(event);
+}
+
+void AkuTooltip::leaveEvent(QEvent *event)
+{
+    m_mouseIn = false;
+    slotFinish();
+    QWidget::leaveEvent(event);
 }
 
 void AkuTooltip::resizeEvent(QResizeEvent *event)
@@ -92,4 +118,9 @@ void AkuTooltip::setTooltip(const QString &tip)
 {
     m_tipLabel->setText(tip);
     setMinimumSize(m_base->sizeHint());
+}
+
+QSize AkuTooltip::sizeHint() const
+{
+    return m_base->sizeHint();
 }

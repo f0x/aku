@@ -11,6 +11,7 @@
 #define AKUTOOLTIP_H
 
 #include <QWidget>
+
 class QLabel;
 class QToolButton;
 class QTimeLine;
@@ -21,6 +22,8 @@ class AkuTooltip : public QWidget
     public:
         AkuTooltip(QWidget *parent);
         ~AkuTooltip();
+
+        QSize sizeHint() const;
 
     public slots:
         void showTip();
@@ -33,6 +36,7 @@ class AkuTooltip : public QWidget
         QToolButton *m_closeButton;
         QTimeLine *m_timeLine;
         bool m_hiding;
+        bool m_mouseIn;
 
     protected slots:
         void animate(int);
@@ -40,6 +44,8 @@ class AkuTooltip : public QWidget
 
     protected:
         void resizeEvent(QResizeEvent*);
+        void enterEvent(QEvent *event);
+        void leaveEvent(QEvent *event);
 
 };
 
