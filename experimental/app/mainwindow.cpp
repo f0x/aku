@@ -196,7 +196,8 @@ void MainWindow::loadSettings()
    actionPaths = KConfigGroup(KGlobal::config(), "Favourite Dirs").readEntry("destinationDirs", QStringList());
    foreach (const KUrl &path, actionPaths) {
        KAction *recentDir = new KAction(this);
-       recentDir->setData(QVariant(path));
+       recentDir->setData(QVariant(path.pathOrUrl()));
+       //kDebug() << recentDir->data().toString();
        recentDir->setText(path.pathOrUrl());
        recentDir->setIcon(KIcon("folder-blue"));
        actionExtract->addAction(recentDir);
@@ -302,6 +303,8 @@ void MainWindow::recentDirSlot()
 {
     KAction *sender = static_cast<KAction*>(this->sender());
     KUrl url(sender->data().toString());
+    kDebug() << url;
+    kDebug() << sender->data().toString();
     doExtraction(url);
 }
 
@@ -318,10 +321,10 @@ void MainWindow::doExtraction(const KUrl &destination)
     KConfigGroup options(KGlobal::config()->group("Favourite Dirs"));
     QStringList urlList = options.readEntry("destinationDirs", QStringList());
 
-    if (urlList.contains(destination.path()) && 
-        destination == KUrl(KGlobalSettings::desktopPath()) &&
+    if (urlList.contains(destination.pathOrUrl()) || 
+        destination == KUrl(KGlobalSettings::desktopPath()) ||
         destination == KUrl(QDir::homePath())) {
-        kDebug() << "already in";
+        kDebug() << destination.pathOrUrl();
         return;
     }
 
