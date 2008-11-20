@@ -8,6 +8,7 @@
 #include "akuiconwidget.h"
 #include "akuextractiondialog.h"
 #include "akutooltip.h"
+#include "akutooltipmanager.h"
 
 #include <akuplugin.h>
 
@@ -451,7 +452,7 @@ void MainWindow::extractionCompleteSlot()
 {
     AkuTooltip *tip = new AkuTooltip(centralWidget());
     tip->setTooltip(i18n("Extraction process completed"));
-    tip->showTip();
+    AkuTooltipManager::instance()->showTip(tip);
 }
 
 void MainWindow::handleProgress(double current, double total)

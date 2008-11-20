@@ -9,6 +9,7 @@
 */
 
 #include "akutooltip.h"
+#include "akutooltipmanager.h"
 
 #include <QPalette>
 #include <QLabel>
@@ -20,13 +21,14 @@
 #include <KIconLoader>
 #include <KLocale>
 #include <KHBox>
+#include <KDebug>
 
 const int DURATION = 750; // ms
 
 AkuTooltip::AkuTooltip(QWidget *parent) : QWidget(parent),
                                           m_mouseIn(false)
 {
-    setAttribute(Qt::WA_DeleteOnClose);
+//     setAttribute(Qt::WA_DeleteOnClose);
 
     m_base = new KHBox(this);
     m_base->setAutoFillBackground(true);
@@ -57,10 +59,13 @@ AkuTooltip::AkuTooltip(QWidget *parent) : QWidget(parent),
 
     m_base->setGeometry(0, -height(), width(), height());
     hide();
+
+    AkuTooltipManager::instance()->registerTooltip(this, parent);
 }
 
 AkuTooltip::~AkuTooltip()
-{}
+{
+}
 
 void AkuTooltip::animate(int y)
 {
@@ -89,7 +94,8 @@ void AkuTooltip::hideTip()
 void AkuTooltip::slotFinish()
 {
     if (m_hiding) {
-        close();
+        hide();
+        emit tooltipClosed(this);
     } else {
         QTimer::singleShot(5000, this, SLOT(hideTip()));
     }

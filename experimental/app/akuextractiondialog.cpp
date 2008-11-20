@@ -9,6 +9,7 @@
 */ 
 #include "akuextractiondialog.h"
 #include "akutooltip.h"
+#include "akutooltipmanager.h"
 
 #include <KLocale>
 #include <KDebug>
@@ -66,7 +67,7 @@ AkuExtractionDialog::AkuExtractionDialog(QWidget *parent) : KDialog(parent),
     AkuTooltip *tip = new AkuTooltip(this);
     ui.verticalLayout->insertWidget(0, tip);
     tip->setTooltip(i18n("The destination path will be created if necessary"));
-    tip->showTip();
+    AkuTooltipManager::instance()->showTip(tip);
 
     resize(400, height());
     //connect(ui.buttonNewDir, SIGNAL(clicked()), this, SLOT(createNewDir()));

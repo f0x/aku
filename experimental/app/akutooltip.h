@@ -15,6 +15,7 @@
 class QLabel;
 class QToolButton;
 class QTimeLine;
+class AkuTooltipManager;
 
 class AkuTooltip : public QWidget
 {
@@ -26,9 +27,11 @@ class AkuTooltip : public QWidget
         QSize sizeHint() const;
 
     public slots:
+        void setTooltip(const QString &);
+
+    private slots:
         void showTip();
         void hideTip();
-        void setTooltip(const QString &);
 
     private:
         QWidget *m_base;
@@ -37,6 +40,10 @@ class AkuTooltip : public QWidget
         QTimeLine *m_timeLine;
         bool m_hiding;
         bool m_mouseIn;
+        friend class AkuTooltipManager;
+
+    signals:
+        void tooltipClosed(AkuTooltip *);
 
     protected slots:
         void animate(int);
