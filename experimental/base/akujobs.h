@@ -68,6 +68,19 @@ class ExtractJob : public AkuJob
         QStringList m_files;
 };
 
+class LockJob : public AkuJob
+{
+    Q_OBJECT
+    public:
+        LockJob(AkuPlugin *, QObject *parent = 0);
+        ~LockJob();
+
+        void doWork();
+
+    private:
+        AkuPlugin *m_plugin;
+};
+
 class AkuThread : public ThreadWeaver::Job
 {
     Q_OBJECT

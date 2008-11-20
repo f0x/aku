@@ -149,6 +149,30 @@ void AkuPlugin::extract(const KUrl &fileName, const KUrl &destination, const QSt
     job->start();
 }
 
+void AkuPlugin::lock(const KUrl &fileName)
+{
+    if (d->currentFile != fileName) {
+        init(fileName);
+    }
+
+    setCurrentOperation(Locking);
+
+    if (!d->helper) {
+        d->helper = new AkuJobs::AkuHelper(this);
+    }
+    connect (d->helper, SIGNAL(error(const QString &)), this, SIGNAL(error(const QString &)));
+    connect (d->helper, SIGNAL(archiveLoaded(QVector<QStringList>)), this, SIGNAL(archiveLoaded(QVector<QStringList>)));
+    connect (d->helper, SIGNAL(progressUpdate(double, double)), this, SIGNAL(progressUpdate(double, double)));
+
+    KJob *job = new AkuJobs::LockJob(this, this);
+    connect(job, SIGNAL(operationCompleted()), this, SIGNAL(operationCompleted()));
+
+    job->start();
+}
+
+void AkuPlugin::lock()
+{}
+
 void AkuPlugin::completeOperations()
 {
 }

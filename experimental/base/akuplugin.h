@@ -101,6 +101,10 @@ class AKU_EXPORT AkuPlugin : public QObject
         virtual void extractArchive(const KUrl &destination, const QStringList &files);
 
         /**
+         */
+        virtual void lock();
+
+        /**
          * Reimplement this method in order to perform standard initializing operations.
          * @note that operations such as loadArchive and extractArchive are performed
          * in an external thread so you might want to put in this function the initialization
@@ -118,6 +122,11 @@ class AKU_EXPORT AkuPlugin : public QObject
          * @internal used to extract the archive.
          */
         void extract(const KUrl &fileName, const KUrl &destination, const QStringList &files = QStringList());
+
+        /**
+         * @internal
+         */
+        void lock(const KUrl &fileName);
 
         /**
          * @return the operation in progress.

@@ -49,6 +49,19 @@ void ExtractJob::doWork()
     emit operationCompleted();
 }
 
+LockJob::LockJob(AkuPlugin *plugin, QObject *parent) :
+                  AkuJob(parent), m_plugin(plugin)
+{}
+
+LockJob::~LockJob()
+{}
+
+void LockJob::doWork()
+{
+    m_plugin->lock();
+    emit operationCompleted();
+}
+
 AkuThread::AkuThread(AkuJob *job) : m_job(job)
 {
 }
