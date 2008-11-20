@@ -108,6 +108,8 @@ void SzipPlugin::loadArchive()
     lines = output.split("\n");
     float ratio;
     QString ratioValue;   
+    QString packed;
+    QString size;
 
 #ifdef Q_WS_WIN
     for (int i = 0; i < lines.size(); i++) {
@@ -122,20 +124,24 @@ void SzipPlugin::loadArchive()
            continue;
        }
        if (line.startsWith("Size =")) {
-           file << line.mid(7);
+           //file << line.mid(7);
+           size = line.mid(7);
+           file << KGlobal::locale()->formatByteSize(size.toDouble());
            //kDebug() << file;
            continue;
        }
        if (line.startsWith("Packed Size =")) {
-           file << line.mid(14);
+           packed = line.mid(14);
+           file << KGlobal::locale()->formatByteSize(packed.toDouble());
+           //file << line.mid(14);
            // add the ratio value
-           if (file[1].toInt() != 0) {
-               ratio = 100 * file[2].toInt() / file[1].toInt();
+           if (size.toInt() != 0) {
+               ratio = 100 * packed.toInt() / size.toInt();
                ratioValue.setNum(ratio);
                file << (ratioValue + "%");
                continue;
            }
-           file << QString(0 + "%");
+           file << QString("0%");
            kDebug() << file;
            continue;
        }
