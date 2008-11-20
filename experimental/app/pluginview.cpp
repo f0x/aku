@@ -24,7 +24,7 @@ PluginView::PluginView(QWidget *parent) : QTreeView(parent)
 {
     QStandardItemModel *model = new QStandardItemModel();
     model->setHorizontalHeaderLabels(QStringList()<<i18n("Archive Plugin")<<
-                                     i18n("Extraction")<<i18n("Creation")<<i18n("Delete")<<i18n("Rename")
+                                     i18n("Extraction")<<i18n("Creation")<<i18n("Add file")<<i18n("Delete")<<i18n("Rename")
                                      <<i18n("Encryption")<<i18n("Comment")<<i18n("Lock")<<i18n("Working Properly")
                                      <<i18n("Configuration"));
     setModel(model);
@@ -39,7 +39,7 @@ PluginView::~PluginView()
 {}
 
 void PluginView::addPluginInfo(const QString &suffix, const QString &comment,
-                               bool extraction, bool creation, bool deletion, 
+                               bool extraction, bool creation, bool adding, bool deletion, 
                                bool renaming, bool encrypting, bool addComment, bool locking, bool working, const KPluginInfo &info, QWidget *config)
 {
     QList<QStandardItem*> items;
@@ -58,6 +58,10 @@ void PluginView::addPluginInfo(const QString &suffix, const QString &comment,
 
     item = new QStandardItem();
     item->setData(creation, PluginInfoDelegate::PluginPropertyRole);
+    items << item;
+
+    item = new QStandardItem();
+    item->setData(adding, PluginInfoDelegate::PluginPropertyRole);
     items << item;
 
     item = new QStandardItem();

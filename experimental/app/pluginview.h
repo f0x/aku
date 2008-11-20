@@ -23,7 +23,7 @@ class PluginView : public QTreeView
         ~PluginView();
 
         void addPluginInfo(const QString &suffix, const QString &comment, bool extraction,
-                            bool deletion, bool creation, bool renaming, bool encrypting, 
+                            bool creation, bool adding, bool deletion, bool renaming, bool encrypting, 
                             bool addComment, bool locking, bool working,
                             const KPluginInfo &, QWidget *config = 0);
 

@@ -113,7 +113,6 @@ void MainWindow::setupActions()
   actionExtract->setIcon(KIcon("archive-extract.png"));
   actionExtract->setText(i18n("Extract"));
   actionCollection()->addAction("extract", actionExtract);
-  connect(actionExtract, SIGNAL(triggered()), this, SLOT(extractionSlot()));
 
   actionAdd = new KActionMenu(this);
   actionAdd->setIcon(KIcon("archive-insert"));
@@ -168,8 +167,10 @@ void MainWindow::setupActions()
 
 void MainWindow::setupConnections()
 {
-  connect(viewTree, SIGNAL(triggered()), this, SLOT(changeView()));
-  connect(viewIcon, SIGNAL(triggered()), this, SLOT(changeView()));
+   connect(actionExtract, SIGNAL(triggered()), this, SLOT(extractionSlot()));
+   connect(viewTree, SIGNAL(triggered()), this, SLOT(changeView()));
+   connect(viewIcon, SIGNAL(triggered()), this, SLOT(changeView()));
+   connect(actionLock, SIGNAL(triggered()), this, SLOT(lockArchive()));
 }
 
 void MainWindow::loadSettings()
@@ -372,6 +373,7 @@ void MainWindow::addPlugin(AkuPlugin *plugin, const KPluginInfo &info)
                       mime->comment(),
                       plugin->canExtract(),
                       plugin->canCreate(),
+                      plugin->canAdd(),
                       plugin->canDelete(),
                       plugin->canRename(),
                       plugin->canEncrypt(),
@@ -417,6 +419,18 @@ void MainWindow::showArchive(const QVector<QStringList> &archive)
     actionDelete->setToolTip(i18n("Not supported by the current plugin"));
     actionAdd->setEnabled(false);
     actionAdd->setToolTip(i18n("Not supported by the current plugin"));
+    addFile->setEnabled(false);
+    addFile->setToolTip(i18n("Not supported by the current plugin"));
+    addDir->setEnabled(false);
+    addDir->setToolTip(i18n("Not supported by the current plugin"));
+    actionRename->setEnabled(false);
+    actionRename->setToolTip(i18n("Not supported by the current plugin"));
+    actionAddComment->setEnabled(false);
+    actionAddComment->setToolTip(i18n("Not supported by the current plugin"));
+    actionEncrypt->setEnabled(false);
+    actionEncrypt->setToolTip(i18n("Not supported by the current plugin"));
+    actionLock->setEnabled(false);
+    actionLock->setToolTip(i18n("Not supported by the current plugin"));
    
     // here we set additional per-plugin headers
     AkuPlugin *sender = static_cast<AkuPlugin*>(this->sender());
@@ -431,11 +445,33 @@ void MainWindow::showArchive(const QVector<QStringList> &archive)
         actionDelete->setEnabled(true);
         actionDelete->setToolTip("");
     }  
+
+    if (sender->canRename()) {
+        actionRename->setEnabled(true);
+        actionRename->setToolTip("");
+    }  
   
     if (sender->canAdd()) {
         actionAdd->setEnabled(true);
+        addDir->setEnabled(true);
+        addFile->setEnabled(true);
         actionAdd->setToolTip("");
     }
+
+    if (sender->canLock()) {
+        actionLock->setEnabled(true);
+        actionLock->setToolTip("");
+    }    
+  
+    if (sender->canAddComment()) {
+        actionAddComment->setEnabled(true);
+        actionAddComment->setToolTip("");
+    }  
+  
+    if (sender->canEncrypt()) {
+        actionEncrypt->setEnabled(true);
+        actionEncrypt->setToolTip("");
+    }  
 
     currentArchive = archive;
 
@@ -471,4 +507,9 @@ void MainWindow::completeOperations()
     m_progressBar->hide();
     m_statusLabel->hide();
     m_statusIcon->hide();
+}
+
+void MainWindow::lockArchive()
+{   
+    //m_plugins[m_currentPlugin]->lock();
 }

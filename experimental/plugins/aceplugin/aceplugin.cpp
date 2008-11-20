@@ -153,8 +153,8 @@ void AcePlugin::loadArchive()
         // NOTE: ace format
         
         file << filePath;
-        file << attributes[3];  // size
-        file << attributes[2];  // packed
+        file << KGlobal::locale()->formatByteSize(attributes[3].toDouble()); // size
+        file << KGlobal::locale()->formatByteSize(attributes[2].toDouble()); // packed
         file << attributes[4];  // ratio
 
         QDateTime modified(QDate::fromString(attributes[0], QString("dd.MM.yy")), 

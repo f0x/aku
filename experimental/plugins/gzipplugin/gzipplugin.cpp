@@ -34,7 +34,7 @@ QStringList GZipPlugin::mimeTypeNames()
 
 bool GZipPlugin::canExtract()
 {
-    return true;
+    return false;
 }
 
 bool GZipPlugin::canCreate()
@@ -44,7 +44,7 @@ bool GZipPlugin::canCreate()
 
 bool GZipPlugin::canRename()
 {
-    return true;
+    return false;
 }
 
 bool GZipPlugin::canAdd()
@@ -54,7 +54,7 @@ bool GZipPlugin::canAdd()
 
 bool GZipPlugin::canDelete()
 {
-    return true;
+    return false;
 }
 
 bool GZipPlugin::isWorkingProperly()
