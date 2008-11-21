@@ -163,6 +163,7 @@ void RarPlugin::loadArchive()
                 if (j == 4) {
                     QDateTime modified(QDate::fromString(file[4], QString("dd-MM-yy")), 
                                        QTime::fromString(attributes[4], QString("hh:mm")));
+                    modified = modified.addYears(100);
                     file[4] = KGlobal::locale()->formatDateTime(modified);
                     continue;
                 }

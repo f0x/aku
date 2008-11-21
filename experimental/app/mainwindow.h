@@ -67,6 +67,9 @@ class MainWindow : public KXmlGuiWindow
     void setupOptionsWidget();
     void setupConnections();
 
+  public slots:
+    void load(const KUrl &);
+
   private slots:
     void openDialog();
     void addPlugin(AkuPlugin*, const KPluginInfo &);
@@ -78,7 +81,6 @@ class MainWindow : public KXmlGuiWindow
     void completeOperations();
     void extractionSlot();
     void doExtraction(const KUrl &destination);
-    void load(const KUrl &);
     void extractionCompleteSlot();
     void loadSettings();
     void slotPluginStateChanged();
