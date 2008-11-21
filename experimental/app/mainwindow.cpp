@@ -201,7 +201,7 @@ void MainWindow::loadSettings()
        recentDir->setData(QVariant(path.pathOrUrl()));
        //kDebug() << recentDir->data().toString();
        recentDir->setText(path.pathOrUrl());
-       recentDir->setIcon(KIcon("folder-blue"));
+       recentDir->setIcon(KIcon("inode-directory"));
        actionExtract->addAction(recentDir);
        connect(recentDir, SIGNAL(triggered()), this, SLOT(recentDirSlot()));
    }
@@ -315,9 +315,11 @@ void MainWindow::doExtraction(const KUrl &destination)
     // TODO: retrieve selected files to extract
     kDebug() << "extracting to" << destination;
     QStringList files = treeView->selectedPaths();
+
     if (iconWidget->isVisible()) {
        files = iconWidget->view()->selectedPaths();
     }
+
     m_plugins[m_currentPlugin]->extract(m_currentUrl, destination, files);
     
     KConfigGroup options(KGlobal::config()->group("Favourite Dirs"));
