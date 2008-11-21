@@ -70,11 +70,15 @@ bool TipContainer::removeTip(AkuTooltip *tip)
 
 bool TipContainer::contains(AkuTooltip *tip) const
 {
+    kDebug() << akutipList;
     foreach (AkuTooltip *tipin, akutipList) {
+        kDebug() << tip << tipin;
         if (tip == tipin) {
+            kDebug() << "tip listed";
             return true;
         }
     }
+    kDebug() << "tip not listed";
     return false;
 }
 
@@ -93,6 +97,7 @@ bool TipContainer::append(AkuTooltip *tip, QWidget *w)
     }
 
     akutipList << tip;
+    kDebug() << akutipList;
     count = akutipList.count();
     return true;
 }
@@ -152,14 +157,15 @@ void AkuTooltipManager::registerTooltip(AkuTooltip *tip, QWidget *widget)
     connect(widget, SIGNAL(destroyed(QObject *)), this, SLOT(containerWidgetDeleted(QObject *)));
     connect(tip, SIGNAL(tooltipClosed(AkuTooltip*)), this, SLOT(deleteTooltip(AkuTooltip*)));
 
-    kDebug() << d->tipQueue.isEmpty();
-    if (d->tipQueue.isEmpty()) return;
+//     kDebug() << d->tipQueue.isEmpty();
+//     if (d->tipQueue.isEmpty()) return;
 
     // kDebug() << d->tipQueue; WARNING: Crash!
 }
 
 void AkuTooltipManager::deleteTooltip(AkuTooltip *tip)
 {
+    kDebug() << "deleting tooltip";
     tip->deleteLater();
 }
 
@@ -168,7 +174,7 @@ void AkuTooltipManager::enqueue(AkuTooltip *tip, QWidget *w)
     d->lastTip = tip;
     foreach (TipContainer c, d->tipQueue) {
         if (c.append(tip, w)) {
-            kDebug() << "append successful";
+            kDebug() << "append successful" << tip;
             return;
         }
     }
@@ -214,6 +220,7 @@ void AkuTooltipManager::unregisterTooltip(AkuTooltip *tip)
 
 void AkuTooltipManager::dequeue(AkuTooltip *tip)
 {
+    kDebug() << "dequeueing" << tip;
     foreach (TipContainer c, d->tipQueue) {
         if (c.removeTip(tip)) {
             d->updateLastTip();
@@ -234,6 +241,7 @@ bool AkuTooltipManager::canShow(AkuTooltip *tip)
 
 void AkuTooltipManager::showTip(AkuTooltip *tip)
 {
+    kDebug() << "trying to show";
     if (!isRegistered(tip)) {
         kError() << "cannot show unregistered tooltip" << tip;
         return;
@@ -257,9 +265,11 @@ bool AkuTooltipManager::isRegistered(AkuTooltip *tip)
 {
     foreach (const TipContainer &c, d->tipQueue) {
         if (c.contains(tip)) {
+            kDebug() << "contained";
             return true;
          }
     }
+    kDebug() << "not contained";
     return false;
 }
 
