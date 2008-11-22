@@ -187,8 +187,18 @@ void RarPlugin::loadArchive()
    }
  
 //    kDebug() << archive;
-
-    onArchiveLoaded(archive);
+    // we start a second archive list to check if the archive is locked and if we have comment
+//     QProcess process;
+//    
+//     QStringList options;
+//     options << "v" << m_fileName.pathOrUrl();
+//     process.start(exeName, options);
+//     process.waitForFinished();
+// 
+//     QString output;
+//     output = process.readAllStandardOutput();
+// 
+      onArchiveLoaded(archive);
 }
 
 bool RarPlugin::isWorkingProperly()
@@ -231,7 +241,7 @@ void RarPlugin::extractArchive(const KUrl &destination, const QStringList &files
     process.waitForFinished();
 }
 
-void RarPlugin::lock(const KUrl &fileName)
+void RarPlugin::lockArchive(const KUrl &fileName)
 {  
     kDebug() << "locking archive";
     QProcess process;

@@ -170,9 +170,6 @@ void AkuPlugin::lock(const KUrl &fileName)
     job->start();
 }
 
-void AkuPlugin::lock()
-{}
-
 void AkuPlugin::completeOperations()
 {
 }
@@ -186,6 +183,10 @@ void AkuPlugin::extractArchive(const KUrl &destination, const QStringList &files
 {
     Q_UNUSED(destination)
     Q_UNUSED(files)
+}
+
+void AkuPlugin::lockArchive()
+{
 }
 
 AkuPlugin::CurrentOperation AkuPlugin::currentOperation()

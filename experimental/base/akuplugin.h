@@ -102,7 +102,7 @@ class AKU_EXPORT AkuPlugin : public QObject
 
         /**
          */
-        virtual void lock();
+        virtual void lockArchive();
 
         /**
          * Reimplement this method in order to perform standard initializing operations.
