@@ -9,7 +9,7 @@ int main ( int argc, char *argv[] )
 {
 
   KAboutData aboutData("aku", 0, ki18n("aKu"),
-                       "1.1", ki18n("The RAR/ZIP/TAR application for KDE4"), KAboutData::License_GPL_V3,
+                       "1.1", ki18n("The archiver application for KDE4"), KAboutData::License_GPL_V3,
                        ki18n("Copyright (c) 2008"));
 
   aboutData.addAuthor(ki18n("Alessandro Diaferia aka \"The Speedy Coder\""), 

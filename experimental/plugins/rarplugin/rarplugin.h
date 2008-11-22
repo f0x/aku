@@ -48,6 +48,9 @@ class RarPlugin : public AkuPlugin
     private:
         KUrl m_fileName;
 
+    public slots:
+        void lock(const KUrl &fileName);
+
 };
 
 #endif

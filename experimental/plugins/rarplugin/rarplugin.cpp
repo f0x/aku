@@ -230,3 +230,15 @@ void RarPlugin::extractArchive(const KUrl &destination, const QStringList &files
     kDebug() << options;
     process.waitForFinished();
 }
+
+void RarPlugin::lock(const KUrl &fileName)
+{  
+    kDebug() << "locking archive";
+    QProcess process;
+    QStringList options;
+    options.insert(0, "k");
+    options.insert(1, m_fileName.pathOrUrl());
+    process.start(exeName, options);
+    kDebug() << options;
+    process.waitForFinished();
+}
