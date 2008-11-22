@@ -15,13 +15,12 @@
 #include <KDebug>
 #include <QDir>
 #include <QHeaderView>
-#include <QCompleter>
 
 #include <kinputdialog.h>
 #include <KIO/Job>
 #include <KIcon>
 #include <KMessageBox>
-#include <KDirModel>
+#include <KUrlCompletion>
 
 AkuExtractionDialog::AkuExtractionDialog(QWidget *parent) : KDialog(parent),
                                                             m_wparent(0), m_awidget(0)
@@ -63,7 +62,10 @@ AkuExtractionDialog::AkuExtractionDialog(QWidget *parent) : KDialog(parent),
     setCaption(i18n("Extraction path and options"));
 
     //ui.buttonNewDir->setIcon(KIcon("folder-new"));
-    ui.comboHistoryBox->setCompleter(new QCompleter(new KDirModel));
+    KUrlCompletion *urlCompletion = new KUrlCompletion(KUrlCompletion::DirCompletion);
+    ui.comboHistoryBox->setCompletionObject(urlCompletion);
+    ui.comboHistoryBox->setAutoDeleteCompletionObject(true);
+    ui.comboHistoryBox->setCompletionMode(KGlobalSettings::CompletionPopupAuto);
 
     connect(this, SIGNAL(okClicked()), this, SLOT(slotExtraction()));
     connect(dirView, SIGNAL(currentChanged(const KUrl &)), this, SLOT(updateCombo(const KUrl &)));
