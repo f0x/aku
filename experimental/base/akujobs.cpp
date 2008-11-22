@@ -58,7 +58,7 @@ LockJob::~LockJob()
 
 void LockJob::doWork()
 {
-    m_plugin->lock();
+    m_plugin->lockArchive();
     emit operationCompleted();
 }
 

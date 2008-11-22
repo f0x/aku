@@ -513,5 +513,5 @@ void MainWindow::completeOperations()
 
 void MainWindow::lockArchive()
 {   
-    m_plugins[m_currentPlugin]->lock();
+    m_plugins[m_currentPlugin]->lock(m_currentUrl);
 }
