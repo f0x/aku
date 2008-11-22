@@ -88,7 +88,7 @@ class TipContainer
 
     private:
         QWidget *widget;
-        QList <AkuTooltip*> akutipList;
+        QList<AkuTooltip*> akutipList;
         int count;
 };
 

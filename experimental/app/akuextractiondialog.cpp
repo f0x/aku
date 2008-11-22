@@ -19,6 +19,7 @@
 #include <kinputdialog.h>
 #include <KIO/Job>
 #include <KIcon>
+#include <KMessageBox>
 
 AkuExtractionDialog::AkuExtractionDialog(QWidget *parent) : KDialog(parent),
                                                             m_wparent(0), m_awidget(0)
@@ -84,7 +85,20 @@ void AkuExtractionDialog::slotExtraction()
 {
     // TODO: check whether the url has write permissions for
     //       the current user or not.
-    emit extractionClicked(dirView->selectedUrl());
+
+    const KUrl url(ui.comboHistoryBox->currentText());
+    if (!url.isValid()) {
+        KMessageBox::error(this, i18n("The specified url is not valid. Cannot extract."), i18n("Invalid destination url"));
+        return;
+    }
+
+
+    if (!QDir(url.pathOrUrl()).exists()) {     
+        KIO::mkdir(url);
+    }
+    
+    kDebug() << "extracting in" << url;
+    emit extractionClicked(url);
 }
 
 void AkuExtractionDialog::updateCombo(const KUrl localPath)
@@ -94,6 +108,11 @@ void AkuExtractionDialog::updateCombo(const KUrl localPath)
 
 void AkuExtractionDialog::createNewDir()
 {
+    KUrl dir(ui.comboHistoryBox->currentText());
+    if (!dir.isValid()) {
+        return;
+    }
+
     QString newDir;
     newDir = KInputDialog::getText(i18n("New Folder"), i18n("Enter a name for the new folder"),
                                    "New Folder", 0 , this);
@@ -102,7 +121,6 @@ void AkuExtractionDialog::createNewDir()
         return;
     }
 
-    KUrl dir = dirView->selectedUrl();
     dir.addPath(newDir);
     KIO::mkdir(dir);
     dirView->setCurrentUrl(dir);

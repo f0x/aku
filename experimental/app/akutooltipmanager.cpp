@@ -35,7 +35,7 @@ TipContainer::~TipContainer()
 QWidget* TipContainer::tipWidget() const
 {
     return widget;
-    }
+}
 
 int TipContainer::tipCount() const
 {
@@ -70,7 +70,7 @@ bool TipContainer::removeTip(AkuTooltip *tip)
 
 bool TipContainer::contains(AkuTooltip *tip) const
 {
-    kDebug() << akutipList;
+//     kDebug() << akutipList;
     foreach (AkuTooltip *tipin, akutipList) {
         kDebug() << tip << tipin;
         if (tip == tipin) {
@@ -146,6 +146,8 @@ AkuTooltipManager::Ptr AkuTooltipManager::instance()
     if (!instance) {
         instance = new AkuTooltipManager;
     }
+
+    kDebug() << instance;
 
     return instance;
 }
@@ -223,6 +225,7 @@ void AkuTooltipManager::dequeue(AkuTooltip *tip)
     kDebug() << "dequeueing" << tip;
     foreach (TipContainer c, d->tipQueue) {
         if (c.removeTip(tip)) {
+            kDebug() << "tip" << tip << "correctly removed";
             d->updateLastTip();
             return;
         }
