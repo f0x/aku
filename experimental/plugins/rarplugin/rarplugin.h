@@ -43,12 +43,11 @@ class RarPlugin : public AkuPlugin
 
         QStringList additionalHeaderStrings();
 
+        void lockArchive();
+        void extractArchive(const KUrl &destination, const QStringList &files);
+
     private:
         KUrl m_fileName;
-
-    public slots:
-        void lockArchive(const KUrl &fileName);
-        void extractArchive(const KUrl &destination, const QStringList &files);
 
 };
 

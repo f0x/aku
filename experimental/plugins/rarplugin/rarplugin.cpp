@@ -106,16 +106,39 @@ void RarPlugin::init(const KUrl &fileName)
 
 void RarPlugin::loadArchive()
 {
-
+    // we start a first archive list to check if the archive is locked
     QProcess process;
-   
+    QString output;
     QStringList options;
+    options << "vt" << m_fileName.pathOrUrl();
+    process.start(exeName, options);
+    process.waitForFinished();
+    
+    output = process.readAllStandardOutput();
+     
+    if (output.contains("Lock is present\n")) {
+        kDebug() << "The archive is LOCKED";
+    }
+
+    //QProcess process;
+    //QStringList options;
+    //QString output;
+    options.clear();
     options << "v" << m_fileName.pathOrUrl();
     process.start(exeName, options);
     process.waitForFinished();
 
-    QString output;
     output = process.readAllStandardOutput();
+
+    if (output.contains("Comment:")) {
+        QString comment = output;
+        int target = comment.indexOf("Comment:");
+        comment.remove(0, target);
+        comment.remove("Comment: ");
+        comment.remove(comment.indexOf("Pathname"), comment.length());
+        comment = comment.trimmed();
+        kDebug() << "COMMENT: " << comment;
+    }
    
     int indexOfHeaderLine;
     indexOfHeaderLine = output.indexOf(headerLine);
@@ -185,19 +208,7 @@ void RarPlugin::loadArchive()
            file.clear();
        }
    }
- 
-//    kDebug() << archive;
-    // we start a second archive list to check if the archive is locked and if we have comment
-//     QProcess process;
-//    
-//     QStringList options;
-//     options << "v" << m_fileName.pathOrUrl();
-//     process.start(exeName, options);
-//     process.waitForFinished();
-// 
-//     QString output;
-//     output = process.readAllStandardOutput();
-// 
+
       onArchiveLoaded(archive);
 }
 
@@ -241,7 +252,7 @@ void RarPlugin::extractArchive(const KUrl &destination, const QStringList &files
     process.waitForFinished();
 }
 
-void RarPlugin::lockArchive(const KUrl &fileName)
+void RarPlugin::lockArchive()
 {  
     kDebug() << "locking archive";
     QProcess process;
