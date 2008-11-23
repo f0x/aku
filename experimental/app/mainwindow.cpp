@@ -238,8 +238,8 @@ void MainWindow::openDialog()
 
 void MainWindow::load(const KUrl &url)
 {
-    if (!KFileItem(KFileItem::Unknown, KFileItem::Unknown, url).isReadable()) {
-        // TODO: show an error
+    if (!QFile(url.pathOrUrl()).open(QIODevice::ReadOnly)) {
+        KMessageBox::error(this, i18n("Could not open %1.\nCheck your file permissions", url.prettyUrl()), i18n("Load error"));
         return;
     }
 
