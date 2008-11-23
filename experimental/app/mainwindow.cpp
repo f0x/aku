@@ -246,26 +246,27 @@ void MainWindow::load(const KUrl &url)
     KMimeType::Ptr mimetype = KMimeType::findByUrl(url);
     kDebug() << mimetype -> name();
 
-    if (m_plugins.contains(mimetype->name())) {
-        if (m_plugins[mimetype->name()]->isWorkingProperly()) {
-            // this emit adds the url of the file loaded to recent files
-            m_currentPlugin = mimetype->name();
-            m_plugins[mimetype->name()]->load(url);
-            addRecentFile(url);
-        } else {
-            KMessageBox::sorry(this,
-                           i18n("The correct plugin to open <b>%1</b> mimetype was found but appears to not be working properly. "
-                                "Please check the installation", mimetype->name()), 
-                           i18n("Unable to load archive"));
-        }
-
-    } else {
+    if (!m_plugins.contains(mimetype->name())) {
         KMessageBox::detailedSorry(this,
                            i18n("Sorry, no available plugin to open: <b>%1</b>.", url.pathOrUrl() ),
                            i18n("Install a plugin for <b>%1</b> mimetype in order to load the archive."
                            , mimetype->name()), 
                            i18n("Unable to load archive"));
+        return;
     }
+
+    if (!m_plugins[mimetype->name()]->isWorkingProperly()) {
+        KMessageBox::sorry(this,
+                       i18n("The correct plugin to open <b>%1</b> mimetype was found but appears to not be working properly. "
+                            "Please check the installation", mimetype->name()), 
+                       i18n("Unable to load archive"));
+        return;
+    }
+
+    // this emit adds the url of the file loaded to recent files
+    m_currentPlugin = mimetype->name();
+    m_plugins[mimetype->name()]->load(url);
+    addRecentFile(url);
 }
 
 void MainWindow::addRecentFile(KUrl recent)
