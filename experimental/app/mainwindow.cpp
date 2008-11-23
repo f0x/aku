@@ -211,15 +211,29 @@ void MainWindow::loadSettings()
 
 void MainWindow::openDialog()
 {
-  // TODO: base suffixes on available plugins
-  KUrl url = KFileDialog::getOpenUrl(KUrl("kfiledialog:///AkuOpenDir"), 
-                          i18n("*.rar *.7z *.zip *.bz2 *.gz *.tar *.ace|All supported types\n"
-                               "*.rar|Rar archives\n*.7z|7-zip archives\n*.zip|Zip archives\n*.bz2|Tar archives (bzip)"
-                               "\n*.gz|Tar archives (gzip)\n*.tar|Tar archives\n*.ace|Ace archives\n*.*|All files"), this);
-  if (!url.isEmpty()) {
-    m_currentUrl = url;
-    load(url);
-  }
+    KUrl url;
+    KFileDialog openDialog(KUrl(), QString(), this);
+    QStringList filters;
+
+    foreach (AkuPlugin *plugin, m_plugins) {
+        foreach (const QString &mime, plugin->mimeTypeNames()) {
+            if (!filters.contains(mime)) {
+                filters << mime;
+            }
+        }
+    }
+
+    openDialog.setMimeFilter(filters);
+    openDialog.setOperationMode(KFileDialog::Opening);
+
+    if (openDialog.exec()) {
+        url = openDialog.selectedUrl();
+    }
+
+    if (!url.isEmpty()) {
+        m_currentUrl = url;
+        load(url);
+    }
 }
 
 void MainWindow::load(const KUrl &url)
