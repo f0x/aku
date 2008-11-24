@@ -21,7 +21,7 @@
 
 AKU_PLUGIN_EXPORT(ZipPlugin)
 
-ZipPlugin::ZipPlugin(QObject *parent, const QVariantList &args) : AkuPlugin(parent)
+ZipPlugin::ZipPlugin(QObject *parent, const QVariantList &args) : AkuPlugin(parent), m_archive(0)
 {
     m_widget = new QWidget();
     ui.setupUi(m_widget);

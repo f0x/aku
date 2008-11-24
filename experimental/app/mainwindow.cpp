@@ -36,7 +36,7 @@
 #include <QLabel>
 
 MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent),
-                                          m_pluginView(new PluginView()),
+                                          m_pluginView(new PluginView(this)),
                                           m_progressBar(new QProgressBar(this)),
                                           m_statusLabel(new QLabel(this)),
                                           m_statusIcon(new QLabel(this))
