@@ -16,15 +16,16 @@
 #include <QPair>
 #include <QDebug>
 
-#include <KSharedPtr>
-
 class QWidget;
 class AkuTooltip;
 class TipContainer;
 
+class TooltipManagerHelper;
+
 class AkuTooltipManager : public QObject
 {
     Q_OBJECT
+    friend class TooltipManagerHelper;
     public:
         typedef QList< TipContainer > TipQueue;
 
@@ -47,11 +48,12 @@ class AkuTooltipManager : public QObject
          */
         bool isRegistered(AkuTooltip*);
 
-    protected:
+    private:
         AkuTooltipManager(QObject *parent = 0);
         AkuTooltipManager(const AkuTooltipManager&);
         AkuTooltipManager& operator =(const AkuTooltipManager &c);
 
+    protected:
         void enqueue(AkuTooltip *tip, QWidget *w);
         void dequeue(AkuTooltip *tip);
         bool canShow(AkuTooltip *tip);
@@ -63,7 +65,6 @@ class AkuTooltipManager : public QObject
         void deleteTooltip(AkuTooltip *);
 
     private:
-        static AkuTooltipManager *m_instance;
         class Private;
         Private *d;
 };

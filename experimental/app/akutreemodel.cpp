@@ -26,6 +26,8 @@ public:
     Private(AkuTreeModel *q):
                         q(q)
                         {}
+    ~Private()
+    { delete rootNode; nodes.clear(); sourceData.clear();}
 
     AkuTreeModel *q;
     QVector<QStringList> sourceData;
@@ -47,7 +49,9 @@ AkuTreeModel::AkuTreeModel(QVector<QStringList> fileList, QObject *parent) :
 }
 
 AkuTreeModel::~AkuTreeModel()
-{}
+{
+    delete d;
+}
 
 int AkuTreeModel::rowCount(const QModelIndex & parent) const
 {

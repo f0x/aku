@@ -28,7 +28,10 @@ ZipPlugin::ZipPlugin(QObject *parent, const QVariantList &args) : AkuPlugin(pare
 }
 
 ZipPlugin::~ZipPlugin()
-{}
+{
+    m_widget->deleteLater();
+    delete m_archive;
+}
 
 QStringList ZipPlugin::mimeTypeNames()
 {

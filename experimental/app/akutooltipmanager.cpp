@@ -15,6 +15,15 @@
 #include <QVariant>
 
 #include <KDebug>
+#include <KGlobal>
+
+class TooltipManagerHelper
+{
+public:
+    AkuTooltipManager instance;
+};
+
+K_GLOBAL_STATIC(TooltipManagerHelper, globalHelper)
 
 //////////////////////// TipContainer ////////////////////////////////
 
@@ -157,13 +166,11 @@ AkuTooltipManager::AkuTooltipManager(QObject *parent) : QObject(parent),
 
 AkuTooltipManager::AkuTooltipManager(const AkuTooltipManager &p) : QObject()
 {
-    m_instance = p.m_instance;
     d = p.d;
 }
 
 AkuTooltipManager& AkuTooltipManager::operator =(const AkuTooltipManager &c)
 {
-    m_instance = c.m_instance;
     d = c.d;
 
     return *this;
@@ -172,20 +179,17 @@ AkuTooltipManager& AkuTooltipManager::operator =(const AkuTooltipManager &c)
 AkuTooltipManager::~AkuTooltipManager()
 {
     delete d;
-    delete m_instance;
 }
-
-AkuTooltipManager* AkuTooltipManager::m_instance = 0;
 
 AkuTooltipManager* AkuTooltipManager::instance()
 {
-    if (!m_instance) {
-        m_instance = new AkuTooltipManager();
-    }
+//     if (!m_instance) {
+//         m_instance = new AkuTooltipManager();
+//     }
 
-    kDebug() << m_instance;
+//     m_instance = globalAkuTooltipManager;
 
-    return m_instance;
+    return &globalHelper->instance;
 }
 
 void AkuTooltipManager::registerTooltip(AkuTooltip *tip, QWidget *widget)
