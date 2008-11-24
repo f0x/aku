@@ -22,16 +22,15 @@ class QWidget;
 class AkuTooltip;
 class TipContainer;
 
-class AkuTooltipManager : public QObject , public QSharedData
+class AkuTooltipManager : public QObject
 {
     Q_OBJECT
     public:
-        typedef KSharedPtr<AkuTooltipManager> Ptr;
         typedef QList< TipContainer > TipQueue;
 
         ~AkuTooltipManager();
 
-        static AkuTooltipManager::Ptr instance();
+        static AkuTooltipManager* instance();
 
         /**
          * @param widget the widget that "hosts" the tooltip.
@@ -50,6 +49,9 @@ class AkuTooltipManager : public QObject , public QSharedData
 
     protected:
         AkuTooltipManager(QObject *parent = 0);
+        AkuTooltipManager(const AkuTooltipManager&);
+        AkuTooltipManager& operator =(const AkuTooltipManager &c);
+
         void enqueue(AkuTooltip *tip, QWidget *w);
         void dequeue(AkuTooltip *tip);
         bool canShow(AkuTooltip *tip);
@@ -61,7 +63,7 @@ class AkuTooltipManager : public QObject , public QSharedData
         void deleteTooltip(AkuTooltip *);
 
     private:
-
+        static AkuTooltipManager *m_instance;
         class Private;
         Private *d;
 };
@@ -70,7 +72,7 @@ class TipContainer
 {
     public:
         TipContainer();
-
+        TipContainer(const TipContainer &);
         TipContainer(QWidget* widget);
         ~TipContainer();
 
@@ -79,10 +81,12 @@ class TipContainer
 
          bool operator ==(const TipContainer &v) const;
          void operator <<(AkuTooltip *tip);
+         TipContainer& operator =(const TipContainer &c);
 
          bool removeTip(AkuTooltip *tip);
          bool contains(AkuTooltip *tip) const;
-         bool append(AkuTooltip *tip, QWidget *w);
+         void append(AkuTooltip *tip, QWidget *w);
+         bool canAppend(AkuTooltip *tip, QWidget *w);
          AkuTooltip * last();
          QList <AkuTooltip*> tipList() const;
 

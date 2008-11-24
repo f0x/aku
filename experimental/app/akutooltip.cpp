@@ -76,6 +76,11 @@ void AkuTooltip::showTip()
 {
     show();
     m_hiding = false;
+
+    if (m_timeLine->state() == QTimeLine::Running) {
+        m_timeLine->stop();
+    }
+
     m_timeLine->setFrameRange(-height(), 0);
     m_timeLine->start();
 }

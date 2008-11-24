@@ -29,6 +29,14 @@ TipContainer::TipContainer() : widget(0), count(0)
     qRegisterMetaType<TipContainer>("TipContainer");
 }
 
+ TipContainer::TipContainer(const TipContainer &c) : widget(0), count(0)
+{
+    qRegisterMetaType<TipContainer>("TipContainer");
+    widget = c.widget;
+    count = c.count;
+    akutipList = c.akutipList;
+}
+
 TipContainer::~TipContainer()
 {}
 
@@ -50,6 +58,14 @@ bool TipContainer::operator ==(const TipContainer &v) const
     return false;
 }
 
+TipContainer& TipContainer::operator =(const TipContainer &c)
+{
+    widget = c.widget;
+    akutipList = c.akutipList;
+    count = c.count;
+    return *this;
+}
+
 void TipContainer::operator <<(AkuTooltip *tip)
 {
     if (!contains(tip)) {
@@ -58,7 +74,7 @@ void TipContainer::operator <<(AkuTooltip *tip)
     }
 }
 
-bool TipContainer::removeTip(AkuTooltip *tip) 
+bool TipContainer::removeTip(AkuTooltip *tip)
 {
     if (akutipList.removeAll(tip)) {
         count = akutipList.count();
@@ -70,45 +86,50 @@ bool TipContainer::removeTip(AkuTooltip *tip)
 
 bool TipContainer::contains(AkuTooltip *tip) const
 {
-//     kDebug() << akutipList;
     foreach (AkuTooltip *tipin, akutipList) {
-        kDebug() << tip << tipin;
+//         kDebug() << tip << tipin;
         if (tip == tipin) {
-            kDebug() << "tip listed";
             return true;
         }
     }
-    kDebug() << "tip not listed";
     return false;
 }
 
-bool TipContainer::append(AkuTooltip *tip, QWidget *w)
+void TipContainer::append(AkuTooltip *tip, QWidget *w)
 {
     if (!widget) {
         kDebug() << "widget not set.. appending tip" << tip << "and setting widget" << w;
         akutipList << tip;
         count = akutipList.count();
         widget = w;
-        return true;
+        return;
     }
     if (w != widget) {
         kDebug() << "different widgets, use another container";
-        return false;
+        return;
     }
 
     akutipList << tip;
     kDebug() << akutipList;
     count = akutipList.count();
+}
+
+bool TipContainer::canAppend(AkuTooltip *tip, QWidget *w)
+{
+    if (w != widget) {
+        return false;
+    }
     return true;
 }
 
-AkuTooltip * TipContainer::last() {
-    return akutipList.last();
+AkuTooltip * TipContainer::last()
+{
+    return akutipList.isEmpty() ? 0 : akutipList.last();
 }
 
 QList <AkuTooltip*> TipContainer::tipList() const
 {
-    return akutipList.isEmpty() ? QList<AkuTooltip*>() : akutipList;
+    return akutipList;
 }
 
 /////////////////// Private /////////////////////////////////////////
@@ -116,12 +137,11 @@ QList <AkuTooltip*> TipContainer::tipList() const
 class AkuTooltipManager::Private
 {
 public:
-    Private(AkuTooltipManager *q) :
-    q(q), lastTip(0)
+    Private() :
+    lastTip(0)
     {
     }
 
-    AkuTooltipManager *q;
     TipQueue tipQueue;
     AkuTooltip *lastTip;
 
@@ -131,25 +151,41 @@ public:
 //////////////////// AkuTooltipManager////////////////////////////////////
 
 AkuTooltipManager::AkuTooltipManager(QObject *parent) : QObject(parent),
-                                                        d(new Private(this))
+                                                        d(new Private())
 {
+}
+
+AkuTooltipManager::AkuTooltipManager(const AkuTooltipManager &p) : QObject()
+{
+    m_instance = p.m_instance;
+    d = p.d;
+}
+
+AkuTooltipManager& AkuTooltipManager::operator =(const AkuTooltipManager &c)
+{
+    m_instance = c.m_instance;
+    d = c.d;
+
+    return *this;
 }
 
 AkuTooltipManager::~AkuTooltipManager()
 {
     delete d;
+    delete m_instance;
 }
 
-AkuTooltipManager::Ptr AkuTooltipManager::instance()
+AkuTooltipManager* AkuTooltipManager::m_instance = 0;
+
+AkuTooltipManager* AkuTooltipManager::instance()
 {
-    static AkuTooltipManager::Ptr instance(0);
-    if (!instance) {
-        instance = new AkuTooltipManager;
+    if (!m_instance) {
+        m_instance = new AkuTooltipManager();
     }
 
-    kDebug() << instance;
+    kDebug() << m_instance;
 
-    return instance;
+    return m_instance;
 }
 
 void AkuTooltipManager::registerTooltip(AkuTooltip *tip, QWidget *widget)
@@ -175,8 +211,11 @@ void AkuTooltipManager::enqueue(AkuTooltip *tip, QWidget *w)
 {
     d->lastTip = tip;
     foreach (TipContainer c, d->tipQueue) {
-        if (c.append(tip, w)) {
-            kDebug() << "append successful" << tip;
+        if (c.canAppend(tip, w)) {
+            d->tipQueue.removeAll(c);
+            c.append(tip, w);
+            d->tipQueue << c;
+//             kDebug() << d->tipQueue;
             return;
         }
     }
@@ -224,8 +263,11 @@ void AkuTooltipManager::dequeue(AkuTooltip *tip)
 {
     kDebug() << "dequeueing" << tip;
     foreach (TipContainer c, d->tipQueue) {
-        if (c.removeTip(tip)) {
-            kDebug() << "tip" << tip << "correctly removed";
+        if (c.contains(tip)) {
+            d->tipQueue.removeAll(c);
+            c.removeTip(tip);
+            d->tipQueue.append(c);
+            kDebug() << d->tipQueue;
             d->updateLastTip();
             return;
         }
@@ -261,6 +303,10 @@ void AkuTooltipManager::showTip(AkuTooltip *tip)
 
 void AkuTooltipManager::showPendingTips()
 {
+    if (!d->lastTip) {
+        return;
+    }
+
     showTip(d->lastTip);
 }
 
@@ -280,6 +326,10 @@ bool AkuTooltipManager::isRegistered(AkuTooltip *tip)
 QDebug operator<<(QDebug dbg, const TipContainer &c)
 {
     dbg.nospace() << "TipContainer (" << c.tipCount()
-                  << ", " << c.tipWidget() << "," << c.tipList() << ")";
+                  << ", " 
+                  << c.tipWidget() 
+                  << "," 
+                  << c.tipList()
+                  << ")";
     return dbg.space();
 }
