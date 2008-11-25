@@ -25,7 +25,9 @@ GZipPlugin::GZipPlugin(QObject *parent, const QVariantList &args) : AkuPlugin(pa
 {}
 
 GZipPlugin::~GZipPlugin()
-{}
+{
+    delete gzFile;
+}
 
 QStringList GZipPlugin::mimeTypeNames()
 {
