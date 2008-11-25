@@ -87,7 +87,12 @@ void AkuTooltip::showTip()
 
 void AkuTooltip::hideTip()
 {
-    if (m_mouseIn) {
+    bool fromButton = false;
+    if (sender() == m_closeButton) {
+        fromButton = true;
+    }
+
+    if (m_mouseIn && !fromButton) {
         return;
     }
 
