@@ -90,7 +90,7 @@ void ZipPlugin::loadArchive()
     m_archive->close();
 
 
-    emit archiveLoaded(m_entries);
+    onArchiveLoaded(m_entries);
 
 }
 
