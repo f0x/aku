@@ -9,9 +9,11 @@
 #include "akuextractiondialog.h"
 #include "akutooltip.h"
 #include "akutooltipmanager.h"
+#include "akuadddir.h"
 
 #include <akuplugin.h>
 
+#include <KFileDialog>
 #include <KStandardAction>
 #include <KActionCollection>
 #include <KApplication>
@@ -171,6 +173,8 @@ void MainWindow::setupConnections()
    connect(viewTree, SIGNAL(triggered()), this, SLOT(changeView()));
    connect(viewIcon, SIGNAL(triggered()), this, SLOT(changeView()));
    connect(actionLock, SIGNAL(triggered()), this, SLOT(lockArchive()));
+   connect(addFile, SIGNAL(triggered()), this, SLOT(addFileToArchive()));
+   connect(addDir, SIGNAL(triggered()), this, SLOT(addDirToArchive()));
 }
 
 void MainWindow::loadSettings()
@@ -529,4 +533,16 @@ void MainWindow::completeOperations()
 void MainWindow::lockArchive()
 {   
     m_plugins[m_currentPlugin]->lock(m_currentUrl);
+}
+
+void MainWindow::addFileToArchive()
+{
+    KFileDialog *addFileDialog = new KFileDialog(KUrl(QDir::homePath()), "*.*", this);
+    addFileDialog->show();
+}
+
+void MainWindow::addDirToArchive()
+{
+    akuAddDir *dirDialog = new akuAddDir(this);
+    dirDialog->show(); 
 }

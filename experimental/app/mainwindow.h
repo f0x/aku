@@ -86,6 +86,8 @@ class MainWindow : public KXmlGuiWindow
     void slotPluginStateChanged();
     void recentDirSlot();
     void lockArchive();
+    void addFileToArchive();
+    void addDirToArchive();
 };
 
 #endif
