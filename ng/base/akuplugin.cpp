@@ -23,9 +23,6 @@
 #include <KDebug>
 #include <KUrl>
 
-#include <QStringList>
-#include <QVector>
-
 Q_DECLARE_METATYPE(QVector<QStringList>)
 
 class AkuPlugin::AkuPluginPrivate {

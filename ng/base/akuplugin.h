@@ -21,6 +21,7 @@
 #define AKUPLUGIN_H
 
 #include <QObject>
+#include <QVector>
 
 #include <aku_macros.h>
 
