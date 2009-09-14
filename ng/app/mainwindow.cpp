@@ -20,6 +20,7 @@
 
 #include "mainwindow.h"
 #include "pluginloader.h"
+#include "akuplugin.h"
 
 #include <QSplitter>
 
@@ -29,6 +30,7 @@
 #include <KActionCollection>
 #include <KFileDialog>
 #include <KLocale>
+#include <KDebug>
 
 MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
 {
@@ -44,17 +46,24 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
     PluginLoader *pluginLoader = new PluginLoader(this);
     connect(pluginLoader, SIGNAL(pluginsLoaded(AkuPlugin*, const KPluginInfo &)),
           this, SLOT(addPlugins(AkuPlugin*, const KPluginInfo &)));
+    pluginLoader->loadPlugins();
     //
 }
 
 MainWindow::~MainWindow()
 {
-
 }
 
 void MainWindow::setupActions()
 {
     KStandardAction::open(this, SLOT(openDialog()), actionCollection());
+
+    // Open Recent Files
+    m_recentFilesAction = KStandardAction::openRecent(this, SLOT(load(const KUrl&)), actionCollection());
+    m_recentFilesAction->setToolBarMode(KRecentFilesAction::MenuMode);
+    m_recentFilesAction->setToolButtonPopupMode(QToolButton::DelayedPopup);
+    m_recentFilesAction->loadEntries(KGlobal::config()->group("Recent Files"));
+    //
     KStandardAction::quit(kapp, SLOT(quit()), actionCollection());
 }
 
@@ -68,6 +77,7 @@ void MainWindow::openDialog()
     KFileDialog fileDialog(QDir::homePath(), QString(), this);
     fileDialog.setOperationMode(KFileDialog::Opening);
     fileDialog.setCaption(i18n("Open"));
+    fileDialog.setMimeFilter(m_mimeTypeNames);
 
     if (fileDialog.exec()) {
         url = fileDialog.selectedUrl();
@@ -75,5 +85,22 @@ void MainWindow::openDialog()
 
     if (!url.isEmpty()) {
         m_currentUrl = url;
+        load(url);
     }
 }
+
+void MainWindow::addPlugins(AkuPlugin *plugin, const KPluginInfo &info)
+{
+    foreach (const QString &mimeName, plugin->mimeTypeNames()) {
+        KMimeType::Ptr mime = KMimeType::mimeType(mimeName);
+        m_mimeTypeNames << mimeName;
+        kDebug() << mimeName;
+    }
+}
+
+void MainWindow::load(const KUrl &url)
+{
+    m_recentFilesAction->addUrl(url);
+    m_recentFilesAction->saveEntries(KGlobal::config()->group("Recent Files"));
+}
+
