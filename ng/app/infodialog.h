@@ -21,14 +21,16 @@
 #ifndef INFODIALOG_H
 #define INFODIALOG_H
 
-#include <KDialog>
+#include <KConfigDialog>
 
-class InfoDialog : public KDialog
+class KConfigSkeleton;
+
+class InfoDialog : public KConfigDialog
 {
     Q_OBJECT
 
     public:
-      InfoDialog(QWidget *parent = 0);
+      InfoDialog(QWidget *parent, const QString &name, KConfigSkeleton *config);
       ~InfoDialog();
 
       void addPluginInfo();

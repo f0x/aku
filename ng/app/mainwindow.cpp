@@ -31,9 +31,11 @@
 #include <KStandardAction>
 #include <KApplication>
 #include <KActionCollection>
-#include <KFileDialog>
+#include <KConfigDialog>
 #include <KLocale>
 #include <KRecentFilesAction>
+#include <KFileDialog>
+#include <KConfigSkeleton>
 #include <KDebug>
 
 MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
@@ -76,7 +78,7 @@ void MainWindow::setupActions()
     //
 
     KAction* pluginsInfoAction = new KAction(this);
-    pluginsInfoAction->setText(i18n("Show Plugins Informations"));
+    pluginsInfoAction->setText(i18n("Show Plugins Information"));
     //pluginsInfoAction->setIcon(KIcon("document-new"));
     //pluginsInfoAction->setShortcut(Qt::CTRL + Qt::Key_W);
     actionCollection()->addAction("pluginsinfo", pluginsInfoAction);
@@ -108,7 +110,9 @@ void MainWindow::openDialog()
 
 void MainWindow::addPlugins(AkuPlugin *plugin, const KPluginInfo &info)
 {
-    infoDialog = new InfoDialog(this);
+    KConfigSkeleton *configSkeleton = new KConfigSkeleton(KGlobal::config(), this);
+    infoDialog = new InfoDialog(this, "Plugins Information", configSkeleton);
+
     foreach (const QString &mimeName, plugin->mimeTypeNames()) {
         KMimeType::Ptr mime = KMimeType::mimeType(mimeName);
         m_mimeTypeNames << mimeName;
