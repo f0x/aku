@@ -38,6 +38,9 @@
 #include <KRecentFilesAction>
 #include <KFileDialog>
 #include <KConfigSkeleton>
+#include <KPluginInfo>
+#include <KPluginSelector>
+#include <KServiceTypeTrader>
 #include <KDebug>
 
 MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
@@ -130,10 +133,13 @@ void MainWindow::showPluginsInfo()
     InfoDialog *infoDialog = new InfoDialog(this, "Plugins Information", configSkeleton);
     infoDialog->setAttribute(Qt::WA_DeleteOnClose);
     
-    QListView *pluginsView = new QListView(infoDialog);
-    pluginsView->setModel(new PluginsModel(pluginsView));
+    KPluginSelector *selector = new KPluginSelector(infoDialog);
+    KService::List offers = KServiceTypeTrader::self()->query("Aku/Plugin");
+    kDebug() << offers;
+    QList<KPluginInfo> plugins = KPluginInfo::fromServices(offers);
+    selector->addPlugins(plugins);
 
-    infoDialog->addPage(pluginsView, i18n("Aku plugins"), "preferences-plugin");
+    infoDialog->addPage(selector, i18n("Aku plugins"), "preferences-plugin");
     infoDialog->exec();
 }
 

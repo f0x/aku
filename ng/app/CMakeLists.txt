@@ -13,7 +13,7 @@ set( aku_SRCS
  )
 
 kde4_add_executable(aku ${aku_SRCS})
-target_link_libraries(aku akucore ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KFILE_LIBS})
+target_link_libraries(aku akucore ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KFILE_LIBS} ${KDE4_KUTILS_LIBS})
 install(TARGETS aku ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES akuui.rc 
         DESTINATION  ${DATA_INSTALL_DIR}/aku)
