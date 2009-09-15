@@ -7,6 +7,9 @@
                          http://www.kde.org/standards/kxmlgui/1.0/kxmlgui.xsd" >
 
   <MenuBar>
+   <Menu name="settings" >
+      <Action name="pluginsinfo" />
+   </Menu>
   </MenuBar>
 
   <ToolBar name="mainToolBar" >

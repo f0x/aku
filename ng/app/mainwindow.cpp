@@ -21,6 +21,7 @@
 #include "mainwindow.h"
 #include "pluginloader.h"
 #include "akuplugin.h"
+#include "infodialog.h"
 
 #include <QSplitter>
 
@@ -30,6 +31,7 @@
 #include <KActionCollection>
 #include <KFileDialog>
 #include <KLocale>
+#include <KRecentFilesAction>
 #include <KDebug>
 
 MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
@@ -52,11 +54,13 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
 
 MainWindow::~MainWindow()
 {
+    m_recentFilesAction->saveEntries(KGlobal::config()->group("Recent Files"));
 }
 
 void MainWindow::setupActions()
 {
     KStandardAction::open(this, SLOT(openDialog()), actionCollection());
+    KStandardAction::quit(this, SLOT(close()), actionCollection());
 
     // Open Recent Files
     m_recentFilesAction = KStandardAction::openRecent(this, SLOT(load(const KUrl&)), actionCollection());
@@ -64,7 +68,14 @@ void MainWindow::setupActions()
     m_recentFilesAction->setToolButtonPopupMode(QToolButton::DelayedPopup);
     m_recentFilesAction->loadEntries(KGlobal::config()->group("Recent Files"));
     //
-    KStandardAction::quit(kapp, SLOT(quit()), actionCollection());
+
+    KAction* pluginsInfoAction = new KAction(this);
+    pluginsInfoAction->setText(i18n("Show Plugins Informations"));
+    //pluginsInfoAction->setIcon(KIcon("document-new"));
+    //pluginsInfoAction->setShortcut(Qt::CTRL + Qt::Key_W);
+    actionCollection()->addAction("pluginsinfo", pluginsInfoAction);
+    connect(pluginsInfoAction, SIGNAL(triggered(bool)), this, SLOT(showPluginsInfo()));
+
 }
 
 void MainWindow::setupConnections()
@@ -91,6 +102,7 @@ void MainWindow::openDialog()
 
 void MainWindow::addPlugins(AkuPlugin *plugin, const KPluginInfo &info)
 {
+    infoDialog = new InfoDialog(this);
     foreach (const QString &mimeName, plugin->mimeTypeNames()) {
         KMimeType::Ptr mime = KMimeType::mimeType(mimeName);
         m_mimeTypeNames << mimeName;
@@ -101,6 +113,11 @@ void MainWindow::addPlugins(AkuPlugin *plugin, const KPluginInfo &info)
 void MainWindow::load(const KUrl &url)
 {
     m_recentFilesAction->addUrl(url);
-    m_recentFilesAction->saveEntries(KGlobal::config()->group("Recent Files"));
 }
+
+void MainWindow::showPluginsInfo()
+{
+
+}
+
 

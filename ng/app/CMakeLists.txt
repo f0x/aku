@@ -5,6 +5,7 @@ set( aku_SRCS
      main.cpp
      mainwindow.cpp
      ../base/pluginloader.cpp
+     infodialog.cpp
  )
 
 kde4_add_executable(aku ${aku_SRCS})

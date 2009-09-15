@@ -23,10 +23,11 @@
 
 #include <KXmlGuiWindow>
 #include <KUrl>
-#include <KRecentFilesAction>
 
 class AkuPlugin;
 class KPluginInfo;
+class KRecentFilesAction;
+class InfoDialog;
 
 class MainWindow : public KXmlGuiWindow
 {
@@ -45,12 +46,15 @@ class MainWindow : public KXmlGuiWindow
     KRecentFilesAction *m_recentFilesAction;
     KUrl m_currentUrl;
 
+    InfoDialog *infoDialog;
+
   public slots:
     void load(const KUrl &);
 
   private slots:
     void openDialog();
     void addPlugins(AkuPlugin*, const KPluginInfo &);
+    void showPluginsInfo();
 };
 
 #endif
