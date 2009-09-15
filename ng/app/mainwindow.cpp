@@ -24,7 +24,9 @@
 #include "akutreeview.h"
 #include "akutreemodel.h"
 #include "infodialog.h"
+#include "pluginsmodel.h"
 
+#include <QListView>
 #include <QSplitter>
 
 #include <KVBox>
@@ -110,9 +112,6 @@ void MainWindow::openDialog()
 
 void MainWindow::addPlugins(AkuPlugin *plugin, const KPluginInfo &info)
 {
-    KConfigSkeleton *configSkeleton = new KConfigSkeleton(KGlobal::config(), this);
-    infoDialog = new InfoDialog(this, "Plugins Information", configSkeleton);
-
     foreach (const QString &mimeName, plugin->mimeTypeNames()) {
         KMimeType::Ptr mime = KMimeType::mimeType(mimeName);
         m_mimeTypeNames << mimeName;
@@ -127,7 +126,15 @@ void MainWindow::load(const KUrl &url)
 
 void MainWindow::showPluginsInfo()
 {
-    infoDialog->show();
+    KConfigSkeleton *configSkeleton = new KConfigSkeleton(KGlobal::config(), this);
+    InfoDialog *infoDialog = new InfoDialog(this, "Plugins Information", configSkeleton);
+    infoDialog->setAttribute(Qt::WA_DeleteOnClose);
+    
+    QListView *pluginsView = new QListView(infoDialog);
+    pluginsView->setModel(new PluginsModel(pluginsView));
+
+    infoDialog->addPage(pluginsView, i18n("Aku plugins"), "preferences-plugin");
+    infoDialog->exec();
 }
 
 

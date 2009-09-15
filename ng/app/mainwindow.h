@@ -29,7 +29,6 @@ class AkuTreeModel;
 class AkuTreeView;
 class KPluginInfo;
 class KRecentFilesAction;
-class InfoDialog;
 
 class MainWindow : public KXmlGuiWindow
 {
@@ -47,7 +46,6 @@ class MainWindow : public KXmlGuiWindow
 
     AkuTreeModel *m_model;
     AkuTreeView *m_treeView;
-    InfoDialog *infoDialog;
 
     KRecentFilesAction *m_recentFilesAction;
     KUrl m_currentUrl;
