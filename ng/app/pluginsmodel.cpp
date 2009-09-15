@@ -18,23 +18,21 @@
  ***************************************************************************/
 #include "startupmodel.h"
 
-#include <mediabrowserlibs/modelpackage.h>
-
 #include <KIcon>
 #include <KServiceTypeTrader>
 #include <KService>
 #include <KSycoca>
 #include <KDebug>
 
-StartupModel::StartupModel(QObject *parent) : QAbstractItemModel(parent)
+PluginsModel::PluginsModel(QObject *parent) : QAbstractItemModel(parent)
 {
     init();
 }
 
-StartupModel::~StartupModel()
+PluginsModel::~PluginsModel()
 {}
 
-void StartupModel::init()
+void PluginsModel::init()
 {
     KService::List plugins = KServiceTypeTrader::self()->query("Aku/Plugin");
     if (plugins.isEmpty()) {
@@ -45,7 +43,7 @@ void StartupModel::init()
     addAvailableModels(plugins);
 }
 
-int StartupModel::columnCount(const QModelIndex &parent) const
+int PluginsModel::columnCount(const QModelIndex &parent) const
 {
     if (!parent.isValid()) {
         return 1;
@@ -54,7 +52,7 @@ int StartupModel::columnCount(const QModelIndex &parent) const
     return 0;
 }
 
-int StartupModel::rowCount(const QModelIndex &parent) const
+int PluginsModel::rowCount(const QModelIndex &parent) const
 {
     if (!parent.isValid()) {
         return m_modelServices.count();
@@ -63,7 +61,7 @@ int StartupModel::rowCount(const QModelIndex &parent) const
     return 0;
 }
 
-QVariant StartupModel::data(const QModelIndex &index, int role) const
+QVariant PluginsModel::data(const QModelIndex &index, int role) const
 {
     if (index.parent().isValid()) {
         return QVariant();
@@ -89,7 +87,7 @@ QVariant StartupModel::data(const QModelIndex &index, int role) const
     return data;
 }
 
-QModelIndex StartupModel::index(int row, int column, const QModelIndex &parent) const
+QModelIndex PluginsModel::index(int row, int column, const QModelIndex &parent) const
 {
     if (parent.isValid()) {
         return QModelIndex();
@@ -102,20 +100,20 @@ QModelIndex StartupModel::index(int row, int column, const QModelIndex &parent) 
     return createIndex(row, column, (KService*)m_modelServices[row].data());
 }
 
-QModelIndex StartupModel::parent(const QModelIndex &index) const
+QModelIndex PluginsModel::parent(const QModelIndex &index) const
 {
     Q_UNUSED(index);
     return QModelIndex();
 }
 
-void StartupModel::addAvailableModels(const KService::List &models)
+void PluginsModel::addAvailableModels(const KService::List &models)
 {
     beginInsertRows(QModelIndex(), 0, models.count() - 1);
     m_modelServices << models;
     endInsertRows();
 }
 
-KService::Ptr StartupModel::service(KService *service) const
+KService::Ptr PluginsModel::service(KService *service) const
 {
     KService::List::const_iterator i = m_modelServices.constBegin();
     KService::List::const_iterator end = m_modelServices.constEnd();

@@ -16,18 +16,18 @@
  *   Free Software Foundation, Inc.,                                       *
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
-#ifndef STARTUPMODEL_H
-#define STARTUPMODEL_H
+#ifndef PLUGINSMODEL_H
+#define PLUGINSMODEL_H
 
 #include <QAbstractItemModel>
 #include <KService>
 
-class StartupModel : public QAbstractItemModel
+class PluginsModel : public QAbstractItemModel
 {
     Q_OBJECT
 public:
-    StartupModel(QObject *parent = 0);
-    ~StartupModel();
+    PluginsModel(QObject *parent = 0);
+    ~PluginsModel();
 
     virtual int columnCount ( const QModelIndex & parent = QModelIndex() ) const;
     virtual QVariant data ( const QModelIndex & index, int role = Qt::DisplayRole ) const;
@@ -45,4 +45,4 @@ private:
     KService::Ptr service(KService *) const;
 };
 
-#endif // STARTUPMODEL_H
+#endif // PLUGINSMODEL_H
