@@ -23,8 +23,10 @@
 #include <KPageWidget>
 #include <KLocale>
 
-InfoDialog::InfoDialog(QWidget *parent) : KDialog(parent)
+InfoDialog::InfoDialog(QWidget *parent, const QString &name, KConfigSkeleton *config)
+        : KConfigDialog(parent, name, config)
 {
+    setCaption(i18n("Plugins information"));
 }
 
 InfoDialog::~InfoDialog()
