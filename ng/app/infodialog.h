@@ -33,6 +33,6 @@ class InfoDialog : public KDialog
 
       void addPluginInfo();
 
-}
+};
 
 #endif // INFODIALOG_H

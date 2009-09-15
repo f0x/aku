@@ -21,6 +21,8 @@
 #include "mainwindow.h"
 #include "pluginloader.h"
 #include "akuplugin.h"
+#include "akutreeview.h"
+#include "akutreemodel.h"
 #include "infodialog.h"
 
 #include <QSplitter>
@@ -39,6 +41,10 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
     KVBox *baseWidget = new KVBox(this);
     setCentralWidget(baseWidget);
     QSplitter *splitter = new QSplitter(baseWidget);
+
+    m_model = new AkuTreeModel(QVector<QStringList>(), this);
+    m_treeView = new AkuTreeView(splitter);
+    m_treeView->setModel(m_model);
 
     setupActions();
     setupConnections();
@@ -117,7 +123,7 @@ void MainWindow::load(const KUrl &url)
 
 void MainWindow::showPluginsInfo()
 {
-
+    infoDialog->show();
 }
 
 

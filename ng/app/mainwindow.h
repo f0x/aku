@@ -25,6 +25,8 @@
 #include <KUrl>
 
 class AkuPlugin;
+class AkuTreeModel;
+class AkuTreeView;
 class KPluginInfo;
 class KRecentFilesAction;
 class InfoDialog;
@@ -43,10 +45,12 @@ class MainWindow : public KXmlGuiWindow
 
     QStringList m_mimeTypeNames;
 
+    AkuTreeModel *m_model;
+    AkuTreeView *m_treeView;
+    InfoDialog *infoDialog;
+
     KRecentFilesAction *m_recentFilesAction;
     KUrl m_currentUrl;
-
-    InfoDialog *infoDialog;
 
   public slots:
     void load(const KUrl &);

@@ -20,7 +20,10 @@
 
 #include "infodialog.h"
 
-InfoDialog::InfoDialog(QObject *parent) : KDialog(parent)
+#include <KPageWidget>
+#include <KLocale>
+
+InfoDialog::InfoDialog(QWidget *parent) : KDialog(parent)
 {
 }
 
