@@ -42,6 +42,7 @@ class MainWindow : public KXmlGuiWindow
     void setupActions();
     void setupConnections();
 
+    QString m_currentPlugin;
     QStringList m_mimeTypeNames;
     QMap<QString, AkuPlugin*> m_plugins;
 
@@ -59,6 +60,7 @@ class MainWindow : public KXmlGuiWindow
     void addPlugins(AkuPlugin*, const KPluginInfo &);
     void showPluginsInfo();
     void configureAku();
+    void showArchiveContent(const QVector<QStringList> &archive);
 };
 
 #endif

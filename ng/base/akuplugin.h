@@ -41,7 +41,7 @@ class AKU_EXPORT AkuPlugin : public QObject
         /**
          * Defines current operation. The state will automagically be set at the begin
          * of each operation. The state can be retrieved using currentOperation().
-          */
+         */
         enum CurrentOperation { 
                                 NoOperation,
                                 Loading,
@@ -85,12 +85,6 @@ class AKU_EXPORT AkuPlugin : public QObject
          * the correct data. Note that the archive path is given in the init() method.
          */
         virtual void loadArchive() = 0;
-
-        /**
-         * Return true if the plugin has all needed resources ready and working
-         * to properly load the archive otherwise the plugin will be marked as not working.
-         */
-        virtual bool isWorkingProperly();
 
         /**
          * Reimplement this if your plugin gives more parameter for each file 

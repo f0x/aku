@@ -9,8 +9,8 @@
    version 2 of the License, or (at your option) any later version.
 */ 
 
-#ifndef RARPLUGIN_H
-#define RARPLUGIN_H
+#ifndef ACEPLUGIN_H
+#define ACEPLUGIN_H
 
 #include <akuplugin.h>
 #include <aku_macros.h>
@@ -18,12 +18,12 @@
 
 #include <KUrl>
 
-class RarPlugin : public AkuPlugin
+class AcePlugin : public AkuPlugin
 {
     Q_OBJECT
     public:
-        RarPlugin(QObject *parent, const QVariantList &args);
-        ~RarPlugin();
+        AcePlugin(QObject *parent, const QVariantList &args);
+        ~AcePlugin();
 
         QStringList mimeTypeNames();
 
@@ -41,7 +41,6 @@ class RarPlugin : public AkuPlugin
 
         QStringList additionalHeaderStrings();
 
-        void lockArchive();
         void extractArchive(const KUrl &destination, const QStringList &files);
 
     private:

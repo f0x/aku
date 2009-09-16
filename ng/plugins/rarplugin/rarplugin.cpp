@@ -101,6 +101,17 @@ bool RarPlugin::canLock()
 
 void RarPlugin::init(const KUrl &fileName)
 {
+    // WARNING: this checks for unrar or rar with no distinction
+    // TODO: decide whether we should support also the shareware rar
+
+    if (KStandardDirs::findExe("rar").isEmpty()) {
+        if (!KStandardDirs::findExe("unrar").isEmpty()) {
+            exeName = "unrar";
+        }
+    } else {
+        exeName = "rar";
+    }
+
     m_fileName = fileName;
 }
 
@@ -212,23 +223,23 @@ void RarPlugin::loadArchive()
       onArchiveLoaded(archive);
 }
 
-bool RarPlugin::isWorkingProperly()
-{
-    // WARNING: this checks for unrar or rar with no distinction
-    // TODO: decide whether we should support also the shareware rar
-
-    if (KStandardDirs::findExe("rar").isEmpty()) {
-        if (!KStandardDirs::findExe("unrar").isEmpty()) {
-            exeName = "unrar";
-            return true;
-        }
-        return false;
-    }
-    else {
-        exeName = "rar";
-        return true;
-    }
-}
+//bool RarPlugin::isWorkingProperly()
+//{
+//    // WARNING: this checks for unrar or rar with no distinction
+//    // TODO: decide whether we should support also the shareware rar
+//
+//    if (KStandardDirs::findExe("rar").isEmpty()) {
+//        if (!KStandardDirs::findExe("unrar").isEmpty()) {
+//            exeName = "unrar";
+//            return true;
+//        }
+//        return false;
+//    }
+//    else {
+//        exeName = "rar";
+//        return true;
+//    }
+//}
 
 QStringList RarPlugin::additionalHeaderStrings()
 {

@@ -205,7 +205,7 @@ void AkuTreeModel::Private::generateNodes()
                 continue;
             }
 
-            AkuTreeNode *node = new AkuTreeNode(QStringList()<<pathNodes[j], parentNode);
+            AkuTreeNode *node = new AkuTreeNode(QStringList() <<pathNodes[j], parentNode);
             parentNode->appendChild(node);
             parentNode = node;
         }

@@ -98,11 +98,6 @@ bool AkuPlugin::canLock()
     return false;
 }
 
-bool AkuPlugin::isWorkingProperly()
-{
-    return false;
-}
-
 QStringList AkuPlugin::additionalHeaderStrings()
 {
     return QStringList();
@@ -125,12 +120,12 @@ void AkuPlugin::load(const KUrl &fileName)
     if (!d->helper) {
         d->helper = new AkuJobs::AkuHelper(this);
     }
-    connect (d->helper, SIGNAL(error(const QString &)), this, SIGNAL(error(const QString &)));
+    //connect (d->helper, SIGNAL(error(const QString &)), this, SIGNAL(error(const QString &)));
     connect (d->helper, SIGNAL(archiveLoaded(QVector<QStringList>)), this, SIGNAL(archiveLoaded(QVector<QStringList>)));
-    connect (d->helper, SIGNAL(progressUpdate(double, double)), this, SIGNAL(progressUpdate(double, double)));
+    //connect (d->helper, SIGNAL(progressUpdate(double, double)), this, SIGNAL(progressUpdate(double, double)));
 
     KJob *job = new AkuJobs::LoadJob(this, this);
-    connect(job, SIGNAL(operationCompleted()), this, SIGNAL(operationCompleted()));
+    //connect(job, SIGNAL(operationCompleted()), this, SIGNAL(operationCompleted()));
     job->start();
 }
 

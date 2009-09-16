@@ -30,7 +30,7 @@ AkuTreeView::AkuTreeView(QWidget *parent) : QTreeView(parent)
 {
     setAlternatingRowColors(true);
     setSelectionMode(QAbstractItemView::ExtendedSelection);
-    header()->setResizeMode(QHeaderView::ResizeToContents);
+    //header()->setResizeMode(QHeaderView::ResizeToContents);
 }
 
 AkuTreeView::~AkuTreeView()

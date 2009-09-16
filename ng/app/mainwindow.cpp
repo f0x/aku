@@ -117,6 +117,9 @@ void MainWindow::openDialog()
 
 void MainWindow::addPlugins(AkuPlugin *plugin, const KPluginInfo &info)
 {
+    connect(plugin, SIGNAL(archiveLoaded(const QVector<QStringList> &)),
+            this, SLOT(showArchiveContent(const QVector<QStringList> &)));
+
     foreach (const QString &mimeName, plugin->mimeTypeNames()) {
         KMimeType::Ptr mime = KMimeType::mimeType(mimeName);
 
@@ -140,22 +143,15 @@ void MainWindow::load(const KUrl &url)
     kDebug() << mimetype -> name();
 
     if (!m_plugins.contains(mimetype->name())) {
-        KMessageBox::detailedSorry(this, i18n("Sorry, no available plugin to open:") +  "<b>%1</b>.", url.pathOrUrl(),
-                           i18n("Install a plugin for") + "<b>%1</b> " + i18n("mimetype in order to load the archive."),
-                           mimetype->name(), i18n("Unable to load archive"));
+        KMessageBox::detailedSorry(this, i18n("Sorry, no available plugin to open") +  " <b>" + url.pathOrUrl() + "</b>",
+                           i18n("Install a plugin for") + " <b>" + mimetype->name() + "</b> " +
+                                 i18n("mimetype in order to load the archive."),
+                           i18n("Unable to load the archive"));
         return;
     }
 
-    if (!m_plugins[mimetype->name()]->isWorkingProperly()) {
-        KMessageBox::sorry(this, i18n("The correct plugin to open") + " <b>%1</b> " +
-                           i18n("mimetype was found but appears to not be working properly." + "<br>" +
-                           "Please check the installation", mimetype->name()),
-                           i18n("Unable to load archive"));
-        return;
-    }
-
-    KMimeType::Ptr mimetype = KMimeType::findByUrl(url);
-    kDebug() << mimetype -> name();
+    m_currentPlugin = mimetype->name();
+    m_plugins[mimetype->name()]->load(url);
     m_recentFilesAction->addUrl(url);
 }
 
@@ -177,6 +173,19 @@ void MainWindow::configureAku()
 
 void MainWindow::showPluginsInfo()
 {
+}
+
+void MainWindow::showArchiveContent(const QVector<QStringList> &archive)
+{
+    if (archive.isEmpty()) {
+        return;
+    }
+
+    // here we set additional per-plugin headers
+    AkuPlugin *sender = static_cast<AkuPlugin*>(this->sender());
+    m_model->setAdditionalHeaders(sender->additionalHeaderStrings());
+    //
+    m_model->setSourceData(archive);
 }
 
 
