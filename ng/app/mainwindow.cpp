@@ -41,6 +41,7 @@
 #include <KPluginInfo>
 #include <KPluginSelector>
 #include <KServiceTypeTrader>
+#include <KMessageBox>
 #include <KDebug>
 
 MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
@@ -118,13 +119,43 @@ void MainWindow::addPlugins(AkuPlugin *plugin, const KPluginInfo &info)
 {
     foreach (const QString &mimeName, plugin->mimeTypeNames()) {
         KMimeType::Ptr mime = KMimeType::mimeType(mimeName);
+
+        m_plugins.insert(mime->name(), plugin);
+
         m_mimeTypeNames << mimeName;
+
         kDebug() << mimeName;
     }
 }
 
 void MainWindow::load(const KUrl &url)
 {
+    if (!QFile(url.pathOrUrl()).open(QIODevice::ReadOnly)) {
+        KMessageBox::error(this, i18n("Could not open") + " %1.<br>" + i18n("Check your file permissions",
+                                      url.prettyUrl()), i18n("Load error"));
+        return;
+    }
+
+    KMimeType::Ptr mimetype = KMimeType::findByUrl(url);
+    kDebug() << mimetype -> name();
+
+    if (!m_plugins.contains(mimetype->name())) {
+        KMessageBox::detailedSorry(this, i18n("Sorry, no available plugin to open:") +  "<b>%1</b>.", url.pathOrUrl(),
+                           i18n("Install a plugin for") + "<b>%1</b> " + i18n("mimetype in order to load the archive."),
+                           mimetype->name(), i18n("Unable to load archive"));
+        return;
+    }
+
+    if (!m_plugins[mimetype->name()]->isWorkingProperly()) {
+        KMessageBox::sorry(this, i18n("The correct plugin to open") + " <b>%1</b> " +
+                           i18n("mimetype was found but appears to not be working properly." + "<br>" +
+                           "Please check the installation", mimetype->name()),
+                           i18n("Unable to load archive"));
+        return;
+    }
+
+    KMimeType::Ptr mimetype = KMimeType::findByUrl(url);
+    kDebug() << mimetype -> name();
     m_recentFilesAction->addUrl(url);
 }
 

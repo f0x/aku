@@ -43,6 +43,7 @@ class MainWindow : public KXmlGuiWindow
     void setupConnections();
 
     QStringList m_mimeTypeNames;
+    QMap<QString, AkuPlugin*> m_plugins;
 
     AkuTreeModel *m_model;
     AkuTreeView *m_treeView;
