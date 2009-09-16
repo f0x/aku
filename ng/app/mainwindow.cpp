@@ -99,15 +99,7 @@ void MainWindow::setupConnections()
 
 void MainWindow::openDialog()
 {
-    KUrl url;
-    KFileDialog fileDialog(QDir::homePath(), QString(), this);
-    fileDialog.setOperationMode(KFileDialog::Opening);
-    fileDialog.setCaption(i18n("Open"));
-    fileDialog.setMimeFilter(m_mimeTypeNames);
-
-    if (fileDialog.exec()) {
-        url = fileDialog.selectedUrl();
-    }
+    KUrl url = KFileDialog::getOpenUrl(KUrl(), m_mimeTypeNames.join(" "), this, i18n("Open Archive"));
 
     if (!url.isEmpty()) {
         m_currentUrl = url;
