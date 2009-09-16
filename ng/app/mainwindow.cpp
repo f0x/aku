@@ -23,7 +23,7 @@
 #include "akuplugin.h"
 #include "akutreeview.h"
 #include "akutreemodel.h"
-#include "infodialog.h"
+//#include "infodialog.h"
 #include "pluginsmodel.h"
 
 #include <QListView>
@@ -74,6 +74,7 @@ void MainWindow::setupActions()
 {
     KStandardAction::open(this, SLOT(openDialog()), actionCollection());
     KStandardAction::quit(this, SLOT(close()), actionCollection());
+    KStandardAction::preferences(this, SLOT(configureAku()), actionCollection());
 
     // Open Recent Files
     m_recentFilesAction = KStandardAction::openRecent(this, SLOT(load(const KUrl&)), actionCollection());
@@ -127,20 +128,24 @@ void MainWindow::load(const KUrl &url)
     m_recentFilesAction->addUrl(url);
 }
 
-void MainWindow::showPluginsInfo()
+void MainWindow::configureAku()
 {
     KConfigSkeleton *configSkeleton = new KConfigSkeleton(KGlobal::config(), this);
-    InfoDialog *infoDialog = new InfoDialog(this, "Plugins Information", configSkeleton);
-    infoDialog->setAttribute(Qt::WA_DeleteOnClose);
+    KConfigDialog *configDialog = new KConfigDialog(this, "Plugins Information", configSkeleton);
+    configDialog->setAttribute(Qt::WA_DeleteOnClose);
     
-    KPluginSelector *selector = new KPluginSelector(infoDialog);
+    KPluginSelector *selector = new KPluginSelector(configDialog);
     KService::List offers = KServiceTypeTrader::self()->query("Aku/Plugin");
     kDebug() << offers;
     QList<KPluginInfo> plugins = KPluginInfo::fromServices(offers);
     selector->addPlugins(plugins);
 
-    infoDialog->addPage(selector, i18n("Aku plugins"), "preferences-plugin");
-    infoDialog->exec();
+    configDialog->addPage(selector, i18n("Aku plugins"), "preferences-plugin");
+    configDialog->exec();
+}
+
+void MainWindow::showPluginsInfo()
+{
 }
 
 

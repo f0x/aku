@@ -57,6 +57,7 @@ class MainWindow : public KXmlGuiWindow
     void openDialog();
     void addPlugins(AkuPlugin*, const KPluginInfo &);
     void showPluginsInfo();
+    void configureAku();
 };
 
 #endif

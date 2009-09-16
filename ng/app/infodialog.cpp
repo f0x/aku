@@ -27,6 +27,7 @@ InfoDialog::InfoDialog(QWidget *parent, const QString &name, KConfigSkeleton *co
         : KConfigDialog(parent, name, config)
 {
     setCaption(i18n("Plugins information"));
+
 }
 
 InfoDialog::~InfoDialog()
