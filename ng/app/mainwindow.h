@@ -30,6 +30,7 @@ class AkuTreeView;
 class KPluginInfo;
 class KRecentFilesAction;
 class FilterWidget;
+class SortFilterModel;
 
 class MainWindow : public KXmlGuiWindow
 {
@@ -50,6 +51,7 @@ class MainWindow : public KXmlGuiWindow
     AkuTreeModel *m_model;
     AkuTreeView *m_treeView;
     FilterWidget *m_filterWidget;
+    SortFilterModel *m_sortFilterModel;
 
     KRecentFilesAction *m_recentFilesAction;
     KUrl m_currentUrl;
@@ -63,6 +65,7 @@ class MainWindow : public KXmlGuiWindow
     void showPluginsInfo();
     void configureAku();
     void showArchiveContent(const QVector<QStringList> &archive);
+    void setFilterModel(QRegExp);
 };
 
 #endif

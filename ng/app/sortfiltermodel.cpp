@@ -20,17 +20,17 @@
 
 #include "sortfiltermodel.h"
 
-SortFilterModel::SortFilterModel(QObject *parent) : QSortFilterProxyModel(parent)
+SortFilterModel::SortFilterModel(QObject *parent) : KSortFilterProxyModel(parent)
  {
  }
 
- bool MySortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
- {
- }
+ //bool SortFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
+ //{
+ //}
 
- bool MySortFilterProxyModel::lessThan(const QModelIndex &left, const QModelIndex &right) const
- {
- }
+ //bool SortFilterModel::lessThan(const QModelIndex &left, const QModelIndex &right) const
+ //{
+ //}
 
 
 

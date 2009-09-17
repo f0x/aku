@@ -21,7 +21,9 @@
 #ifndef SORTFILTERMODEL_H
 #define SORTFILTERMODEL_H
 
- class SortFilterModel : public QSortFilterProxyModel
+#include <ksortfilterproxymodel.h>
+
+ class SortFilterModel : public KSortFilterProxyModel
  {
      Q_OBJECT
 
@@ -29,8 +31,8 @@
      SortFilterModel(QObject *parent = 0);
 
  protected:
-     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
-     bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
+     //bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
+     //bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
 
  private:
 

@@ -22,12 +22,16 @@
 
 #include <QWidget>
 
+class QToolButton;
+class QCheckBox;
 class KFilterProxySearchLine;
 class KAction;
-class QToolButton;
+class KComboBox;
 
 class FilterWidget : public QWidget
 {
+    Q_OBJECT
+
 public:
     FilterWidget(QWidget *parent);
     ~FilterWidget();
@@ -37,10 +41,22 @@ public:
      * menu entry to show/hide this widget.
      */
     KAction *action();
+
 private:
+    void setupConnections();
+
     KFilterProxySearchLine *m_filterLine;
     KAction *m_action;
+    KComboBox *m_filterComboBox;
+
     QToolButton *m_hideButton;
+    QCheckBox *m_checkBox;
+
+private slots:
+    void textFilterChanged();
+
+signals:
+    void filterChanged(QRegExp);
 };
 
 #endif // FILTERWIDGET_H

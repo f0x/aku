@@ -27,6 +27,8 @@
 #include <KFilterProxySearchLine>
 #include <KLocale>
 #include <KAction>
+#include <KComboBox>
+#include <KLineEdit>
 
 FilterWidget::FilterWidget(QWidget *parent) : QWidget(parent),
 m_action(0),
@@ -34,31 +36,47 @@ m_hideButton(0)
 {
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
-    m_filterLine = new KFilterProxySearchLine(this);
-
     QHBoxLayout *layout = new QHBoxLayout;
-    layout->addSpacing(10);
-    layout->addWidget(m_filterLine);
-
-    QCheckBox *checkBox = new QCheckBox(i18n("Case sensitive"), this);
-    layout->addWidget(checkBox);
-
-    layout->addSpacing(50);
+    //layout->addSpacing(10);
 
     m_hideButton = new QToolButton(this);
     m_hideButton->setAutoRaise(true);
     m_hideButton->setIcon(KIcon("dialog-close"));
-    connect(m_hideButton, SIGNAL(clicked()), this, SLOT(hide()));
     layout->addWidget(m_hideButton);
+
+    m_filterLine = new KFilterProxySearchLine(this);
+    layout->addWidget(m_filterLine);
+
+    m_filterComboBox = new KComboBox;
+    m_filterComboBox->addItem(i18n("Fixed string"), QRegExp::FixedString);
+    m_filterComboBox->addItem(i18n("Wildcard"), QRegExp::Wildcard);
+    m_filterComboBox->addItem(i18n("Regular expression"), QRegExp::RegExp);
+    layout->addWidget(m_filterComboBox);
+
+    m_checkBox = new QCheckBox(i18n("Case sensitive"), this);
+    layout->addWidget(m_checkBox);
+
+    //layout->addSpacing(50);
 
     setLayout(layout);
 
     hide();
+
+    setupConnections();
 }
 
 FilterWidget::~FilterWidget()
 {
 }
+
+void FilterWidget::setupConnections()
+{
+    //connect(m_filterLine, SIGNAL(textChanged(const QString &)), this, SLOT(textFilterChanged()));
+    connect(m_hideButton, SIGNAL(clicked()), this, SLOT(hide()));
+    //connect(m_filterComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(textFilterChanged()));
+    //connect(m_checkBox, SIGNAL(toggled(bool)), this, SLOT(textFilterChanged()));
+}
+
 
 KAction* FilterWidget::action()
 {
@@ -74,4 +92,15 @@ KAction* FilterWidget::action()
     }
 
     return m_action;
+}
+
+void FilterWidget::textFilterChanged()
+{
+     QRegExp::PatternSyntax syntax =
+             QRegExp::PatternSyntax(m_filterComboBox->itemData(m_filterComboBox->currentIndex()).toInt());
+     Qt::CaseSensitivity caseSensitivity = m_checkBox->isChecked() ? Qt::CaseSensitive : Qt::CaseInsensitive;
+
+     QRegExp regExp(m_filterLine->lineEdit()->text(), caseSensitivity, syntax);
+     //proxyModel->setFilterRegExp(regExp);
+     emit(filterChanged(regExp));
 }

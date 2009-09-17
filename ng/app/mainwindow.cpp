@@ -26,6 +26,7 @@
 //#include "infodialog.h"
 #include "pluginsmodel.h"
 #include "filterwidget.h"
+#include "sortfiltermodel.h"
 
 #include <QListView>
 #include <QSplitter>
@@ -61,6 +62,9 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
     m_model = new AkuTreeModel(QVector<QStringList>(), this);
     m_treeView = new AkuTreeView(splitter);
     m_treeView->setModel(m_model);
+
+    m_sortFilterModel = new SortFilterModel(this);
+    m_sortFilterModel->setDynamicSortFilter(true);
 
     setupActions();
     setupConnections();
@@ -105,11 +109,12 @@ void MainWindow::setupActions()
 
 void MainWindow::setupConnections()
 {
+    connect(m_filterWidget, SIGNAL(filterChanged(QRegExp)), this, SLOT(setFilterModel(QRegExp)));
 }
 
 void MainWindow::openDialog()
 {
-    KUrl url = KFileDialog::getOpenUrl(QDir::home(), m_mimeTypeNames.join(" "), this, i18n("Open Archive"));
+    KUrl url = KFileDialog::getOpenUrl(QDir::homePath(), m_mimeTypeNames.join(" "), this, i18n("Open Archive"));
 
     if (!url.isEmpty()) {
         m_currentUrl = url;
@@ -188,14 +193,12 @@ void MainWindow::showArchiveContent(const QVector<QStringList> &archive)
     m_model->setAdditionalHeaders(sender->additionalHeaderStrings());
     //
     m_model->setSourceData(archive);
-
-    //m_treeView->setSortingEnabled(true);
-    //KSortFilterProxyModel *proxy = new KSortFilterProxyModel(this);
-    //proxy->setSourceModel(m_model);
-    //proxy->setDynamicSortFilter(true);
-    //proxy->sort(1, Qt::AscendingOrder);
-    //m_treeView->setModel(proxy);
-
+//    m_treeView->setModel(m_sortFilterModel);
+    m_treeView->setSortingEnabled(true);
 }
 
-
+void MainWindow::setFilterModel(QRegExp exp)
+{
+    m_sortFilterModel->setFilterRegExp(exp);
+    m_treeView->setModel(m_sortFilterModel);
+}
