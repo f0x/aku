@@ -1,26 +1,33 @@
- /*
-
-   Copyright (C) 2008 Francesco Grieco <fgrieco@gmail.com>
-   Copyright (C) 2008 Alessandro Diaferia <alediaferia@gmail.com>
-
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-*/ 
-
-// IMPORTANT NOTE: Keep using kdelibs coding style
-//                 have a look at: http://techbase.kde.org/Policies/Kdelibs_Coding_Style
+/***************************************************************************
+ *   Copyright 2009 by Francesco Grieco <fgrieco@gmail.com>                *
+ *                     Alessandro Diaferia <alediaferia@gmail.com>         *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
+ ***************************************************************************/
 
 #include "rarplugin.h"
 
 #include <QProcess>
-#include <QDateTime>
 #include <QDir>
+#include <QTextStream>
 
 #include <KLocale>
-#include <KDebug>
 #include <KStandardDirs>
+#include <KDateTime>
+#include <KDebug>
 
 AKU_PLUGIN_EXPORT(RarPlugin)
 
@@ -118,24 +125,31 @@ void RarPlugin::init(const KUrl &fileName)
 void RarPlugin::loadArchive()
 {
     // we start a first archive list to check if the archive is locked
+    // or header password protected
     QProcess process;
     QString output;
     QStringList options;
-    options << "vt" << m_fileName.pathOrUrl();
+
+    // v[t,b]        Verbosely list archive [technical,bare]
+    // -p-            Do not query password
+    options << "vt" << "-p-" << m_fileName.pathOrUrl();
+
     process.start(exeName, options);
     process.waitForFinished();
-    
+
     output = process.readAllStandardOutput();
-     
-    if (output.contains("Lock is present\n")) {
+
+    if (output.contains("Lock is present")) {
         kDebug() << "The archive is LOCKED";
+    } else if (output.contains("CRC failed in")) {
+        kDebug() << "The archive is HEADER PROTECTED";
     }
 
-    //QProcess process;
-    //QStringList options;
-    //QString output;
     options.clear();
+
+    // we start the real archive list
     options << "v" << m_fileName.pathOrUrl();
+
     process.start(exeName, options);
     process.waitForFinished();
 
@@ -150,96 +164,69 @@ void RarPlugin::loadArchive()
         comment = comment.trimmed();
         kDebug() << "COMMENT: " << comment;
     }
-   
+
     int indexOfHeaderLine;
     indexOfHeaderLine = output.indexOf(headerLine);
-    
+
     // cut the the text until the end of headerLine
-    output.remove(0, indexOfHeaderLine + 79);  
+    output.remove(0, indexOfHeaderLine + 79);
 
     // search for the second headerLine. The list of the file in the archive ends here
     indexOfHeaderLine = output.indexOf(headerLine);
 
     output.remove(indexOfHeaderLine, output.length());
 
-    //kDebug() << output;
-    //output.remove(0, 1);
-    //output.remove(output.length() - 1, 1); //other parsing corrections
-
-    QStringList splitList;
-    splitList = output.split("\n"); // split at the newline
-
-    splitList.removeFirst();
-    splitList.removeLast();
-
+    QTextStream stream(&output);
+    QString line;
     QVector<QStringList> archive;
-
     QStringList file;
+    int i = 0;
 
-#ifdef Q_WS_WIN
-    // one more parsing correction on Win32
-    // since appears to be a newline char issue
-    for (int i = 0; i < splitList.count(); i++) {
-        splitList[i] = splitList[i].remove(splitList[i].size() - 1, 1);
-    }
-#endif
+    do {
+        line = stream.readLine();
+        // skip the empty line
+        if (line.isEmpty()) {
+            continue;
+        }
 
-    for (int i = 0; i < splitList.size(); i++) {
-        if ( i % 2 == 0 ) {
-            file << splitList[i].mid(1); // filepath
+        if ((i % 2) == 0) {
+            file << line.mid(1); // filepath
         } else {
-            QStringList attributes = (splitList.at(i)).split(" ", QString::SkipEmptyParts);
-            for (int j = 0; j < attributes.size(); j++) {
-                //if ((j == 5) && (attributes[j].startsWith("d"))) {
-                //    file[0].append(QDir().separator());;
-                //}                
-
-                if (j == 4) {
-                    QDateTime modified(QDate::fromString(file[4], QString("dd-MM-yy")), 
+            QStringList attributes = (line.split(" ", QString::SkipEmptyParts));
+            for (int i = 0; i < attributes.size(); i++) {
+                if (i == 4) {
+                    KDateTime modified(QDate::fromString(file[4], QString("dd-MM-yy")),
                                        QTime::fromString(attributes[4], QString("hh:mm")));
                     modified = modified.addYears(100);
                     file[4] = KGlobal::locale()->formatDateTime(modified);
                     continue;
                 }
 
-                if (j == 0 || j == 1) {
-                    file << KGlobal::locale()->formatByteSize(attributes[j].toDouble());
+                if (i == 0 || i == 1) {
+                    file << KGlobal::locale()->formatByteSize(attributes[i].toDouble());
                     continue;
                 }
 
-                if (j > 3) {
-                    file << attributes[j];
+                //if (i == 2) {
+                //
+                //    continue;
+                //}
+
+                if (i > 3) {
+                    file << attributes[i];
                     continue;
                 }
 
-                file << attributes[j];
+                file << attributes[i];
             }
+            archive << (QStringList() << file);
+            file.clear();
+        }
+        i++;
+    } while (!line.isNull());
 
-           archive << (QStringList() << file);
-           file.clear();
-       }
-   }
-
-      onArchiveLoaded(archive);
+    onArchiveLoaded(archive);
 }
-
-//bool RarPlugin::isWorkingProperly()
-//{
-//    // WARNING: this checks for unrar or rar with no distinction
-//    // TODO: decide whether we should support also the shareware rar
-//
-//    if (KStandardDirs::findExe("rar").isEmpty()) {
-//        if (!KStandardDirs::findExe("unrar").isEmpty()) {
-//            exeName = "unrar";
-//            return true;
-//        }
-//        return false;
-//    }
-//    else {
-//        exeName = "rar";
-//        return true;
-//    }
-//}
 
 QStringList RarPlugin::additionalHeaderStrings()
 {

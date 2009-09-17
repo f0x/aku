@@ -76,7 +76,7 @@ QStringList AkuTreeView::selectedPaths()
      connect(actionCollapseAll, SIGNAL(triggered()), this, SLOT(collapseAll()));
 
      KMenu menu(this);
-     menu.addTitle(i18n("Quick operations"));
+     menu.addTitle(i18n("Quick actions"));
      menu.addAction(actionSelectAll);
      menu.addAction(actionInvertSelection);
      menu.addSeparator();
