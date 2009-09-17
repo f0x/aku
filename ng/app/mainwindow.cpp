@@ -46,6 +46,8 @@
 #include <KMenuBar>
 #include <KDebug>
 
+#include <ksortfilterproxymodel.h>
+
 MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
 {
     KVBox *baseWidget = new KVBox(this);
@@ -107,7 +109,7 @@ void MainWindow::setupConnections()
 
 void MainWindow::openDialog()
 {
-    KUrl url = KFileDialog::getOpenUrl(KUrl(), m_mimeTypeNames.join(" "), this, i18n("Open Archive"));
+    KUrl url = KFileDialog::getOpenUrl(QDir::home(), m_mimeTypeNames.join(" "), this, i18n("Open Archive"));
 
     if (!url.isEmpty()) {
         m_currentUrl = url;
@@ -186,6 +188,14 @@ void MainWindow::showArchiveContent(const QVector<QStringList> &archive)
     m_model->setAdditionalHeaders(sender->additionalHeaderStrings());
     //
     m_model->setSourceData(archive);
+
+    //m_treeView->setSortingEnabled(true);
+    //KSortFilterProxyModel *proxy = new KSortFilterProxyModel(this);
+    //proxy->setSourceModel(m_model);
+    //proxy->setDynamicSortFilter(true);
+    //proxy->sort(1, Qt::AscendingOrder);
+    //m_treeView->setModel(proxy);
+
 }
 
 

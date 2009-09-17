@@ -11,6 +11,7 @@ set( aku_SRCS
      akutreemodel.cpp
      pluginsmodel.cpp
      filterwidget.cpp
+     sortfiltermodel.cpp
  )
 
 kde4_add_executable(aku ${aku_SRCS})
