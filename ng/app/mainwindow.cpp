@@ -50,14 +50,14 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
     KVBox *baseWidget = new KVBox(this);
     setCentralWidget(baseWidget);
 
+    m_filterWidget = new FilterWidget(baseWidget);
+
     KHBox *hbox = new KHBox(baseWidget);
     QSplitter *splitter = new QSplitter(hbox);
 
     m_model = new AkuTreeModel(QVector<QStringList>(), this);
     m_treeView = new AkuTreeView(splitter);
     m_treeView->setModel(m_model);
-
-    m_filterWidget = new FilterWidget(baseWidget);
 
     setupActions();
     setupConnections();
@@ -95,6 +95,14 @@ void MainWindow::setupActions()
     //pluginsInfoAction->setShortcut(Qt::CTRL + Qt::Key_W);
     actionCollection()->addAction("pluginsinfo", pluginsInfoAction);
     connect(pluginsInfoAction, SIGNAL(triggered(bool)), this, SLOT(showPluginsInfo()));
+
+    KAction* filterAction = new KAction(this);
+    filterAction->setCheckable(true);
+    filterAction->setText(i18n("Filter"));
+    //filterAction->setIcon(KIcon("document-new"));
+    filterAction->setShortcut(Qt::CTRL + Qt::Key_F);
+    actionCollection()->addAction("filter", filterAction);
+    connect(filterAction, SIGNAL(triggered(bool)), m_filterWidget, SLOT(setVisible(bool)));
 
 }
 

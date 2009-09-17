@@ -19,17 +19,38 @@
 
 #include "filterwidget.h"
 
+#include <QHBoxLayout>
+#include <QToolButton>
+#include <QCheckBox>
+
+#include <KIcon>
 #include <KFilterProxySearchLine>
-#include <KHBox>
+#include <KLocale>
 
 FilterWidget::FilterWidget(QWidget *parent) : QWidget(parent)
 {
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
-    KHBox *box = new KHBox(this);
+    filterLine = new KFilterProxySearchLine(this);
 
-    filterLine = new KFilterProxySearchLine(box);
+    QHBoxLayout *layout = new QHBoxLayout;
+    layout->addSpacing(10);
+    layout->addWidget(filterLine);
 
+    QCheckBox *checkBox = new QCheckBox(i18n("Case sensitive"), this);
+    layout->addWidget(checkBox);
+
+    layout->addSpacing(50);
+
+    QToolButton *hideButton = new QToolButton(this);
+    hideButton->setAutoRaise(true);
+    hideButton->setIcon(KIcon("dialog-close"));
+    connect(hideButton, SIGNAL(clicked()), this, SLOT(hide()));
+    layout->addWidget(hideButton);
+
+    setLayout(layout);
+
+    hide();
 }
 
 FilterWidget::~FilterWidget()
