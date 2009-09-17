@@ -25,6 +25,7 @@
 #include "akutreemodel.h"
 //#include "infodialog.h"
 #include "pluginsmodel.h"
+#include "filterwidget.h"
 
 #include <QListView>
 #include <QSplitter>
@@ -48,11 +49,15 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
 {
     KVBox *baseWidget = new KVBox(this);
     setCentralWidget(baseWidget);
-    QSplitter *splitter = new QSplitter(baseWidget);
+
+    KHBox *hbox = new KHBox(baseWidget);
+    QSplitter *splitter = new QSplitter(hbox);
 
     m_model = new AkuTreeModel(QVector<QStringList>(), this);
     m_treeView = new AkuTreeView(splitter);
     m_treeView->setModel(m_model);
+
+    m_filterWidget = new FilterWidget(baseWidget);
 
     setupActions();
     setupConnections();
