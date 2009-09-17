@@ -193,6 +193,9 @@ void AkuTreeModel::Private::generateNodes()
                 AkuTreeNode *node = new AkuTreeNode(QStringList()<<pathNodes[j]<<file, parentNode);
 
                 // TODO: make a real check to see whether it is a folder or not
+                if (parentNode->findChildFolder(pathNodes[j])) {
+                    continue;
+                }
                 node->setFolder(false);
                 parentNode->appendChild(node);
                 continue;
