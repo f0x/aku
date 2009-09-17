@@ -18,23 +18,25 @@
  ***************************************************************************/
 
 #include "filterwidget.h"
+#include "sortfiltermodel.h"
 
 #include <QHBoxLayout>
 #include <QToolButton>
 #include <QCheckBox>
 
 #include <KIcon>
-#include <KFilterProxySearchLine>
 #include <KLocale>
 #include <KAction>
 #include <KComboBox>
 #include <KLineEdit>
 
-FilterWidget::FilterWidget(QWidget *parent) : QWidget(parent),
+FilterWidget::FilterWidget(QWidget *parent, QSortFilterProxyModel *model) : QWidget(parent),
 m_action(0),
 m_hideButton(0)
 {
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+
+    m_model = model;
 
     QHBoxLayout *layout = new QHBoxLayout;
     //layout->addSpacing(10);
@@ -44,7 +46,7 @@ m_hideButton(0)
     m_hideButton->setIcon(KIcon("dialog-close"));
     layout->addWidget(m_hideButton);
 
-    m_filterLine = new KFilterProxySearchLine(this);
+    m_filterLine = new KLineEdit(this);
     layout->addWidget(m_filterLine);
 
     m_filterComboBox = new KComboBox;
@@ -71,10 +73,10 @@ FilterWidget::~FilterWidget()
 
 void FilterWidget::setupConnections()
 {
-    //connect(m_filterLine, SIGNAL(textChanged(const QString &)), this, SLOT(textFilterChanged()));
+    connect(m_filterLine, SIGNAL(textChanged(const QString &)), this, SLOT(textFilterChanged()));
     connect(m_hideButton, SIGNAL(clicked()), this, SLOT(hide()));
-    //connect(m_filterComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(textFilterChanged()));
-    //connect(m_checkBox, SIGNAL(toggled(bool)), this, SLOT(textFilterChanged()));
+    connect(m_filterComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(textFilterChanged()));
+    connect(m_checkBox, SIGNAL(toggled(bool)), this, SLOT(textFilterChanged()));
 }
 
 
@@ -100,7 +102,8 @@ void FilterWidget::textFilterChanged()
              QRegExp::PatternSyntax(m_filterComboBox->itemData(m_filterComboBox->currentIndex()).toInt());
      Qt::CaseSensitivity caseSensitivity = m_checkBox->isChecked() ? Qt::CaseSensitive : Qt::CaseInsensitive;
 
-     QRegExp regExp(m_filterLine->lineEdit()->text(), caseSensitivity, syntax);
-     //proxyModel->setFilterRegExp(regExp);
-     emit(filterChanged(regExp));
+     QRegExp regExp(m_filterLine->text(), caseSensitivity, syntax);
+     m_model->setFilterRegExp(regExp);
+     //emit(filterChanged(regExp));
+
 }

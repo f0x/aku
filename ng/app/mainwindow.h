@@ -65,7 +65,6 @@ class MainWindow : public KXmlGuiWindow
     void showPluginsInfo();
     void configureAku();
     void showArchiveContent(const QVector<QStringList> &archive);
-    void setFilterModel(QRegExp);
 };
 
 #endif

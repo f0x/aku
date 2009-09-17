@@ -54,17 +54,20 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
     KVBox *baseWidget = new KVBox(this);
     setCentralWidget(baseWidget);
 
-    m_filterWidget = new FilterWidget(baseWidget);
+    m_model = new AkuTreeModel(QVector<QStringList>(), this);
+
+    m_sortFilterModel = new SortFilterModel(this);
+    m_sortFilterModel->setDynamicSortFilter(true);
+    m_sortFilterModel->setSourceModel(m_model);
+
+    m_filterWidget = new FilterWidget(baseWidget, m_sortFilterModel);
 
     KHBox *hbox = new KHBox(baseWidget);
     QSplitter *splitter = new QSplitter(hbox);
 
-    m_model = new AkuTreeModel(QVector<QStringList>(), this);
     m_treeView = new AkuTreeView(splitter);
-    m_treeView->setModel(m_model);
-
-    m_sortFilterModel = new SortFilterModel(this);
-    m_sortFilterModel->setDynamicSortFilter(true);
+    //m_treeView->setModel(m_model);
+    m_treeView->setModel(m_sortFilterModel);
 
     setupActions();
     setupConnections();
@@ -193,12 +196,6 @@ void MainWindow::showArchiveContent(const QVector<QStringList> &archive)
     m_model->setAdditionalHeaders(sender->additionalHeaderStrings());
     //
     m_model->setSourceData(archive);
-//    m_treeView->setModel(m_sortFilterModel);
     m_treeView->setSortingEnabled(true);
 }
 
-void MainWindow::setFilterModel(QRegExp exp)
-{
-    m_sortFilterModel->setFilterRegExp(exp);
-    m_treeView->setModel(m_sortFilterModel);
-}

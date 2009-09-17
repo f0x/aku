@@ -24,16 +24,18 @@
 
 class QToolButton;
 class QCheckBox;
-class KFilterProxySearchLine;
+
 class KAction;
 class KComboBox;
+class KLineEdit;
+class QSortFilterProxyModel;
 
 class FilterWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-    FilterWidget(QWidget *parent);
+    FilterWidget(QWidget *parent, QSortFilterProxyModel*);
     ~FilterWidget();
 
     /**
@@ -45,7 +47,9 @@ public:
 private:
     void setupConnections();
 
-    KFilterProxySearchLine *m_filterLine;
+    QSortFilterProxyModel *m_model;
+
+    KLineEdit *m_filterLine;
     KAction *m_action;
     KComboBox *m_filterComboBox;
 
