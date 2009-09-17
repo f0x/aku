@@ -30,7 +30,7 @@ public:
     FilterWidget(QWidget *parent);
     ~FilterWidget();
 private:
-    KFilterProxySearchLine *filterLine;
+    KFilterProxySearchLine *m_filterLine;
 };
 
 #endif // FILTERWIDGET_H

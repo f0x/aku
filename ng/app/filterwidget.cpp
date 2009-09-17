@@ -31,11 +31,11 @@ FilterWidget::FilterWidget(QWidget *parent) : QWidget(parent)
 {
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
-    filterLine = new KFilterProxySearchLine(this);
+    m_filterLine = new KFilterProxySearchLine(this);
 
     QHBoxLayout *layout = new QHBoxLayout;
     layout->addSpacing(10);
-    layout->addWidget(filterLine);
+    layout->addWidget(m_filterLine);
 
     QCheckBox *checkBox = new QCheckBox(i18n("Case sensitive"), this);
     layout->addWidget(checkBox);
