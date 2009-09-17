@@ -23,14 +23,24 @@
 #include <QWidget>
 
 class KFilterProxySearchLine;
+class KAction;
+class QToolButton;
 
 class FilterWidget : public QWidget
 {
 public:
     FilterWidget(QWidget *parent);
     ~FilterWidget();
+
+    /**
+     * @return an useful action to be used as
+     * menu entry to show/hide this widget.
+     */
+    KAction *action();
 private:
     KFilterProxySearchLine *m_filterLine;
+    KAction *m_action;
+    QToolButton *m_hideButton;
 };
 
 #endif // FILTERWIDGET_H

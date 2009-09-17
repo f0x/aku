@@ -26,8 +26,11 @@
 #include <KIcon>
 #include <KFilterProxySearchLine>
 #include <KLocale>
+#include <KAction>
 
-FilterWidget::FilterWidget(QWidget *parent) : QWidget(parent)
+FilterWidget::FilterWidget(QWidget *parent) : QWidget(parent),
+m_action(0),
+m_hideButton(0)
 {
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
@@ -42,11 +45,11 @@ FilterWidget::FilterWidget(QWidget *parent) : QWidget(parent)
 
     layout->addSpacing(50);
 
-    QToolButton *hideButton = new QToolButton(this);
-    hideButton->setAutoRaise(true);
-    hideButton->setIcon(KIcon("dialog-close"));
-    connect(hideButton, SIGNAL(clicked()), this, SLOT(hide()));
-    layout->addWidget(hideButton);
+    m_hideButton = new QToolButton(this);
+    m_hideButton->setAutoRaise(true);
+    m_hideButton->setIcon(KIcon("dialog-close"));
+    connect(m_hideButton, SIGNAL(clicked()), this, SLOT(hide()));
+    layout->addWidget(m_hideButton);
 
     setLayout(layout);
 
@@ -55,4 +58,20 @@ FilterWidget::FilterWidget(QWidget *parent) : QWidget(parent)
 
 FilterWidget::~FilterWidget()
 {
+}
+
+KAction* FilterWidget::action()
+{
+    if (!m_action) {
+        m_action = new KAction(this);
+        m_action->setText(i18n("Filter"));
+        m_action->setShortcut(Qt::CTRL + Qt::Key_F);
+        m_action->setCheckable(true);
+        m_action->setChecked(isVisible());
+        connect (m_action, SIGNAL(toggled(bool)), this, SLOT(setVisible(bool)));
+        disconnect(m_hideButton);
+        connect (m_hideButton, SIGNAL(clicked()), m_action, SLOT(toggle()));
+    }
+
+    return m_action;
 }

@@ -43,6 +43,7 @@
 #include <KPluginSelector>
 #include <KServiceTypeTrader>
 #include <KMessageBox>
+#include <KMenuBar>
 #include <KDebug>
 
 MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
@@ -96,13 +97,7 @@ void MainWindow::setupActions()
     actionCollection()->addAction("pluginsinfo", pluginsInfoAction);
     connect(pluginsInfoAction, SIGNAL(triggered(bool)), this, SLOT(showPluginsInfo()));
 
-    KAction* filterAction = new KAction(this);
-    filterAction->setCheckable(true);
-    filterAction->setText(i18n("Filter"));
-    //filterAction->setIcon(KIcon("document-new"));
-    filterAction->setShortcut(Qt::CTRL + Qt::Key_F);
-    actionCollection()->addAction("filter", filterAction);
-    connect(filterAction, SIGNAL(triggered(bool)), m_filterWidget, SLOT(setVisible(bool)));
+    actionCollection()->addAction("filter", m_filterWidget->action());
 
 }
 
