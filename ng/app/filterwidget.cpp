@@ -1,6 +1,5 @@
 /***************************************************************************
  *   Copyright 2009 by Francesco Grieco <fgrieco@gmail.com>                *
- *                     Alessandro Diaferia <alediaferia@gmail.com>         *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,51 +17,21 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#include "filterwidget.h"
 
-#include <KXmlGuiWindow>
-#include <KUrl>
+#include <KFilterProxySearchLine>
+#include <KHBox>
 
-class AkuPlugin;
-class AkuTreeModel;
-class AkuTreeView;
-class KPluginInfo;
-class KRecentFilesAction;
-class FilterWidget;
-
-class MainWindow : public KXmlGuiWindow
+FilterWidget::FilterWidget(QWidget *parent) : QWidget(parent)
 {
-  Q_OBJECT
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
-  public:
-    MainWindow(QWidget* parent = 0);
-    ~MainWindow();
+    KHBox *box = new KHBox(this);
 
-  private:
-    void setupActions();
-    void setupConnections();
+    filterLine = new KFilterProxySearchLine(box);
 
-    QString m_currentPlugin;
-    QStringList m_mimeTypeNames;
-    QMap<QString, AkuPlugin*> m_plugins;
+}
 
-    AkuTreeModel *m_model;
-    AkuTreeView *m_treeView;
-    FilterWidget *m_filterWidget;
-
-    KRecentFilesAction *m_recentFilesAction;
-    KUrl m_currentUrl;
-
-  public slots:
-    void load(const KUrl &);
-
-  private slots:
-    void openDialog();
-    void addPlugins(AkuPlugin*, const KPluginInfo &);
-    void showPluginsInfo();
-    void configureAku();
-    void showArchiveContent(const QVector<QStringList> &archive);
-};
-
-#endif
+FilterWidget::~FilterWidget()
+{
+}
