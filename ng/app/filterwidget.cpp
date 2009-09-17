@@ -39,14 +39,14 @@ m_hideButton(0)
     m_model = model;
 
     QHBoxLayout *layout = new QHBoxLayout;
-    //layout->addSpacing(10);
-
     m_hideButton = new QToolButton(this);
     m_hideButton->setAutoRaise(true);
     m_hideButton->setIcon(KIcon("dialog-close"));
     layout->addWidget(m_hideButton);
 
     m_filterLine = new KLineEdit(this);
+    m_filterLine->setClearButtonShown(true);
+    m_filterLine->setClickMessage(i18n("Filter..."));
     layout->addWidget(m_filterLine);
 
     m_filterComboBox = new KComboBox;
@@ -57,6 +57,7 @@ m_hideButton(0)
 
     m_checkBox = new QCheckBox(i18n("Case sensitive"), this);
     layout->addWidget(m_checkBox);
+    layout->addSpacing(10);
 
     //layout->addSpacing(50);
 
@@ -98,12 +99,15 @@ KAction* FilterWidget::action()
 
 void FilterWidget::textFilterChanged()
 {
-     QRegExp::PatternSyntax syntax =
-             QRegExp::PatternSyntax(m_filterComboBox->itemData(m_filterComboBox->currentIndex()).toInt());
-     Qt::CaseSensitivity caseSensitivity = m_checkBox->isChecked() ? Qt::CaseSensitive : Qt::CaseInsensitive;
+    QRegExp::PatternSyntax syntax =
+            QRegExp::PatternSyntax(m_filterComboBox->itemData(m_filterComboBox->currentIndex()).toInt());
+    Qt::CaseSensitivity caseSensitivity = m_checkBox->isChecked() ? Qt::CaseSensitive : Qt::CaseInsensitive;
 
-     QRegExp regExp(m_filterLine->text(), caseSensitivity, syntax);
-     m_model->setFilterRegExp(regExp);
-     //emit(filterChanged(regExp));
+    QRegExp regExp(m_filterLine->text(), caseSensitivity, syntax);
+    m_model->setFilterRegExp(regExp);
+}
 
+void FilterWidget::clearFilterText()
+{
+    m_filterLine->clear();
 }

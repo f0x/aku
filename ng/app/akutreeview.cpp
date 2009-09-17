@@ -22,15 +22,18 @@
 
 #include <QVector>
 #include <QHeaderView>
+#include <QContextMenuEvent>
 
 #include <KLocale>
+#include <KAction>
+#include <KMenu>
 #include <KDebug>
 
 AkuTreeView::AkuTreeView(QWidget *parent) : QTreeView(parent)
 {
     setAlternatingRowColors(true);
     setSelectionMode(QAbstractItemView::ExtendedSelection);
-    //header()->setResizeMode(QHeaderView::ResizeToContents);
+    header()->setResizeMode(QHeaderView::ResizeToContents);
 }
 
 AkuTreeView::~AkuTreeView()
@@ -58,4 +61,30 @@ QStringList AkuTreeView::selectedPaths()
     }
 
     return paths;
+}
+
+ void AkuTreeView::contextMenuEvent(QContextMenuEvent *event)
+ {
+     KAction *actionSelectAll = new KAction(i18n("Select all"),this);
+     KAction *actionInvertSelection = new KAction(i18n("Invert selection"),this);
+     KAction *actionExpandAll = new KAction(i18n("Expand all the items"),this);
+     KAction *actionCollapseAll = new KAction(i18n("Collapse all the items"),this);
+
+     connect(actionSelectAll, SIGNAL(triggered()), this, SLOT(selectAll()));
+     connect(actionInvertSelection, SIGNAL(triggered()), this, SLOT(invertSelection()));
+     connect(actionExpandAll, SIGNAL(triggered()), this, SLOT(expandAll()));
+     connect(actionCollapseAll, SIGNAL(triggered()), this, SLOT(collapseAll()));
+
+     KMenu menu(this);
+     menu.addTitle(i18n("Quick operations"));
+     menu.addAction(actionSelectAll);
+     menu.addAction(actionInvertSelection);
+     menu.addSeparator();
+     menu.addAction(actionExpandAll);
+     menu.addAction(actionCollapseAll);
+     menu.exec(event->globalPos());
+}
+
+void AkuTreeView::invertSelection()
+{
 }

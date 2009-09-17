@@ -44,6 +44,8 @@ public:
      */
     KAction *action();
 
+    void clearFilterText();
+
 private:
     void setupConnections();
 
@@ -58,9 +60,6 @@ private:
 
 private slots:
     void textFilterChanged();
-
-signals:
-    void filterChanged(QRegExp);
 };
 
 #endif // FILTERWIDGET_H

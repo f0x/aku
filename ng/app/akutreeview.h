@@ -28,13 +28,21 @@ class AkuTreeView : public QTreeView
 {
     Q_OBJECT
 
-    public:
-      AkuTreeView(QWidget *parent);
-      ~AkuTreeView();
+public:
+    AkuTreeView(QWidget *parent);
+    ~AkuTreeView();
 
-      AkuTreeModel* model();
+    AkuTreeModel* model();
 
-      QStringList selectedPaths();
+    QStringList selectedPaths();
+
+protected:
+
+    void contextMenuEvent(QContextMenuEvent *event);
+
+private slots:
+    void invertSelection();
+
 };
 
 #endif

@@ -55,6 +55,7 @@ AkuTreeModel::AkuTreeModel(QVector<QStringList> fileList, QObject *parent) :
     d->sourceData = fileList;
     d->initData();
     d->generateNodes();
+
 }
 
 AkuTreeModel::~AkuTreeModel()
@@ -84,7 +85,7 @@ int AkuTreeModel::columnCount(const QModelIndex &parent) const
         return 0;
     }
 
-    return d->sourceData.first().count() + 1;
+    return d->sourceData.first().count(); //  + 1;
    
 }
 

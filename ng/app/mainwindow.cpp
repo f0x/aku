@@ -191,11 +191,14 @@ void MainWindow::showArchiveContent(const QVector<QStringList> &archive)
         return;
     }
 
+    m_filterWidget->clearFilterText();
+
     // here we set additional per-plugin headers
     AkuPlugin *sender = static_cast<AkuPlugin*>(this->sender());
     m_model->setAdditionalHeaders(sender->additionalHeaderStrings());
     //
     m_model->setSourceData(archive);
     m_treeView->setSortingEnabled(true);
+    m_treeView->expandAll();
 }
 
