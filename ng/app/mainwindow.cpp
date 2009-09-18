@@ -46,7 +46,6 @@
 #include <KMessageBox>
 #include <KMenuBar>
 #include <KDebug>
-#include <KTabWidget>
 
 #include <ksortfilterproxymodel.h>
 
@@ -63,26 +62,11 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
 
     m_filterWidget = new FilterWidget(baseWidget, m_sortFilterModel);
 
-    KTabWidget *tabWidget = new KTabWidget(baseWidget);
-    tabWidget->setTabPosition(QTabWidget::South);
+    KHBox *hbox = new KHBox(baseWidget);
+    QSplitter *splitter = new QSplitter(hbox);
 
-    // tab MAIN
-    KHBox *tabAku = new KHBox(this);
-    tabWidget->addTab(tabAku, i18n("Main"));
-    QSplitter *splitter = new QSplitter(tabAku);
     m_treeView = new AkuTreeView(splitter);
     m_treeView->setModel(m_sortFilterModel);
-    //
-
-    // tab CONSOLE
-    KVBox *tabConsole = new KVBox(this);
-    tabWidget->addTab(tabConsole, i18n("Console"));
-    //
-
-    // tab INFO
-    KVBox *tabInfo = new KVBox(this);
-    tabWidget->addTab(tabInfo, i18n("Info"));
-    //
 
     setupActions();
     setupConnections();
