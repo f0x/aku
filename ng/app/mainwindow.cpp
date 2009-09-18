@@ -66,7 +66,6 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
     QSplitter *splitter = new QSplitter(hbox);
 
     m_treeView = new AkuTreeView(splitter);
-    //m_treeView->setModel(m_model);
     m_treeView->setModel(m_sortFilterModel);
 
     setupActions();
@@ -112,7 +111,6 @@ void MainWindow::setupActions()
 
 void MainWindow::setupConnections()
 {
-    connect(m_filterWidget, SIGNAL(filterChanged(QRegExp)), this, SLOT(setFilterModel(QRegExp)));
 }
 
 void MainWindow::openDialog()

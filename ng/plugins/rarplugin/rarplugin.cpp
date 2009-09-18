@@ -207,10 +207,16 @@ void RarPlugin::loadArchive()
                     continue;
                 }
 
-                //if (i == 2) {
-                //
-                //    continue;
-                //}
+                // ratio value.
+                // The ratio value is inverse in rar output
+                if (i == 2) {
+                    // remove "%" at the end of the string
+                    attributes[i].chop(1);
+                    int value  = attributes[i].toInt();
+                    value = 100 - value;
+                    file << QString::number(value) + "%";
+                    continue;
+                }
 
                 if (i > 3) {
                     file << attributes[i];
