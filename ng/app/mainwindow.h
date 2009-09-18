@@ -30,6 +30,7 @@ class AkuTreeView;
 class KPluginInfo;
 class KRecentFilesAction;
 class FilterWidget;
+class MetaWidget;
 class SortFilterModel;
 
 class MainWindow : public KXmlGuiWindow
@@ -43,6 +44,7 @@ class MainWindow : public KXmlGuiWindow
   private:
     void setupActions();
     void setupConnections();
+    void updateMetaWidget();
 
     QString m_currentPlugin;
     QStringList m_mimeTypeNames;
@@ -51,6 +53,7 @@ class MainWindow : public KXmlGuiWindow
     AkuTreeModel *m_model;
     AkuTreeView *m_treeView;
     FilterWidget *m_filterWidget;
+    MetaWidget *m_metaWidget;
     SortFilterModel *m_sortFilterModel;
 
     KRecentFilesAction *m_recentFilesAction;

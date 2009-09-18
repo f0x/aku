@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Service
 Icon=application-x-compressed-tar
-Name=Aku Tar Plugin
+Name=Tar Plugin
 
 ServiceTypes=Aku/Plugin
 

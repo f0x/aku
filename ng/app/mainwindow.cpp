@@ -27,6 +27,7 @@
 #include "pluginsmodel.h"
 #include "filterwidget.h"
 #include "sortfiltermodel.h"
+#include "metawidget.h"
 
 #include <QListView>
 #include <QSplitter>
@@ -67,6 +68,8 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
 
     m_treeView = new AkuTreeView(splitter);
     m_treeView->setModel(m_sortFilterModel);
+
+    m_metaWidget = new MetaWidget(splitter);
 
     setupActions();
     setupConnections();
@@ -111,6 +114,7 @@ void MainWindow::setupActions()
 
 void MainWindow::setupConnections()
 {
+
 }
 
 void MainWindow::openDialog()
@@ -132,7 +136,7 @@ void MainWindow::addPlugins(AkuPlugin *plugin, const KPluginInfo &info)
         KMimeType::Ptr mime = KMimeType::mimeType(mimeName);
 
         m_plugins.insert(mime->name(), plugin);
-        // if the exe files are installed (ex: rar, zip, 7z)
+        // if the exe files are installed (ex: rar, unace, 7z)
         if (m_plugins[mime->name()]->isInstalled()) {
             m_mimeTypeNames << mimeName;
         }
@@ -161,8 +165,10 @@ void MainWindow::load(const KUrl &url)
     }
 
     m_currentPlugin = mimetype->name();
-    m_plugins[mimetype->name()]->load(url);
+    m_plugins[m_currentPlugin]->load(url);
     m_recentFilesAction->addUrl(url);
+
+    updateMetaWidget();
 }
 
 void MainWindow::configureAku()
@@ -202,3 +208,10 @@ void MainWindow::showArchiveContent(const QVector<QStringList> &archive)
     m_treeView->expandAll();
 }
 
+void MainWindow::updateMetaWidget()
+{
+    // if no file selected in the treeView, se the icon to mime type archive
+    kDebug() << m_currentPlugin;
+    QPixmap mimeIcon = KIcon(m_currentPlugin).pixmap(128,128);
+    m_metaWidget->updateData(mimeIcon);
+}

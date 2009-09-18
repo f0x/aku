@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright 2009 by Alessandro Diaferia <alediaferia@gmail.com>         *
+ *   Copyright 2009 by Francesco Grieco <fgrieco@gmail.com>                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,59 +17,30 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#ifndef ZIPPLUGIN_H
-#define ZIPPLUGIN_H
+#ifndef METAWIDGET_H
+#define METAWIDGET_H
 
-#include <akuplugin.h>
-#include <aku_macros.h>
-#include <QVariantList>
-#include <QStringList>
-#include <QVector>
+#include <QWidget>
 
-#include "ui_zipconfig.h"
+class QLabel;
+class QTableWidget;
 
-class KZip;
-class KUrl;
-class KArchiveEntry;
-
-class ZipPlugin : public AkuPlugin
+class MetaWidget : public QWidget
 {
     Q_OBJECT
-    public:
-        ZipPlugin(QObject *parent, const QVariantList &args);
-        ~ZipPlugin();
 
-        QStringList mimeTypeNames();
+public:
+    MetaWidget(QWidget *parent);
+    ~MetaWidget();
 
-        bool canExtract();
-        bool canCreate();
-        bool canRename();
-        bool canDelete();
-        bool canAdd();
+private:
+    QLabel *iconLabel;
+    QLabel *bottomLabel;
 
-        bool isInstalled();
+    QTableWidget *tableWidget;
 
-        void loadArchive();
-        void init(const KUrl &fileName);
-
-        void extractArchive(const KUrl &destination, const QStringList &files);
-
-        QStringList additionalHeaderStrings();
-
-        QWidget* extractionWidget();
-
-
-    private:
-        Ui::ZipConfig ui;
-        QWidget *m_widget;
-        KZip *m_archive;
-        QVector<QStringList> m_entries;
-        QString m_currentPath;
-        int m_currentExtracting;
-        int m_filesCount;
-
-        void getEntries(const KArchiveEntry *rootEntry);
-
+public slots:
+    void updateData(QPixmap);
 };
 
-#endif
+#endif // METAWIDGET_H

@@ -58,7 +58,7 @@ bool TarPlugin::canDelete()
     return true;
 }
 
-bool TarPlugin::isWorkingProperly()
+bool TarPlugin::isInstalled()
 {
     return true;
 }

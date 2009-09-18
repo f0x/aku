@@ -63,7 +63,7 @@ bool ZipPlugin::canDelete()
     return true;
 }
 
-bool ZipPlugin::isWorkingProperly()
+bool ZipPlugin::isInstalled()
 {
     return true;
 }

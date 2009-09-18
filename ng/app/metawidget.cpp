@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright 2009 by Alessandro Diaferia <alediaferia@gmail.com>         *
+ *   Copyright 2009 by Francesco Grieco <fgrieco@gmail.com>                *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -17,59 +17,48 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#ifndef ZIPPLUGIN_H
-#define ZIPPLUGIN_H
+#include "metawidget.h"
 
-#include <akuplugin.h>
-#include <aku_macros.h>
-#include <QVariantList>
-#include <QStringList>
-#include <QVector>
+#include <QVBoxLayout>
+#include <QLabel>
+#include <QTableWidget>
+#include <QHeaderView>
 
-#include "ui_zipconfig.h"
+#include <KVBox>
+#include <KDebug>
 
-class KZip;
-class KUrl;
-class KArchiveEntry;
-
-class ZipPlugin : public AkuPlugin
+MetaWidget::MetaWidget(QWidget *parent) : QWidget(parent)
 {
-    Q_OBJECT
-    public:
-        ZipPlugin(QObject *parent, const QVariantList &args);
-        ~ZipPlugin();
+    QVBoxLayout *layout = new QVBoxLayout;
 
-        QStringList mimeTypeNames();
+    tableWidget = new QTableWidget(this);
+    tableWidget->setColumnCount(3);
+    tableWidget->horizontalHeader()->setVisible(false);
+    tableWidget->setFrameShape(QFrame::NoFrame);
+    tableWidget->hide();
+    //tableWidget->setAutoFillBackground(true);
+    //tableWidget->setBackgroundRole(QPalette::NoRole);
 
-        bool canExtract();
-        bool canCreate();
-        bool canRename();
-        bool canDelete();
-        bool canAdd();
+    iconLabel = new QLabel(this);
+    iconLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    iconLabel->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
-        bool isInstalled();
+    bottomLabel = new QLabel(this);
 
-        void loadArchive();
-        void init(const KUrl &fileName);
-
-        void extractArchive(const KUrl &destination, const QStringList &files);
-
-        QStringList additionalHeaderStrings();
-
-        QWidget* extractionWidget();
+    layout->addWidget(iconLabel);
+    layout->addWidget(tableWidget);
+    layout->addWidget(bottomLabel);
+    setLayout(layout);
 
 
-    private:
-        Ui::ZipConfig ui;
-        QWidget *m_widget;
-        KZip *m_archive;
-        QVector<QStringList> m_entries;
-        QString m_currentPath;
-        int m_currentExtracting;
-        int m_filesCount;
+}
 
-        void getEntries(const KArchiveEntry *rootEntry);
+MetaWidget::~MetaWidget()
+{
+}
 
-};
-
-#endif
+void MetaWidget::updateData(QPixmap iconPixmap)
+{
+    kDebug() << "I'm HERE!";
+    iconLabel->setPixmap(iconPixmap);
+}
