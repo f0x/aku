@@ -59,7 +59,27 @@ RarPlugin::RarPlugin(QObject *parent, const QVariantList &args) : AkuPlugin(pare
 }
 
 RarPlugin::~RarPlugin()
-{}
+{
+}
+
+
+bool RarPlugin::isInstalled()
+{
+    // WARNING: this checks for unrar or rar with no distinction
+    // TODO: decide whether we should support also the shareware rar
+
+    if (KStandardDirs::findExe("rar").isEmpty()) {
+        if (!KStandardDirs::findExe("unrar").isEmpty()) {
+            exeName = "unrar";
+            return true;
+        }
+        return false;
+    }
+    else {
+        exeName = "rar";
+        return true;
+    }
+}
 
 QStringList RarPlugin::mimeTypeNames()
 {
@@ -108,17 +128,6 @@ bool RarPlugin::canLock()
 
 void RarPlugin::init(const KUrl &fileName)
 {
-    // WARNING: this checks for unrar or rar with no distinction
-    // TODO: decide whether we should support also the shareware rar
-
-    if (KStandardDirs::findExe("rar").isEmpty()) {
-        if (!KStandardDirs::findExe("unrar").isEmpty()) {
-            exeName = "unrar";
-        }
-    } else {
-        exeName = "rar";
-    }
-
     m_fileName = fileName;
 }
 

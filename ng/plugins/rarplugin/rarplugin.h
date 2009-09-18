@@ -47,6 +47,8 @@ class RarPlugin : public AkuPlugin
         bool canAddComment();
         bool canLock();
 
+        bool isInstalled();
+
         void loadArchive();
         void init(const KUrl &fileName);
 

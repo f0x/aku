@@ -1,16 +1,21 @@
- /*
-
-   Copyright (C) 2008 Francesco Grieco <fgrieco@gmail.com>
-   Copyright (C) 2008 Alessandro Diaferia <alediaferia@gmail.com>
-
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-*/ 
-
-// IMPORTANT NOTE: Keep using kdelibs coding style
-//                 have a look at: http://techbase.kde.org/Policies/Kdelibs_Coding_Style
+/***************************************************************************
+ *   Copyright 2009 by Francesco Grieco <fgrieco@gmail.com>                *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
+ ***************************************************************************/
 
 #include "aceplugin.h"
 
@@ -89,17 +94,26 @@ bool AcePlugin::canDelete()
     return false;
 }
 
-void AcePlugin::init(const KUrl &fileName)
+bool AcePlugin::isInstalled()
 {
-    #ifdef Q_WS_WIN
+#ifdef Q_WS_WIN
     if (!KStandardDirs::findExe("unace32").isEmpty()) {
         exeName = "unace32";
+        return true;
     }
-    #else
+#else
     if (!KStandardDirs::findExe("unace").isEmpty()) {
         exeName = "unace";
-    } 
-    #endif
+        return true;
+    }
+#endif
+    else {
+        return false;
+    }
+}
+
+void AcePlugin::init(const KUrl &fileName)
+{    
     m_fileName = fileName;
 }
 

@@ -132,8 +132,10 @@ void MainWindow::addPlugins(AkuPlugin *plugin, const KPluginInfo &info)
         KMimeType::Ptr mime = KMimeType::mimeType(mimeName);
 
         m_plugins.insert(mime->name(), plugin);
-
-        m_mimeTypeNames << mimeName;
+        // if the exe files are installed (ex: rar, zip, 7z)
+        if (m_plugins[mime->name()]->isInstalled()) {
+            m_mimeTypeNames << mimeName;
+        }
 
         kDebug() << mimeName;
     }

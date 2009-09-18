@@ -80,6 +80,11 @@ class AKU_EXPORT AkuPlugin : public QObject
         virtual bool canEncrypt();
 
         /**
+         * return true if the exe file is installed in the system
+        */
+        virtual bool isInstalled();
+
+        /**
          * In the reimplementation of this function goes the real parsing process.
          * At the end of this function emit archiveLoaded() and pass
          * the correct data. Note that the archive path is given in the init() method.

@@ -1,16 +1,21 @@
- /*
-
-   Copyright (C) 2008 Francesco Grieco <fgrieco@gmail.com>
-   Copyright (C) 2008 Alessandro Diaferia <alediaferia@gmail.com>
-
-   This program is free software; you can redistribute it and/or
-   modify it under the terms of the GNU General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
-*/ 
-
-// IMPORTANT NOTE: Keep using kdelibs coding style
-//                 have a look at: http://techbase.kde.org/Policies/Kdelibs_Coding_Style
+/***************************************************************************
+ *   Copyright 2009 by Francesco Grieco <fgrieco@gmail.com>                *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
+ ***************************************************************************/
 
 #include "szipplugin.h"
 
@@ -92,7 +97,6 @@ void SzipPlugin::loadArchive()
     process->start(exeName, options);
     process->waitForFinished();
     
-    //QVector<QStringList> archive;
     QString output;
     output = process->readAllStandardOutput();
    
@@ -102,28 +106,25 @@ void SzipPlugin::loadArchive()
     output.trimmed();
     output = output.trimmed();
 
-    QVector<QStringList> archive;
-    QStringList file;
-    QStringList lines;
-    lines = output.split("\n");
     float ratio;
     QString ratioValue;   
     QString packed;
     QString size;
 
-#ifdef Q_WS_WIN
-    for (int i = 0; i < lines.size(); i++) {
-        lines[i].resize(lines[i].length() - 1);
-    }
-#endif 
+    QTextStream stream(&output);
+    QString line;
+    QVector<QStringList> archive;
+    QStringList file;
 
-    foreach (const QString &line, lines) {
-       if (line.startsWith("Path =")) {
+    do {
+        line = stream.readLine();
+        if (line.startsWith("Path =")) {
            file << line.mid(7);
            //kDebug() << file;
            continue;
-       }
-       if (line.startsWith("Size =")) {
+        }
+
+        if (line.startsWith("Size =")) {
            //file << line.mid(7);
            size = line.mid(7);
            file << KGlobal::locale()->formatByteSize(size.toDouble());
@@ -148,7 +149,7 @@ void SzipPlugin::loadArchive()
        if (line.startsWith("Modified =")) {
            //kDebug() << line.mid(11,10);
            //kDebug() << line.mid(22,5);
-           QDateTime modified(QDate::fromString(line.mid(11, 10), QString("yyyy-MM-dd")), 
+           QDateTime modified(QDate::fromString(line.mid(11, 10), QString("yyyy-MM-dd")),
                               QTime::fromString(line.mid(22, 5), QString("hh:mm")));
            file << KGlobal::locale()->formatDateTime(modified);
            //kDebug() << file;
@@ -163,7 +164,7 @@ void SzipPlugin::loadArchive()
            file << line.mid(6);
            //kDebug() << file;
            continue;
-       } 
+       }
        if (line.startsWith("Method =")) {
            file << line.mid(9);
            //kDebug() << file;
@@ -175,12 +176,13 @@ void SzipPlugin::loadArchive()
            archive << file;
            file.clear();
        }
-    }
+
+    } while (!line.isNull());
 
     onArchiveLoaded(archive);
 }
 
-bool SzipPlugin::isWorkingProperly()
+bool SzipPlugin::isInstalled()
 {
     if (!KStandardDirs::findExe("7z").isEmpty()) {
         exeName = "7z";

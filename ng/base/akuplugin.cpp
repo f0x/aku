@@ -98,6 +98,11 @@ bool AkuPlugin::canLock()
     return false;
 }
 
+bool AkuPlugin::isInstalled()
+{
+    return false;
+}
+
 QStringList AkuPlugin::additionalHeaderStrings()
 {
     return QStringList();
