@@ -36,6 +36,8 @@ class SzipPlugin : public AkuPlugin
         bool canAddComment();
         bool canLock();
 
+        bool isWorkingProperly();
+
         void loadArchive();
         void init(const KUrl &fileName);
 

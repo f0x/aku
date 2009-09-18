@@ -180,12 +180,17 @@ void SzipPlugin::loadArchive()
     onArchiveLoaded(archive);
 }
 
-
-void SzipPlugin::init(const KUrl &fileName)
+bool SzipPlugin::isWorkingProperly()
 {
     if (!KStandardDirs::findExe("7z").isEmpty()) {
         exeName = "7z";
+        return true;
     }
+    return false;
+}
+
+void SzipPlugin::init(const KUrl &fileName)
+{
     m_fileName = fileName;
 }
 
