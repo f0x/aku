@@ -22,6 +22,7 @@
 
 #include <akuplugin.h>
 #include <aku_macros.h>
+
 #include <QVariantList>
 #include <QVector>
 

@@ -22,11 +22,11 @@
 
 #include <akuplugin.h>
 #include <aku_macros.h>
+
 #include <QVariantList>
 #include <QStringList>
 #include <QVector>
 
-#include "ui_zipconfig.h"
 
 class KZip;
 class KUrl;
@@ -56,12 +56,7 @@ class ZipPlugin : public AkuPlugin
 
         QStringList additionalHeaderStrings();
 
-        QWidget* extractionWidget();
-
-
     private:
-        Ui::ZipConfig ui;
-        QWidget *m_widget;
         KZip *m_archive;
         QVector<QStringList> m_entries;
         QString m_currentPath;

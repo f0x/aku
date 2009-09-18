@@ -10,8 +10,6 @@ set(zipplugin_SRCS
     ../karchiveutils/karchiveutils.cpp
 )
 
-kde4_add_ui_files(zipplugin_SRCS zipconfig.ui)
-
 kde4_add_plugin(aku_zipplugin ${zipplugin_SRCS})
 target_link_libraries(aku_zipplugin akucore ${KDE4_KDECORE_LIBS} ${KDE4_KIO_LIBS})
 

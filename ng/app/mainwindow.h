@@ -27,9 +27,10 @@
 class AkuPlugin;
 class AkuTreeModel;
 class AkuTreeView;
+class FilterWidget;
 class KPluginInfo;
 class KRecentFilesAction;
-class FilterWidget;
+class QModelIndex;
 class MetaWidget;
 class SortFilterModel;
 
@@ -44,7 +45,6 @@ class MainWindow : public KXmlGuiWindow
   private:
     void setupActions();
     void setupConnections();
-    void updateMetaWidget();
 
     QString m_currentPlugin;
     QStringList m_mimeTypeNames;
@@ -60,7 +60,7 @@ class MainWindow : public KXmlGuiWindow
     KUrl m_currentUrl;
 
   public slots:
-    void load(const KUrl &);
+    void load(const KUrl);
 
   private slots:
     void openDialog();
@@ -68,6 +68,7 @@ class MainWindow : public KXmlGuiWindow
     void showPluginsInfo();
     void configureAku();
     void showArchiveContent(const QVector<QStringList> &archive);
+    void dataMetaWidget(QModelIndex);
 };
 
 #endif

@@ -23,6 +23,7 @@
 #include <QVector>
 #include <QHeaderView>
 #include <QContextMenuEvent>
+#include <QDir>
 
 #include <KLocale>
 #include <KAction>
@@ -51,10 +52,15 @@ QStringList AkuTreeView::selectedPaths()
 
         QString path;
         path = index.data().toString();
+        // if size is empty, we have a directory
+        //if (finalSlashForDir && index.sibling(index.row(), 1).data().toString().isEmpty()) {
+        //    path.append(QDir::separator());
+        //}
+        //kDebug() << index.sibling(index.row(), 1).data().toString();
 
         QModelIndex parent = index.parent();
         while (parent.isValid()) {
-            path.prepend(parent.data().toString() + '/');
+            path.prepend(parent.data().toString() + QDir::separator());
             parent = parent.parent();
         }
         paths << path;

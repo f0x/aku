@@ -40,7 +40,7 @@ private:
     QTableWidget *tableWidget;
 
 public slots:
-    void updateData(QPixmap);
+    void updateData(QStringList);
 };
 
 #endif // METAWIDGET_H

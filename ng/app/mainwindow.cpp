@@ -114,7 +114,7 @@ void MainWindow::setupActions()
 
 void MainWindow::setupConnections()
 {
-
+    connect(m_treeView, SIGNAL(activated(QModelIndex)), this, SLOT(dataMetaWidget(QModelIndex)));
 }
 
 void MainWindow::openDialog()
@@ -122,7 +122,6 @@ void MainWindow::openDialog()
     KUrl url = KFileDialog::getOpenUrl(QDir::homePath(), m_mimeTypeNames.join(" "), this, i18n("Open Archive"));
 
     if (!url.isEmpty()) {
-        m_currentUrl = url;
         load(url);
     }
 }
@@ -145,7 +144,7 @@ void MainWindow::addPlugins(AkuPlugin *plugin, const KPluginInfo &info)
     }
 }
 
-void MainWindow::load(const KUrl &url)
+void MainWindow::load(const KUrl url)
 {
     if (!QFile(url.pathOrUrl()).open(QIODevice::ReadOnly)) {
         KMessageBox::error(this, i18n("Could not open") + " %1.<br>" + i18n("Check your file permissions",
@@ -167,8 +166,9 @@ void MainWindow::load(const KUrl &url)
     m_currentPlugin = mimetype->name();
     m_plugins[m_currentPlugin]->load(url);
     m_recentFilesAction->addUrl(url);
+    m_currentUrl = url;
 
-    updateMetaWidget();
+    dataMetaWidget(QModelIndex());
 }
 
 void MainWindow::configureAku()
@@ -208,10 +208,16 @@ void MainWindow::showArchiveContent(const QVector<QStringList> &archive)
     m_treeView->expandAll();
 }
 
-void MainWindow::updateMetaWidget()
+void MainWindow::dataMetaWidget(QModelIndex index)
 {
-    // if no file selected in the treeView, se the icon to mime type archive
-    kDebug() << m_currentPlugin;
-    QPixmap mimeIcon = KIcon(m_currentPlugin).pixmap(128,128);
-    m_metaWidget->updateData(mimeIcon);
+    // if no element selected, show the archive mime icon
+    QStringList paths;
+
+    if (!index.isValid()) {
+        paths << m_currentUrl.pathOrUrl();
+    } else {
+        paths << m_treeView->selectedPaths();
+    }
+
+    m_metaWidget->updateData(paths);
 }

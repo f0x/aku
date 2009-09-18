@@ -50,15 +50,13 @@ MetaWidget::MetaWidget(QWidget *parent) : QWidget(parent)
     layout->addWidget(bottomLabel);
     setLayout(layout);
 
-
 }
 
 MetaWidget::~MetaWidget()
 {
 }
 
-void MetaWidget::updateData(QPixmap iconPixmap)
+void MetaWidget::updateData(QStringList paths)
 {
-    kDebug() << "I'm HERE!";
-    iconLabel->setPixmap(iconPixmap);
+    kDebug() << paths;
 }
