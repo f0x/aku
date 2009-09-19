@@ -23,6 +23,7 @@
 #include <QVector>
 #include <QDir>
 
+#include <KGlobal>
 #include <KLocale>
 #include <KIcon>
 #include <KMimeType>
@@ -116,7 +117,20 @@ QVariant AkuTreeModel::data(const QModelIndex &index, int role) const
     }
 
     if (role == Qt::DisplayRole) {
-        return static_cast<AkuTreeNode*>(index.internalPointer())->data(index.column());
+        AkuTreeNode *node = static_cast<AkuTreeNode*>(index.internalPointer());
+        if (index.column() == 1) {
+            if (node->isFolder()) {
+                return QString();
+            }
+            return KGlobal::locale()->formatByteSize(node->size());
+        }
+        if (index.column() == 2) {
+            if (node->isFolder()) {
+                return QString();
+            }
+            return KGlobal::locale()->formatByteSize(node->packedSize());
+        }
+        return node->data(index.column());
     }
 
     return QVariant();
@@ -200,7 +214,7 @@ void AkuTreeModel::Private::generateNodes()
 
             // NOTE: we should put attributes only on last item
             if (j == pathNodes.size() - 1) {
-                AkuTreeNode *node = new AkuTreeNode(QStringList()<<pathNodes[j]<<file, parentNode);
+                AkuTreeNode *node = new AkuTreeNode(QStringList() << pathNodes[j] << file, parentNode);
 
                 // TODO: make a real check to see whether it is a folder or not
                 if (parentNode->findChildFolder(pathNodes[j])) {

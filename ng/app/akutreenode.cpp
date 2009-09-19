@@ -22,56 +22,61 @@
 #include <KMimeType>
 
 AkuTreeNode::AkuTreeNode(const QStringList &data, AkuTreeNode *parent) :
-                                                    itemData(data),
-                                                    parentNode(parent),
-                                                    folder(true)
+                                                    m_itemData(data),
+                                                    m_parentNode(parent),
+                                                    m_folder(true),
+                                                    m_size(0),
+                                                    m_packedSize(0)
 {
 }
 
 AkuTreeNode::~AkuTreeNode()
 {
-    qDeleteAll(childNodes);
-    childNodes.clear();
+    qDeleteAll(m_childNodes);
+    m_childNodes.clear();
+
+    delete m_size;
+    delete m_packedSize;
 }
 
 void AkuTreeNode::appendChild(AkuTreeNode *child)
 {
-    childNodes << child;
+    m_childNodes << child;
 }
 
 int AkuTreeNode::childCount() const
 {
-    return childNodes.size();
+    return m_childNodes.size();
 }
 
 int AkuTreeNode::columnCount() const
 {
-    return itemData.size();
+    return m_itemData.size();
 }
 
 AkuTreeNode* AkuTreeNode::parent()
 {
-    return parentNode;
+    return m_parentNode;
 }
 
 QString AkuTreeNode::data(int column) const
 {
     // NOTE: maybe this first if is unuseful
-    if (itemData.isEmpty()) {
+    if (m_itemData.isEmpty()) {
         return QString();
     }
 
-    if (column >= itemData.size()) {
+    if (column >= m_itemData.size()) {
         return QString();
     }
 
-    return itemData[column];
+    return m_itemData[column];
 }
 
 int AkuTreeNode::row() const
 {
-    if (parentNode) {
-        return parentNode->childNodes.indexOf(const_cast<AkuTreeNode*>(this));
+    if (m_parentNode) {
+        return m_parentNode->m_childNodes.indexOf(const_cast<AkuTreeNode*>(this));
     }
 
     return 0;
@@ -79,21 +84,21 @@ int AkuTreeNode::row() const
 
 AkuTreeNode* AkuTreeNode::child(int row)
 {
-    if (row > childNodes.size()) {
+    if (row > m_childNodes.size()) {
         return 0;
     }
 
-    return childNodes[row];
+    return m_childNodes[row];
 }
 
-bool AkuTreeNode::isFolder()
+bool AkuTreeNode::isFolder() const
 {
-    return folder;
+    return m_folder;
 }
 
 void AkuTreeNode::setFolder(bool set)
 {
-    folder = set;
+    m_folder = set;
 }
 
 AkuTreeNode* AkuTreeNode::findChildFolder(QString name)
@@ -108,34 +113,45 @@ AkuTreeNode* AkuTreeNode::findChildFolder(QString name)
 
 QString AkuTreeNode::name() const
 {
-    if (itemData.count() < 1) {
+    if (m_itemData.count() < 1) {
         return QString();
     }
 
-    return itemData.at(0);
+    return m_itemData.at(0);
 }
 
-double AkuTreeNode::size() const
+double AkuTreeNode::size()
 {
-    if (itemData.count() < 2) {
+    if (isFolder()) {
+        double size = 0;
+        QList<AkuTreeNode*>::const_iterator it = m_childNodes.begin();
+        for (; it != m_childNodes.end(); ++it) {
+            size += static_cast<AkuTreeNode*>(*it)->size();
+        }
+        return size;
+    }
+
+    if (2 <= m_itemData.count() && !m_size) {
+        m_size = new double(m_itemData.at(1).toDouble());
+    }
+    return *m_size;
+}
+
+double AkuTreeNode::packedSize()
+{
+    if (m_itemData.count() < 3) {
         return 0;
     }
 
-    return itemData.at(1).toDouble();
-}
-
-double AkuTreeNode::packedSize() const
-{
-    if (itemData.count() < 3) {
-        return 0;
+    if (3 <= m_itemData.count() && !m_packedSize) {
+        m_packedSize = new double(m_itemData.at(2).toDouble());
     }
-
-    return itemData.at(2).toDouble();
+    return *m_packedSize;
 }
 
 QString AkuTreeNode::mimeType() const
 {
-    if (itemData.count() < 1) {
+    if (m_itemData.count() < 1) {
         return QString();
     }
 
@@ -143,5 +159,5 @@ QString AkuTreeNode::mimeType() const
         return "inode/directory";
     }
 
-    return KMimeType::findByPath(itemData.at(0))->name();
+    return KMimeType::findByPath(m_itemData.at(0))->name();
 }

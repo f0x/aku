@@ -38,8 +38,8 @@ class AkuTreeNode
         int row() const;
 
         QString name() const;
-        double size() const;
-        double packedSize() const;
+        double size();
+        double packedSize();
         QString mimeType() const;
 
         QString data(int column) const;
@@ -47,7 +47,7 @@ class AkuTreeNode
          * Set this to true if the current node is a folder.
          */
         void setFolder(bool);
-        bool isFolder();
+        bool isFolder() const;
 
         /**
          * Searches through the child folder nodes comparing the given string
@@ -57,12 +57,14 @@ class AkuTreeNode
         AkuTreeNode* findChildFolder(QString);
 
     private:
-        QList<AkuTreeNode*> childNodes;
-        QStringList itemData;
+        QList<AkuTreeNode*> m_childNodes;
+        QStringList m_itemData;
 
-        AkuTreeNode *parentNode;
+        AkuTreeNode *m_parentNode;
 
-        bool folder;
+        bool m_folder;
+        double *m_size;
+        double *m_packedSize;
         
 };
 
