@@ -27,12 +27,16 @@ int main ( int argc, char *argv[] )
 {
 
   KAboutData aboutData("aku", 0, ki18n("aKu"),
-                       "0.1", ki18n("An archiving application for KDE4"), KAboutData::License_GPL_V3,
+                       "0.2", ki18n("An archiving application for KDE4"), KAboutData::License_GPL_V3,
                        ki18n("Copyright (c) 2009"));
 
   aboutData.addAuthor(ki18n("Francesco Grieco"),
                       ki18n("Main Developer"),
                             "fgrieco@gmail.com");
+
+  aboutData.addAuthor(ki18n("Alessandro Diaferia"),
+                      ki18n("Main Developer"),
+                            "alediaferia@gmail.com");
 
   aboutData.setBugAddress("fgrieco@gmail.com");
    

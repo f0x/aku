@@ -105,13 +105,13 @@ QVariant AkuTreeModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 
-
     if (role == Qt::DecorationRole && index.column() == 0) {
         AkuTreeNode *node = static_cast<AkuTreeNode*>(index.internalPointer());
         if (node->isFolder()) {
             return KIcon("inode-directory");
         } else {
             KMimeType::Ptr mimeType = KMimeType::mimeType(node->mimeType());
+            //kDebug() << mimeType->iconName();
             return KIcon(mimeType->iconName());
         }
     }

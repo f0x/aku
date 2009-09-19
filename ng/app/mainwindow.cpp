@@ -28,6 +28,7 @@
 #include "filterwidget.h"
 #include "sortfiltermodel.h"
 #include "metawidget.h"
+#include "akutreenode.h"
 
 #include <QDockWidget>
 #include <QListView>
@@ -46,6 +47,7 @@
 #include <KServiceTypeTrader>
 #include <KMessageBox>
 #include <KMenuBar>
+#include <KFileItem>
 #include <KDebug>
 
 MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
@@ -69,7 +71,8 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
     m_infoDock = new QDockWidget(i18nc("@title:window", "Information"));
     m_infoDock->setObjectName("infoDock");
     m_infoDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-    m_metaWidget = new MetaWidget(m_infoDock);
+    m_metaWidget = new MetaWidget(this);
+    m_infoDock->setWidget(m_metaWidget);
 
     addDockWidget(Qt::RightDockWidgetArea, m_infoDock);
 
@@ -218,14 +221,18 @@ void MainWindow::showArchiveContent(const QVector<QStringList> &archive)
 
 void MainWindow::dataMetaWidget(QModelIndex index)
 {
-    // if no element selected, show the archive mime icon
-    QStringList paths;
-
-    if (!index.isValid()) {
-        paths << m_currentUrl.pathOrUrl();
-    } else {
-        paths << m_treeView->selectedPaths();
+    if (!m_infoDock->isVisible()) {
+        return;    
     }
 
-    m_metaWidget->updateData(paths);
+    if (!index.isValid()) {
+        //m_metaWidget->setIcon(KFileItem(m_currentUrl).);
+        KFileItem item(KFileItem::Unknown, KFileItem::Unknown, m_currentUrl);
+        kDebug() << item.iconName();
+        m_metaWidget->setMimeIcon(item.iconName());
+        return;
+    }
+
+    AkuTreeNode *node = m_model->nodeFromIndex(index);
+    kDebug() <<  node->mimeType();
 }

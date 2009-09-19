@@ -23,8 +23,7 @@
 #include <QWidget>
 
 class QLabel;
-class QTableWidget;
-class QToolButton;
+class AkuTreeNode;
 
 class MetaWidget : public QWidget
 {
@@ -35,15 +34,15 @@ public:
     ~MetaWidget();
 
 private:
-    QLabel *iconLabel;
-    QLabel *bottomLabel;
-
-    QTableWidget *tableWidget;
-
-    QToolButton *m_hideButton;
+    QLabel *m_iconLabel;
+    QLabel *m_fileLabel;
+    QLabel *m_modified;
+    QLabel *m_size;
+    QLabel *m_type;
 
 public slots:
-    void updateData(QStringList);
+    void updateData(AkuTreeNode*);
+    void setMimeIcon(QString);
 };
 
 #endif // METAWIDGET_H
