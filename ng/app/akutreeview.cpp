@@ -72,7 +72,9 @@ QStringList AkuTreeView::selectedPaths()
  void AkuTreeView::contextMenuEvent(QContextMenuEvent *event)
  {
      KAction *actionSelectAll = new KAction(i18n("Select all"),this);
+     actionSelectAll->setShortcut(Qt::CTRL + Qt::Key_A);
      KAction *actionInvertSelection = new KAction(i18n("Invert selection"),this);
+     actionInvertSelection->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_A);
      KAction *actionExpandAll = new KAction(i18n("Expand all the items"),this);
      KAction *actionCollapseAll = new KAction(i18n("Collapse all the items"),this);
 

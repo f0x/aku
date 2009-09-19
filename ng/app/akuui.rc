@@ -8,6 +8,7 @@
 
   <MenuBar>
    <Menu name="view" >
+      <Action name="infopanel" />
       <Action name="filter" />
    </Menu>
    <Menu name="settings" >

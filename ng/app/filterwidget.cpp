@@ -40,6 +40,7 @@ m_hideButton(0)
 
     QHBoxLayout *layout = new QHBoxLayout;
     m_hideButton = new QToolButton(this);
+    m_hideButton->setToolTip(i18n("Hide Filter Bar"));
     m_hideButton->setAutoRaise(true);
     m_hideButton->setIcon(KIcon("dialog-close"));
     layout->addWidget(m_hideButton);
@@ -86,6 +87,7 @@ KAction* FilterWidget::action()
     if (!m_action) {
         m_action = new KAction(this);
         m_action->setText(i18n("Filter"));
+        m_action->setIcon(KIcon("view-filter"));
         m_action->setShortcut(Qt::CTRL + Qt::Key_F);
         m_action->setCheckable(true);
         m_action->setChecked(isVisible());

@@ -24,6 +24,7 @@
 
 class QLabel;
 class QTableWidget;
+class QToolButton;
 
 class MetaWidget : public QWidget
 {
@@ -38,6 +39,8 @@ private:
     QLabel *bottomLabel;
 
     QTableWidget *tableWidget;
+
+    QToolButton *m_hideButton;
 
 public slots:
     void updateData(QStringList);

@@ -23,13 +23,16 @@
 #include <QLabel>
 #include <QTableWidget>
 #include <QHeaderView>
+#include <QToolButton>
 
 #include <KVBox>
+#include <KIcon>
+#include <KLocale>
 #include <KDebug>
 
 MetaWidget::MetaWidget(QWidget *parent) : QWidget(parent)
 {
-    QVBoxLayout *layout = new QVBoxLayout;
+    QVBoxLayout *layout = new QVBoxLayout(this);
 
     tableWidget = new QTableWidget(this);
     tableWidget->setColumnCount(3);
@@ -45,9 +48,9 @@ MetaWidget::MetaWidget(QWidget *parent) : QWidget(parent)
 
     bottomLabel = new QLabel(this);
 
-    layout->addWidget(iconLabel);
-    layout->addWidget(tableWidget);
-    layout->addWidget(bottomLabel);
+    //layout->addWidget(iconLabel);
+    //layout->addWidget(tableWidget);
+    //layout->addWidget(bottomLabel);
     setLayout(layout);
 
 }

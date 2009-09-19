@@ -30,6 +30,7 @@ class AkuTreeView;
 class FilterWidget;
 class KPluginInfo;
 class KRecentFilesAction;
+class QDockWidget;
 class QModelIndex;
 class MetaWidget;
 class SortFilterModel;
@@ -49,6 +50,7 @@ class MainWindow : public KXmlGuiWindow
     QString m_currentPlugin;
     QStringList m_mimeTypeNames;
     QMap<QString, AkuPlugin*> m_plugins;
+    QDockWidget *m_infoDock;
 
     AkuTreeModel *m_model;
     AkuTreeView *m_treeView;

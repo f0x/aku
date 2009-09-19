@@ -29,8 +29,8 @@
 #include "sortfiltermodel.h"
 #include "metawidget.h"
 
+#include <QDockWidget>
 #include <QListView>
-#include <QSplitter>
 
 #include <KVBox>
 #include <KStandardAction>
@@ -48,8 +48,6 @@
 #include <KMenuBar>
 #include <KDebug>
 
-#include <ksortfilterproxymodel.h>
-
 MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
 {
     KVBox *baseWidget = new KVBox(this);
@@ -64,12 +62,16 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
     m_filterWidget = new FilterWidget(baseWidget, m_sortFilterModel);
 
     KHBox *hbox = new KHBox(baseWidget);
-    QSplitter *splitter = new QSplitter(hbox);
 
-    m_treeView = new AkuTreeView(splitter);
+    m_treeView = new AkuTreeView(hbox);
     m_treeView->setModel(m_sortFilterModel);
 
-    m_metaWidget = new MetaWidget(splitter);
+    m_infoDock = new QDockWidget(i18nc("@title:window", "Information"));
+    m_infoDock->setObjectName("infoDock");
+    m_infoDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+    m_metaWidget = new MetaWidget(m_infoDock);
+
+    addDockWidget(Qt::RightDockWidgetArea, m_infoDock);
 
     setupActions();
     setupConnections();
@@ -107,6 +109,12 @@ void MainWindow::setupActions()
     //pluginsInfoAction->setShortcut(Qt::CTRL + Qt::Key_W);
     actionCollection()->addAction("pluginsinfo", pluginsInfoAction);
     connect(pluginsInfoAction, SIGNAL(triggered(bool)), this, SLOT(showPluginsInfo()));
+
+    QAction* infoDockAction = m_infoDock->toggleViewAction();
+    infoDockAction->setText(i18nc("@title:window", "Information"));
+    infoDockAction->setShortcut(Qt::Key_F11);
+    infoDockAction->setIcon(KIcon("dialog-information"));
+    actionCollection()->addAction("infopanel", m_infoDock->toggleViewAction());
 
     actionCollection()->addAction("filter", m_filterWidget->action());
 
