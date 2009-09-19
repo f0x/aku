@@ -212,7 +212,7 @@ void RarPlugin::loadArchive()
                 }
 
                 if (i == 0 || i == 1) {
-                    file << KGlobal::locale()->formatByteSize(attributes[i].toDouble());
+                    file << attributes[i];
                     continue;
                 }
 

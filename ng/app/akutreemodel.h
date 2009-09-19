@@ -23,7 +23,7 @@
 #include <QAbstractItemModel>
 #include <QVector>
 
-class QStringList;
+class AkuTreeNode;
 
 class AkuTreeModel : public QAbstractItemModel
 {
@@ -43,6 +43,8 @@ class AkuTreeModel : public QAbstractItemModel
 
         void setSourceData(const QVector<QStringList> &source);
         void setAdditionalHeaders(const QStringList &headers);
+
+        AkuTreeNode *nodeFromIndex(const QModelIndex &) const;
 
     private:
         class Private;

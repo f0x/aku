@@ -19,6 +19,8 @@
 
 #include "akutreenode.h"
 
+#include <KMimeType>
+
 AkuTreeNode::AkuTreeNode(const QStringList &data, AkuTreeNode *parent) :
                                                     itemData(data),
                                                     parentNode(parent),
@@ -102,4 +104,44 @@ AkuTreeNode* AkuTreeNode::findChildFolder(QString name)
         }
     }
     return 0;
+}
+
+QString AkuTreeNode::name() const
+{
+    if (itemData.count() < 1) {
+        return QString();
+    }
+
+    return itemData.at(0);
+}
+
+double AkuTreeNode::size() const
+{
+    if (itemData.count() < 2) {
+        return 0;
+    }
+
+    return itemData.at(1).toDouble();
+}
+
+double AkuTreeNode::packedSize() const
+{
+    if (itemData.count() < 3) {
+        return 0;
+    }
+
+    return itemData.at(2).toDouble();
+}
+
+QString AkuTreeNode::mimeType() const
+{
+    if (itemData.count() < 1) {
+        return QString();
+    }
+
+    if (isFolder()) {
+        return "inode/directory";
+    }
+
+    return KMimeType::findByPath(itemData.at(0))->name();
 }

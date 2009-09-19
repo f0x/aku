@@ -110,7 +110,7 @@ QVariant AkuTreeModel::data(const QModelIndex &index, int role) const
         if (node->isFolder()) {
             return KIcon("inode-directory");
         } else {
-            KMimeType::Ptr mimeType = KMimeType::findByPath(node->data(0));
+            KMimeType::Ptr mimeType = KMimeType::mimeType(node->mimeType());
             return KIcon(mimeType->iconName());
         }
     }
@@ -121,6 +121,15 @@ QVariant AkuTreeModel::data(const QModelIndex &index, int role) const
 
     return QVariant();
 
+}
+
+AkuTreeNode* AkuTreeModel::nodeFromIndex(const QModelIndex &index) const
+{
+    if (!index.isValid()) {
+        return 0;
+    }
+
+    return static_cast<AkuTreeNode*>(index.internalPointer());
 }
 
 QModelIndex AkuTreeModel::parent(const QModelIndex &index) const
@@ -209,7 +218,7 @@ void AkuTreeModel::Private::generateNodes()
                 continue;
             }
 
-            AkuTreeNode *node = new AkuTreeNode(QStringList() <<pathNodes[j], parentNode);
+            AkuTreeNode *node = new AkuTreeNode(QStringList() << pathNodes[j], parentNode);
             parentNode->appendChild(node);
             parentNode = node;
         }

@@ -37,8 +37,12 @@ class AkuTreeNode
         int columnCount() const;
         int row() const;
 
-        QString data(int column) const;
+        QString name() const;
+        double size() const;
+        double packedSize() const;
+        QString mimeType() const;
 
+        QString data(int column) const;
         /**
          * Set this to true if the current node is a folder.
          */
