@@ -21,6 +21,7 @@
 #define AKUTREENODE_H
 
 #include <QStringList>
+#include <QVariant>
 
 class AkuTreeNode
 {
@@ -67,5 +68,7 @@ class AkuTreeNode
         double *m_packedSize;
         
 };
+
+Q_DECLARE_METATYPE(AkuTreeNode*)
 
 #endif

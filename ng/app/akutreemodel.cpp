@@ -114,9 +114,7 @@ QVariant AkuTreeModel::data(const QModelIndex &index, int role) const
             //kDebug() << mimeType->iconName();
             return KIcon(mimeType->iconName());
         }
-    }
-
-    if (role == Qt::DisplayRole) {
+    } else if (role == Qt::DisplayRole) {
         AkuTreeNode *node = static_cast<AkuTreeNode*>(index.internalPointer());
         if (index.column() == 1) {
             if (node->isFolder()) {
@@ -131,20 +129,22 @@ QVariant AkuTreeModel::data(const QModelIndex &index, int role) const
             return KGlobal::locale()->formatByteSize(node->packedSize());
         }
         return node->data(index.column());
+    } else if (role == NodeRole) {
+        return qVariantFromValue(static_cast<AkuTreeNode*>(index.internalPointer()));
     }
 
     return QVariant();
 
 }
 
-AkuTreeNode* AkuTreeModel::nodeFromIndex(const QModelIndex &index) const
-{
-    if (!index.isValid()) {
-        return 0;
-    }
-
-    return static_cast<AkuTreeNode*>(index.internalPointer());
-}
+//AkuTreeNode* AkuTreeModel::nodeFromIndex(const QModelIndex &index) const
+//{
+//    if (!index.isValid()) {
+//        return 0;
+//    }
+//
+//    return static_cast<AkuTreeNode*>(index.internalPointer());
+//}
 
 QModelIndex AkuTreeModel::parent(const QModelIndex &index) const
 {

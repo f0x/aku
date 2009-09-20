@@ -22,8 +22,9 @@
 
 #include <QWidget>
 
-class QLabel;
 class AkuTreeNode;
+class QGridLayout;
+class QLabel;
 
 class MetaWidget : public QWidget
 {
@@ -36,13 +37,13 @@ public:
 private:
     QLabel *m_iconLabel;
     QLabel *m_fileLabel;
-    QLabel *m_modified;
     QLabel *m_size;
     QLabel *m_type;
+    QGridLayout *m_gridLayout;
 
 public slots:
-    void updateData(AkuTreeNode*);
-    void setMimeIcon(QString);
+    void sendData(AkuTreeNode*);
+    void updateData(QString, QString, QString);
 };
 
 #endif // METAWIDGET_H

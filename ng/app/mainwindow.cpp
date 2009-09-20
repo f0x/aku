@@ -126,6 +126,8 @@ void MainWindow::setupActions()
 void MainWindow::setupConnections()
 {
     connect(m_treeView, SIGNAL(activated(QModelIndex)), this, SLOT(dataMetaWidget(QModelIndex)));
+    connect(m_treeView->selectionModel(), SIGNAL(currentChanged(QModelIndex, QModelIndex)),
+            this, SLOT(selectionChanged(QModelIndex, QModelIndex)));
 }
 
 void MainWindow::openDialog()
@@ -230,11 +232,17 @@ void MainWindow::dataMetaWidget(QModelIndex index)
 
     if (!index.isValid()) {
         KFileItem item(KFileItem::Unknown, KFileItem::Unknown, m_currentUrl);
-        m_metaWidget->setMimeIcon(item.iconName());
+        //m_metaWidget->setMimeIcon(item.iconName());
         return;
     }
 
-    //AkuTreeNode *node = static_cast<AkuTreeNode*>(index.internalPointer());
-    AkuTreeNode *node = m_model->nodeFromIndex(index);
-    kDebug() <<  node->mimeType();
+    AkuTreeNode *node = index.data(AkuTreeModel::NodeRole).value<AkuTreeNode*>();
+    m_metaWidget->sendData(node);
+}
+
+void MainWindow::selectionChanged(const QModelIndex &current, const QModelIndex &previous)
+{
+    Q_UNUSED(previous);
+
+    dataMetaWidget(current);
 }

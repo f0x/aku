@@ -71,6 +71,7 @@ class MainWindow : public KXmlGuiWindow
     void configureAku();
     void showArchiveContent(const QVector<QStringList> &archive);
     void dataMetaWidget(QModelIndex);
+    void selectionChanged(const QModelIndex &current, const QModelIndex &previous);
 };
 
 #endif

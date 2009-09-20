@@ -29,6 +29,7 @@ class AkuTreeModel : public QAbstractItemModel
 {
     Q_OBJECT
     public:
+    enum AdditionalRoles { NodeRole = Qt::UserRole + 1 };
         AkuTreeModel(QVector<QStringList> filesList = QVector<QStringList>(), QObject *parent = 0);
         ~AkuTreeModel();
 
@@ -44,7 +45,7 @@ class AkuTreeModel : public QAbstractItemModel
         void setSourceData(const QVector<QStringList> &source);
         void setAdditionalHeaders(const QStringList &headers);
 
-        AkuTreeNode *nodeFromIndex(const QModelIndex &) const;
+//        AkuTreeNode *nodeFromIndex(const QModelIndex &) const;
 
     private:
         class Private;

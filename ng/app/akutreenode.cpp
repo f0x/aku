@@ -20,6 +20,7 @@
 #include "akutreenode.h"
 
 #include <KMimeType>
+#include <KDebug>
 
 AkuTreeNode::AkuTreeNode(const QStringList &data, AkuTreeNode *parent) :
                                                     m_itemData(data),
