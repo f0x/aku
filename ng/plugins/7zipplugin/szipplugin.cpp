@@ -143,7 +143,7 @@ void SzipPlugin::loadArchive()
                continue;
            }
            file << QString("0%");
-           kDebug() << file;
+           //kDebug() << file;
            continue;
        }
        if (line.startsWith("Modified =")) {

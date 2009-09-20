@@ -32,9 +32,10 @@ public:
     AkuTreeView(QWidget *parent);
     ~AkuTreeView();
 
-    AkuTreeModel* model();
-
     QStringList selectedPaths();
+
+private:
+    AkuTreeModel *m_model;
 
 protected:
 
@@ -42,6 +43,10 @@ protected:
 
 private slots:
     void invertSelection();
+
+public slots:
+    void modelForHeader(AkuTreeModel*);
+    void headerMenu(const QPoint&);
 
 };
 

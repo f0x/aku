@@ -35,6 +35,11 @@ AkuTreeView::AkuTreeView(QWidget *parent) : QTreeView(parent)
     setAlternatingRowColors(true);
     setSelectionMode(QAbstractItemView::ExtendedSelection);
     header()->setResizeMode(QHeaderView::ResizeToContents);
+
+    QHeaderView* headerView = header();
+    headerView->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(headerView, SIGNAL(customContextMenuRequested(const QPoint&)),
+            this, SLOT(headerMenu(const QPoint&)));
 }
 
 AkuTreeView::~AkuTreeView()
@@ -71,28 +76,62 @@ QStringList AkuTreeView::selectedPaths()
 
  void AkuTreeView::contextMenuEvent(QContextMenuEvent *event)
  {
-     KAction *actionSelectAll = new KAction(i18n("Select all"),this);
-     actionSelectAll->setShortcut(Qt::CTRL + Qt::Key_A);
-     KAction *actionInvertSelection = new KAction(i18n("Invert selection"),this);
-     actionInvertSelection->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_A);
-     KAction *actionExpandAll = new KAction(i18n("Expand all the items"),this);
-     KAction *actionCollapseAll = new KAction(i18n("Collapse all the items"),this);
+    KAction *actionSelectAll = new KAction(i18n("Select all"),this);
+    actionSelectAll->setShortcut(Qt::CTRL + Qt::Key_A);
+    KAction *actionInvertSelection = new KAction(i18n("Invert selection"),this);
+    actionInvertSelection->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_A);
+    KAction *actionExpandAll = new KAction(i18n("Expand all the items"),this);
+    KAction *actionCollapseAll = new KAction(i18n("Collapse all the items"),this);
 
-     connect(actionSelectAll, SIGNAL(triggered()), this, SLOT(selectAll()));
-     connect(actionInvertSelection, SIGNAL(triggered()), this, SLOT(invertSelection()));
-     connect(actionExpandAll, SIGNAL(triggered()), this, SLOT(expandAll()));
-     connect(actionCollapseAll, SIGNAL(triggered()), this, SLOT(collapseAll()));
+    connect(actionSelectAll, SIGNAL(triggered()), this, SLOT(selectAll()));
+    connect(actionInvertSelection, SIGNAL(triggered()), this, SLOT(invertSelection()));
+    connect(actionExpandAll, SIGNAL(triggered()), this, SLOT(expandAll()));
+    connect(actionCollapseAll, SIGNAL(triggered()), this, SLOT(collapseAll()));
 
-     KMenu menu(this);
-     menu.addTitle(i18n("Quick actions"));
-     menu.addAction(actionSelectAll);
-     menu.addAction(actionInvertSelection);
-     menu.addSeparator();
-     menu.addAction(actionExpandAll);
-     menu.addAction(actionCollapseAll);
-     menu.exec(event->globalPos());
+    KMenu menu(this);
+    menu.addTitle(i18n("Quick actions"));
+    menu.addAction(actionSelectAll);
+    menu.addAction(actionInvertSelection);
+    menu.addSeparator();
+    menu.addAction(actionExpandAll);
+    menu.addAction(actionCollapseAll);
+    menu.exec(event->globalPos());
 }
 
 void AkuTreeView::invertSelection()
 {
+}
+
+void AkuTreeView::modelForHeader(AkuTreeModel *model)
+{
+    m_model = model;
+}
+
+void AkuTreeView::headerMenu(const QPoint& pos)
+{
+    // Dolphin code :D
+    KMenu popup(this);
+    popup.addTitle(i18nc("@title:menu", "Columns"));
+
+    // add checkbox items for each column
+    QHeaderView* headerView = header();
+    const int columns = m_model->columnCount();
+    // Disable File Name column
+    for (int i = 1; i < columns; ++i) {
+        const int logicalIndex = headerView->logicalIndex(i);
+        const QString text = m_model->headerData(logicalIndex, Qt::Horizontal).toString();
+        QAction* action = popup.addAction(text);
+        action->setCheckable(true);
+        action->setChecked(!headerView->isSectionHidden(logicalIndex));
+        action->setData(logicalIndex);
+    }
+    popup.addSeparator();
+
+    QAction* activatedAction = popup.exec(header()->mapToGlobal(pos));
+    if (activatedAction != 0) {
+        const bool show = activatedAction->isChecked();
+        const int columnIndex = activatedAction->data().toInt();
+        setColumnHidden(columnIndex, !show);
+    }
+
 }

@@ -180,6 +180,9 @@ void MainWindow::load(const KUrl url)
     m_currentUrl = url;
 
     dataMetaWidget(QModelIndex());
+
+    // spostare questa chiamata a load completato (quando l'interfaccia sarà in freeze)
+    m_treeView->modelForHeader(m_model);
 }
 
 void MainWindow::configureAku()
@@ -222,17 +225,16 @@ void MainWindow::showArchiveContent(const QVector<QStringList> &archive)
 void MainWindow::dataMetaWidget(QModelIndex index)
 {
     if (!m_infoDock->isVisible()) {
-        return;    
+        return;
     }
 
     if (!index.isValid()) {
-        //m_metaWidget->setIcon(KFileItem(m_currentUrl).);
         KFileItem item(KFileItem::Unknown, KFileItem::Unknown, m_currentUrl);
-        kDebug() << item.iconName();
         m_metaWidget->setMimeIcon(item.iconName());
         return;
     }
 
-    AkuTreeNode *node = m_model->nodeFromIndex(index);
-    kDebug() <<  node->mimeType();
+    //AkuTreeNode *node = static_cast<AkuTreeNode*>(index.internalPointer());
+    //AkuTreeNode *node = m_model->nodeFromIndex(index);
+    //kDebug() <<  m_model->data(-1);
 }
