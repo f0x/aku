@@ -71,7 +71,7 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
     m_infoDock = new QDockWidget(i18nc("@title:window", "Information"));
     m_infoDock->setObjectName("infoDock");
     m_infoDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
-    m_metaWidget = new MetaWidget(this);
+    m_metaWidget = new MetaWidget(m_infoDock);
     m_infoDock->setWidget(m_metaWidget);
 
     addDockWidget(Qt::RightDockWidgetArea, m_infoDock);
@@ -114,10 +114,10 @@ void MainWindow::setupActions()
     connect(pluginsInfoAction, SIGNAL(triggered(bool)), this, SLOT(showPluginsInfo()));
 
     QAction* infoDockAction = m_infoDock->toggleViewAction();
-    infoDockAction->setText(i18nc("@title:window", "Information"));
+    infoDockAction->setText(i18n("Information Panel"));
     infoDockAction->setShortcut(Qt::Key_F11);
     infoDockAction->setIcon(KIcon("dialog-information"));
-    actionCollection()->addAction("infopanel", m_infoDock->toggleViewAction());
+    actionCollection()->addAction("infopanel", infoDockAction);
 
     actionCollection()->addAction("filter", m_filterWidget->action());
 
@@ -235,6 +235,6 @@ void MainWindow::dataMetaWidget(QModelIndex index)
     }
 
     //AkuTreeNode *node = static_cast<AkuTreeNode*>(index.internalPointer());
-    //AkuTreeNode *node = m_model->nodeFromIndex(index);
-    //kDebug() <<  m_model->data(-1);
+    AkuTreeNode *node = m_model->nodeFromIndex(index);
+    kDebug() <<  node->mimeType();
 }

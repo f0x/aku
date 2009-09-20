@@ -60,14 +60,14 @@ MetaWidget::MetaWidget(QWidget *parent) : QWidget(parent)
     m_size = new QLabel(this);
     m_type = new QLabel(this);
 
-    QGridLayout *gridLayout = new QGridLayout(this);
+    QGridLayout *gridLayout = new QGridLayout();
     gridLayout->addWidget(modifiedLayout, 0, 0, Qt::AlignRight);
     gridLayout->addWidget(m_modified, 0, 1, Qt::AlignLeft);
     gridLayout->addWidget(sizeLayout, 1, 0, Qt::AlignRight);
     gridLayout->addWidget(m_size, 0, 1, Qt::AlignLeft);
     gridLayout->addWidget(typeLayout, 2, 0, Qt::AlignRight);
     gridLayout->addWidget(m_type, 0, 1, Qt::AlignLeft);
-    gridLayout->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    gridLayout->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
 
     layout->addWidget(m_fileLabel);
     layout->addWidget(topSeparator);
@@ -78,7 +78,7 @@ MetaWidget::MetaWidget(QWidget *parent) : QWidget(parent)
     layout->insertSpacing(2, 10);
     layout->insertSpacing(4, 10);
     layout->insertSpacing(6, 5);
-    setLayout(layout);
+    //setLayout(layout);
 
 }
 
