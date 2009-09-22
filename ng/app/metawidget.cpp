@@ -55,9 +55,11 @@ MetaWidget::MetaWidget(QWidget *parent) : QWidget(parent)
     QSpacerItem *spacer = new QSpacerItem(10, 10, QSizePolicy::Expanding, QSizePolicy::Expanding);
     
     QLabel *sizeLayout = new QLabel(i18n("Size") + ":", this);
-    sizeLayout->setFont(KGlobalSettings::smallestReadableFont());
+    QFont smallestReadable = KGlobalSettings::smallestReadableFont();
+    smallestReadable.setBold(true);
+    sizeLayout->setFont(smallestReadable);
     QLabel *typeLayout = new QLabel(i18n("Type") + ":", this);
-    typeLayout->setFont(KGlobalSettings::smallestReadableFont());
+    typeLayout->setFont(smallestReadable);
 
     m_size = new QLabel(this);
     m_size->setFont(KGlobalSettings::smallestReadableFont());
@@ -95,7 +97,7 @@ void MetaWidget::sendData(AkuTreeNode *node)
     QString fileName = node->name();
     QString mimeIcon = node->mimeType();
     kDebug() << mimeIcon;
-    QString size = QString::number(node->size());
+    QString size = KGlobal::locale()->formatByteSize(node->size());
     updateData(fileName, mimeIcon, size);
 }
 
