@@ -29,6 +29,7 @@
 #include "sortfiltermodel.h"
 #include "metawidget.h"
 #include "akutreenode.h"
+#include "passwidget.h"
 
 #include <QDockWidget>
 #include <QListView>
@@ -63,9 +64,10 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
 
     m_filterWidget = new FilterWidget(baseWidget, m_sortFilterModel);
 
-    KHBox *hbox = new KHBox(baseWidget);
+    PassWidget *ciao = new PassWidget(baseWidget);
+    ciao->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
-    m_treeView = new AkuTreeView(hbox);
+    m_treeView = new AkuTreeView(baseWidget);
     m_treeView->setModel(m_sortFilterModel);
 
     m_infoDock = new QDockWidget(i18nc("@title:window", "Information"));

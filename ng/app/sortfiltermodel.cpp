@@ -20,7 +20,7 @@
 
 #include "sortfiltermodel.h"
 
-SortFilterModel::SortFilterModel(QObject *parent) : KSortFilterProxyModel(parent)
+SortFilterModel::SortFilterModel(QObject *parent) : QSortFilterProxyModel(parent)
  {
  }
 

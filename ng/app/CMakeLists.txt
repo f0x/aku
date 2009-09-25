@@ -13,6 +13,7 @@ set( aku_SRCS
      filterwidget.cpp
      sortfiltermodel.cpp
      metawidget.cpp
+     passwidget.cpp
  )
 
 kde4_add_executable(aku ${aku_SRCS})

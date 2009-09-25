@@ -18,24 +18,73 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#ifndef SORTFILTERMODEL_H
-#define SORTFILTERMODEL_H
+#ifndef PASSWIDGET_H
+#define PASSWIDGET_H
 
-#include <QSortFilterProxyModel>
+#include <QSize>
+#include <QLabel>
+#include <QPaintEvent>
+#include <QPalette>
+#include <QTimer>
+#include <QBrush>
+#include <QHBoxLayout>
+#include <QPainter>
+#include <QPixmap>
+#include <QCheckBox>
 
- class SortFilterModel : public QSortFilterProxyModel
- {
-     Q_OBJECT
+#include <KPushButton>
+#include <KAction>
+#include <KVBox>
+#include <KLocale>
+#include <KIconLoader>
+#include <KIcon>
+#include <KLineEdit>
 
- public:
-     SortFilterModel(QObject *parent = 0);
+class PassWidget : public QWidget
+{
+  Q_OBJECT
 
- protected:
-     //bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
-     //bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
+public:
+    PassWidget(QWidget *parent = 0);
+    ~PassWidget();
 
- private:
+    virtual QSize sizeHint() const;
+    KAction* actionTip();
 
- };
+private:
+    class PassWidgetPrivate;
+    PassWidgetPrivate *d;
 
-#endif // SORTFILTERMODEL_H
+public slots:
+    virtual void show();
+    virtual void setTip(const QString&);
+
+protected slots:
+    virtual void gradualShow();
+    virtual void gradualHide();
+    virtual void startHide();
+};
+
+class PassWidget::PassWidgetPrivate
+{
+
+public:
+    PassWidgetPrivate() : size(QSize(800,22)),
+                          count(0),
+                          box(0),
+                          lineEdit(0), checkBox(0),
+                          okButton(0), closeButton(0)
+                          {}
+
+    QSize size;
+    int count;
+    QWidget *box;
+    KAction *actionTip;
+    KLineEdit *lineEdit;
+    QCheckBox *checkBox;
+    KPushButton *okButton;
+    KPushButton *closeButton;
+    QTimer *closeTimer;
+};
+
+#endif
