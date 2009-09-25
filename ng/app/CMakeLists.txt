@@ -14,7 +14,10 @@ set( aku_SRCS
      sortfiltermodel.cpp
      metawidget.cpp
      passwidget.cpp
- )
+     extractiondialog.cpp
+   )
+
+kde4_add_ui_files(aku_SRCS extractiondialog.ui)
 
 kde4_add_executable(aku ${aku_SRCS})
 target_link_libraries(aku akucore ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KFILE_LIBS} ${KDE4_KUTILS_LIBS})

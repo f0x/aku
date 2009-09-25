@@ -64,8 +64,8 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
 
     m_filterWidget = new FilterWidget(baseWidget, m_sortFilterModel);
 
-    PassWidget *ciao = new PassWidget(baseWidget);
-    ciao->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    m_passwordWidget = new PassWidget(baseWidget);
+    m_passwordWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
     m_treeView = new AkuTreeView(baseWidget);
     m_treeView->setModel(m_sortFilterModel);
@@ -88,6 +88,8 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
           this, SLOT(addPlugins(AkuPlugin*, const KPluginInfo &)));
     pluginLoader->loadPlugins();
     //
+
+    m_passwordWidget->show();
 }
 
 MainWindow::~MainWindow()

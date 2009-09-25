@@ -18,62 +18,38 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef EXTRACTIONDIALOG_H
+#define EXTRACTIONDIALOG_H
 
-#include <KXmlGuiWindow>
-#include <KUrl>
+#include "ui_extractiondialog.h"
+#include <KDialog>
 
-class AkuPlugin;
-class AkuTreeModel;
-class AkuTreeView;
-class FilterWidget;
-class KPluginInfo;
-class KRecentFilesAction;
-class MetaWidget;
-class QDockWidget;
-class QModelIndex;
-class PassWidget;
-class SortFilterModel;
+class KFileTreeView;
 
-class MainWindow : public KXmlGuiWindow
+class ExtractionDialog : public KDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
-  public:
-    MainWindow(QWidget* parent = 0);
-    ~MainWindow();
+public:
+    ExtractionDialog(QWidget *parent = 0);
+    ~ExtractionDialog();
 
-  private:
-    void setupActions();
-    void setupConnections();
+    void setAdvancedWidget(QWidget *);
 
-    QString m_currentPlugin;
-    QStringList m_mimeTypeNames;
-    QMap<QString, AkuPlugin*> m_plugins;
-    QDockWidget *m_infoDock;
+private:
+    Ui::ExtractionDialog ui;
+        
+    KFileTreeView *m_dirView;
+    QObject *m_wparent;
+    QWidget *m_awidget;
 
-    AkuTreeModel *m_model;
-    AkuTreeView *m_treeView;
-    FilterWidget *m_filterWidget;
-    MetaWidget *m_metaWidget;
-    SortFilterModel *m_sortFilterModel;
-    PassWidget *m_passwordWidget;
+signals:
+    void extractionClicked(const KUrl &destination);
 
-    KRecentFilesAction *m_recentFilesAction;
-    KUrl m_currentUrl;
-
-  public slots:
-    void load(const KUrl);
-
-  private slots:
-    void openDialog();
-    void addPlugins(AkuPlugin*, const KPluginInfo &);
-    void showPluginsInfo();
-    void configureAku();
-    void showArchiveContent(const QVector<QStringList> &archive);
-    void dataMetaWidget(QModelIndex);
-    void selectionChanged(const QModelIndex &current, const QModelIndex &previous);
+private slots:
+    void slotExtraction();
+    void updateCombo(const KUrl localPath);
+    void createNewDir();
 };
 
 #endif

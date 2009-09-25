@@ -58,7 +58,9 @@ PassWidget::PassWidget(QWidget *parent) : QWidget(parent), d(new PassWidgetPriva
     connect(d->checkBox, SIGNAL(clicked(bool)), d->lineEdit, SLOT(setPasswordMode(bool)));
 
     d->okButton = new KPushButton(KIcon("dialog-ok-apply"), i18n("Enter"), widget);
+    connect(d->okButton, SIGNAL(clicked()), this, SLOT(buttonPressed()));
     d->closeButton = new KPushButton(KIcon("dialog-close"), i18n("Abort"), widget);
+    connect(d->closeButton, SIGNAL(clicked()), this, SLOT(buttonPressed()));
 
     QLabel *warning = new QLabel(widget);
     warning->setPixmap(KIconLoader::global()->loadIcon("emblem-important", KIconLoader::Small));
@@ -103,6 +105,8 @@ PassWidget::PassWidget(QWidget *parent) : QWidget(parent), d(new PassWidgetPriva
     //d->actionTip -> setIcon(KIcon("lastmoves"));
     //d->actionTip -> setText(i18n("Last tip"));
     //d->actionTip -> setEnabled(false);
+
+    setVisible(false);
 }
 
 PassWidget::~PassWidget()
@@ -127,9 +131,9 @@ void PassWidget::show()
         QTimer *timer = new QTimer();
         connect(timer, SIGNAL(timeout()), this, SLOT(gradualShow()));
         timer->start(10);
-        d->closeTimer = new QTimer();
-        connect(d->closeTimer, SIGNAL(timeout()), this, SLOT(startHide()));
-        d->closeTimer->start(6000);
+        //d->closeTimer = new QTimer();
+        //connect(d->closeTimer, SIGNAL(timeout()), this, SLOT(startHide()));
+        //d->closeTimer->start(6000);
     } else {
         setVisible(true);
         d->box->resize(d->box->size().width(), height());
@@ -145,7 +149,6 @@ void PassWidget::gradualShow()
 {
     if(d->count <=100) {
         d->box->resize(d->box->size().width(), (d->count/100.0)*height());
-        // puts(QString().setNum(size().height()).toAscii());
         d->count++;
     } else {
         d->box->resize(d->box->size().width(), height());
@@ -178,4 +181,11 @@ void PassWidget::gradualHide()
 QSize PassWidget::sizeHint() const
 {
     return d->size;
+}
+
+void PassWidget::buttonPressed()
+{
+    //startHide();
+    setVisible(false);
+    // return the password or abort
 }

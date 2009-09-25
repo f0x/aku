@@ -56,13 +56,14 @@ private:
     PassWidgetPrivate *d;
 
 public slots:
-    virtual void show();
+    void buttonPressed();
+    void show();
     virtual void setTip(const QString&);
 
 protected slots:
-    virtual void gradualShow();
-    virtual void gradualHide();
-    virtual void startHide();
+    void gradualShow();
+    void gradualHide();
+    void startHide();
 };
 
 class PassWidget::PassWidgetPrivate
