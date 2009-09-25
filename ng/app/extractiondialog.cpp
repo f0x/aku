@@ -19,8 +19,6 @@
  ***************************************************************************/
 
 #include "extractiondialog.h"
-//#include "akutooltip.h"
-//#include "akutooltipmanager.h"
 
 #include <QDir>
 #include <QHeaderView>

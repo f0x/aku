@@ -30,6 +30,7 @@
 #include "metawidget.h"
 #include "akutreenode.h"
 #include "passwidget.h"
+#include "extractiondialog.h"
 
 #include <QDockWidget>
 #include <QListView>

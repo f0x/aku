@@ -21,8 +21,9 @@
 #ifndef EXTRACTIONDIALOG_H
 #define EXTRACTIONDIALOG_H
 
-#include "ui_extractiondialog.h"
 #include <KDialog>
+
+#include "ui_extractiondialog.h"
 
 class KFileTreeView;
 
