@@ -26,7 +26,6 @@
 #include <KXmlGuiWindow>
 #include <KUrl>
 
-class AkuPlugin;
 class AkuTreeModel;
 class AkuTreeView;
 class FilterWidget;

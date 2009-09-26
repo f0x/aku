@@ -89,6 +89,7 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
           this, SLOT(addPlugins(AkuPlugin*, const KPluginInfo &)));
     pluginLoader->loadPlugins();
     //
+
 }
 
 MainWindow::~MainWindow()

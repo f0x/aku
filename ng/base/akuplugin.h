@@ -28,6 +28,7 @@
 // AkuData
 typedef struct {
     QVector<QStringList> paths;
+    bool headerprotected;
 } AkuData;
 
 /** \class AkuPlugin akuplugin.h

@@ -43,8 +43,7 @@ public:
 AkuPlugin::AkuPlugin(QObject *parent) : QObject(parent),
                                         d(new AkuPluginPrivate(this))
 {
-    //qRegisterMetaType<QVector<QStringList> >();
-    //qRegisterMetaType<AkuData>();
+    qRegisterMetaType<AkuData>("AkuData");
     connect (this, SIGNAL(archiveLoaded(AkuData)), this, SIGNAL(operationCompleted()));
     connect (this, SIGNAL(operationCompleted()), this, SLOT(completeOperations()));
 }

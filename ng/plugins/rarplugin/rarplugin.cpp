@@ -148,10 +148,11 @@ void RarPlugin::loadArchive()
 
     output = process.readAllStandardOutput();
 
-    if (output.contains("Lock is present")) {
-        kDebug() << "The archive is LOCKED";
-    } else if (output.contains("CRC failed in")) {
+    if (output.contains("CRC failed in")) {
         kDebug() << "The archive is HEADER PROTECTED";
+        return;
+    } else if (output.contains("Lock is present")) {
+        kDebug() << "The archive is LOCKED";
     }
 
     options.clear();
