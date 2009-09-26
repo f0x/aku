@@ -89,14 +89,14 @@ void ZipPlugin::loadArchive()
     }
 
     m_currentPath.clear();
-    m_entries.clear();
+    m_akudata.paths.clear();
 
     getEntries(m_archive->directory());
 
     m_archive->close();
 
 
-    onArchiveLoaded(m_entries);
+    onArchiveLoaded(m_akudata);
 
 }
 
@@ -105,7 +105,7 @@ void ZipPlugin::getEntries(const KArchiveEntry *rootEntry)
     if (rootEntry->isFile()) {
         const KZipFileEntry *fileEntry = static_cast<const KZipFileEntry*>(rootEntry);
 
-        m_entries << (QStringList() << m_currentPath + fileEntry->name()  // file name
+        m_akudata.paths << (QStringList() << m_currentPath + fileEntry->name()  // file name
                                     << KGlobal::locale()->formatByteSize(fileEntry->size()) // file size
                                     << KGlobal::locale()->formatByteSize(fileEntry->compressedSize()) // compressed size
                                     << QString::number(fileEntry->crc32(), 16) // crc

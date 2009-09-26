@@ -89,15 +89,15 @@ void TarPlugin::loadArchive()
     }
 
     m_currentPath.clear();
-    m_entries.clear();
+    m_akudata.paths.clear();
 
     getEntries(m_archive->directory());
 
     m_archive->close();
 
-    onArchiveLoaded(m_entries);
+    onArchiveLoaded(m_akudata);
 
-    m_entries.clear();
+    m_akudata.paths.clear();
 
 }
 
@@ -106,7 +106,7 @@ void TarPlugin::getEntries(const KArchiveEntry *rootEntry)
     if (rootEntry->isFile()) {
         const KArchiveFile *fileEntry = static_cast<const KArchiveFile*>(rootEntry);
 
-        m_entries << (QStringList() << m_currentPath + fileEntry->name()  // file name
+        m_akudata.paths << (QStringList() << m_currentPath + fileEntry->name()  // file name
                                     << KGlobal::locale()->formatByteSize(fileEntry->size()) // file size
                                     << QString() // compressed size WARNING: not supported by KTar
                                     << fileEntry->user() // owner

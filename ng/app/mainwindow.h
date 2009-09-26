@@ -21,6 +21,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "akuplugin.h"
+
 #include <KXmlGuiWindow>
 #include <KUrl>
 
@@ -71,7 +73,7 @@ class MainWindow : public KXmlGuiWindow
     void addPlugins(AkuPlugin*, const KPluginInfo &);
     void showPluginsInfo();
     void configureAku();
-    void showArchiveContent(const QVector<QStringList> &archive);
+    void showArchiveContent(const AkuData &akudata);
     void dataMetaWidget(QModelIndex);
     void selectionChanged(const QModelIndex &current, const QModelIndex &previous);
 };

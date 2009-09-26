@@ -187,7 +187,7 @@ void RarPlugin::loadArchive()
 
     QTextStream stream(&output);
     QString line;
-    QVector<QStringList> archive;
+    AkuData akudata;
     QStringList file;
     int i = 0;
 
@@ -234,13 +234,13 @@ void RarPlugin::loadArchive()
 
                 file << attributes[i];
             }
-            archive << (QStringList() << file);
+            akudata.paths << (QStringList() << file);
             file.clear();
         }
         i++;
     } while (!line.isNull());
 
-    onArchiveLoaded(archive);
+    onArchiveLoaded(akudata);
 }
 
 QStringList RarPlugin::additionalHeaderStrings()

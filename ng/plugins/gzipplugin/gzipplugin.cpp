@@ -206,7 +206,9 @@ void GZipPlugin::loadArchive()
                                       << QString::number(crc32, 16)
                                       << KGlobal::locale()->formatDateTime(mDateTime);
 
-    onArchiveLoaded(QVector<QStringList>() << entry);
+    AkuData akudata;
+    akudata.paths << entry;
+    onArchiveLoaded(akudata);
 }
 
 QStringList GZipPlugin::additionalHeaderStrings()

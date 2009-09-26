@@ -149,7 +149,7 @@ void AcePlugin::loadArchive()
 
     kDebug() << splitList;
 
-    QVector<QStringList> archive;
+    AkuData akudata;
     QString filePath;
     QStringList attributes;
     QStringList file;
@@ -184,11 +184,11 @@ void AcePlugin::loadArchive()
                                        QTime::fromString(attributes[1], QString("hh:mm")));
         file << KGlobal::locale()->formatDateTime(modified);
 
-        archive << (QStringList() << file);
+        akudata.paths << (QStringList() << file);
         file.clear();
     }
 
-    onArchiveLoaded(archive);
+    onArchiveLoaded(akudata);
 }
 
 QStringList AcePlugin::additionalHeaderStrings()

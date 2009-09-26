@@ -20,7 +20,7 @@
 
 #include "mainwindow.h"
 #include "pluginloader.h"
-#include "akuplugin.h"
+//#include "akuplugin.h"
 #include "akutreeview.h"
 #include "akutreemodel.h"
 //#include "infodialog.h"
@@ -89,8 +89,6 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
           this, SLOT(addPlugins(AkuPlugin*, const KPluginInfo &)));
     pluginLoader->loadPlugins();
     //
-
-    m_passwordWidget->show();
 }
 
 MainWindow::~MainWindow()
@@ -146,8 +144,8 @@ void MainWindow::openDialog()
 
 void MainWindow::addPlugins(AkuPlugin *plugin, const KPluginInfo &info)
 {
-    connect(plugin, SIGNAL(archiveLoaded(const QVector<QStringList> &)),
-            this, SLOT(showArchiveContent(const QVector<QStringList> &)));
+    connect(plugin, SIGNAL(archiveLoaded(const AkuData &)),
+            this, SLOT(showArchiveContent(const AkuData &)));
 
     foreach (const QString &mimeName, plugin->mimeTypeNames()) {
         KMimeType::Ptr mime = KMimeType::mimeType(mimeName);
@@ -212,9 +210,9 @@ void MainWindow::showPluginsInfo()
 {
 }
 
-void MainWindow::showArchiveContent(const QVector<QStringList> &archive)
+void MainWindow::showArchiveContent(const AkuData &akudata)
 {
-    if (archive.isEmpty()) {
+    if (akudata.paths.isEmpty()) {
         return;
     }
 
@@ -224,7 +222,7 @@ void MainWindow::showArchiveContent(const QVector<QStringList> &archive)
     AkuPlugin *sender = static_cast<AkuPlugin*>(this->sender());
     m_model->setAdditionalHeaders(sender->additionalHeaderStrings());
     //
-    m_model->setSourceData(archive);
+    m_model->setSourceData(akudata.paths);
     m_treeView->setSortingEnabled(true);
     m_treeView->expandAll();
 }

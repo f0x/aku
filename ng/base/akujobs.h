@@ -20,6 +20,8 @@
 #ifndef AKUJOBS_H
 #define AKUJOBS_H
 
+#include "akuplugin.h"
+
 #include <KJob>
 #include <KUrl>
 
@@ -114,12 +116,12 @@ class AkuHelper : public QObject
 
     signals:
         void error(const QString &);
-        void archiveLoaded(QVector<QStringList>);
+        void archiveLoaded(AkuData);
         void progressUpdate(double, double);
 
     public slots:
         void onError(const QString &);
-        void onArchiveLoaded(QVector<QStringList>);
+        void onArchiveLoaded(AkuData);
         void onProgressUpdate(double, double);
 };
 };

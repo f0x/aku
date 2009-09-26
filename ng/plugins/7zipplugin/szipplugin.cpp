@@ -113,7 +113,7 @@ void SzipPlugin::loadArchive()
 
     QTextStream stream(&output);
     QString line;
-    QVector<QStringList> archive;
+    AkuData akudata;
     QStringList file;
 
     do {
@@ -173,13 +173,13 @@ void SzipPlugin::loadArchive()
        if (line.startsWith("Block =")) {
            file << line.mid(8);
            //kDebug() << file;
-           archive << file;
+           akudata.paths << file;
            file.clear();
        }
 
     } while (!line.isNull());
 
-    onArchiveLoaded(archive);
+    onArchiveLoaded(akudata);
 }
 
 bool SzipPlugin::isInstalled()

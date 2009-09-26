@@ -18,7 +18,7 @@
  ***************************************************************************/
 
 #include "akujobs.h"
-#include "akuplugin.h"
+//#include "akuplugin.h"
 
 #include <KDebug>
 
@@ -93,7 +93,7 @@ void AkuHelper::onError(const QString &error)
     emit this->error(error);
 }
 
-void AkuHelper::onArchiveLoaded(QVector<QStringList> data)
+void AkuHelper::onArchiveLoaded(AkuData data)
 {
     emit archiveLoaded(data);
 }

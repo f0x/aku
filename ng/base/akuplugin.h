@@ -25,6 +25,11 @@
 
 #include <aku_macros.h>
 
+// AkuData
+typedef struct {
+    QVector<QStringList> paths;
+} AkuData;
+
 /** \class AkuPlugin akuplugin.h
   * \brief Aku's Base Plugin Class for archive management
   *
@@ -151,7 +156,7 @@ class AKU_EXPORT AkuPlugin : public QObject
          * Note that the first three arguments of each QStringList should be in order:
          * File Path, File Size, Packed Size.
          */
-        void archiveLoaded(const QVector<QStringList> &archive);
+        void archiveLoaded(const AkuData &akudata);
 
         /**
          * This signal is emitted after calling onError. Never emit this signal directly.
@@ -198,7 +203,7 @@ class AKU_EXPORT AkuPlugin : public QObject
         /**
          * Call this slot when the archive is correctly loaded.
          */
-        void onArchiveLoaded(QVector<QStringList>);
+        void onArchiveLoaded(AkuData);
 
     protected slots:
         /// @internal

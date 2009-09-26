@@ -58,7 +58,7 @@ class TarPlugin : public AkuPlugin
 
     private:
         KTar *m_archive;
-        QVector<QStringList> m_entries;
+        AkuData m_akudata;
         QString m_currentPath;
         double size;
         int m_currentExtracting;

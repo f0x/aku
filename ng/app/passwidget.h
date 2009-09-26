@@ -21,71 +21,48 @@
 #ifndef PASSWIDGET_H
 #define PASSWIDGET_H
 
-#include <QSize>
-#include <QLabel>
-#include <QPaintEvent>
-#include <QPalette>
-#include <QTimer>
-#include <QBrush>
-#include <QHBoxLayout>
-#include <QPainter>
-#include <QPixmap>
-#include <QCheckBox>
+#include <QWidget>
 
-#include <KPushButton>
-#include <KAction>
-#include <KVBox>
-#include <KLocale>
-#include <KIconLoader>
-#include <KIcon>
-#include <KLineEdit>
+class QLabel;
+class QToolButton;
+class QTimeLine;
 
 class PassWidget : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
+    public:
+        PassWidget(QWidget *parent);
+        ~PassWidget();
 
-public:
-    PassWidget(QWidget *parent = 0);
-    ~PassWidget();
+        QSize sizeHint() const;
 
-    virtual QSize sizeHint() const;
-    KAction* actionTip();
+    public slots:
+        void setTooltip(const QString &);
 
-private:
-    class PassWidgetPrivate;
-    PassWidgetPrivate *d;
+    private slots:
+        void showTip();
+        void hideTip();
 
-public slots:
-    void buttonPressed();
-    void show();
-    virtual void setTip(const QString&);
+    private:
+        QWidget *m_base;
+        QLabel *m_tipLabel;
+        QToolButton *m_closeButton;
+        QTimeLine *m_timeLine;
+        bool m_hiding;
+        bool m_mouseIn;
 
-protected slots:
-    void gradualShow();
-    void gradualHide();
-    void startHide();
-};
+    //signals:
+    //    void tooltipClosed(PassWidget *);
 
-class PassWidget::PassWidgetPrivate
-{
+    protected slots:
+        void animate(int);
+        void slotFinish();
 
-public:
-    PassWidgetPrivate() : size(QSize(800,22)),
-                          count(0),
-                          box(0),
-                          lineEdit(0), checkBox(0),
-                          okButton(0), closeButton(0)
-                          {}
+    protected:
+        void resizeEvent(QResizeEvent*);
+        void enterEvent(QEvent *event);
+        void leaveEvent(QEvent *event);
 
-    QSize size;
-    int count;
-    QWidget *box;
-    KAction *actionTip;
-    KLineEdit *lineEdit;
-    QCheckBox *checkBox;
-    KPushButton *okButton;
-    KPushButton *closeButton;
-    QTimer *closeTimer;
 };
 
 #endif

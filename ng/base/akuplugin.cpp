@@ -43,8 +43,9 @@ public:
 AkuPlugin::AkuPlugin(QObject *parent) : QObject(parent),
                                         d(new AkuPluginPrivate(this))
 {
-    qRegisterMetaType<QVector<QStringList> >();
-    connect (this, SIGNAL(archiveLoaded(QVector<QStringList>)), this, SIGNAL(operationCompleted()));
+    //qRegisterMetaType<QVector<QStringList> >();
+    //qRegisterMetaType<AkuData>();
+    connect (this, SIGNAL(archiveLoaded(AkuData)), this, SIGNAL(operationCompleted()));
     connect (this, SIGNAL(operationCompleted()), this, SLOT(completeOperations()));
 }
 
@@ -126,7 +127,7 @@ void AkuPlugin::load(const KUrl &fileName)
         d->helper = new AkuJobs::AkuHelper(this);
     }
     //connect (d->helper, SIGNAL(error(const QString &)), this, SIGNAL(error(const QString &)));
-    connect (d->helper, SIGNAL(archiveLoaded(QVector<QStringList>)), this, SIGNAL(archiveLoaded(QVector<QStringList>)));
+    connect (d->helper, SIGNAL(archiveLoaded(AkuData)), this, SIGNAL(archiveLoaded(AkuData)));
     //connect (d->helper, SIGNAL(progressUpdate(double, double)), this, SIGNAL(progressUpdate(double, double)));
 
     KJob *job = new AkuJobs::LoadJob(this, this);
@@ -146,7 +147,7 @@ void AkuPlugin::extract(const KUrl &fileName, const KUrl &destination, const QSt
         d->helper = new AkuJobs::AkuHelper(this);
     }
     connect (d->helper, SIGNAL(error(const QString &)), this, SIGNAL(error(const QString &)));
-    connect (d->helper, SIGNAL(archiveLoaded(QVector<QStringList>)), this, SIGNAL(archiveLoaded(QVector<QStringList>)));
+    connect (d->helper, SIGNAL(archiveLoaded(AkuData)), this, SIGNAL(archiveLoaded(AkuData)));
     connect (d->helper, SIGNAL(progressUpdate(double, double)), this, SIGNAL(progressUpdate(double, double)));
 
     KJob *job = new AkuJobs::ExtractJob(this, destination, files, this);
@@ -168,7 +169,7 @@ void AkuPlugin::lock(const KUrl &fileName)
         d->helper = new AkuJobs::AkuHelper(this);
     }
     connect (d->helper, SIGNAL(error(const QString &)), this, SIGNAL(error(const QString &)));
-    connect (d->helper, SIGNAL(archiveLoaded(QVector<QStringList>)), this, SIGNAL(archiveLoaded(QVector<QStringList>)));
+    connect (d->helper, SIGNAL(archiveLoaded(AkuData)), this, SIGNAL(archiveLoaded(AkuData)));
     connect (d->helper, SIGNAL(progressUpdate(double, double)), this, SIGNAL(progressUpdate(double, double)));
 
     KJob *job = new AkuJobs::LockJob(this, this);
@@ -220,7 +221,7 @@ void AkuPlugin::onError(const QString &error)
     d->helper->onError(error);
 }
 
-void AkuPlugin::onArchiveLoaded(QVector<QStringList> data)
+void AkuPlugin::onArchiveLoaded(AkuData data)
 {
     if (!d->helper) {
         return;

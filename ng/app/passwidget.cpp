@@ -20,172 +20,130 @@
 
 #include "passwidget.h"
 
-PassWidget::PassWidget(QWidget *parent) : QWidget(parent), d(new PassWidgetPrivate)
+#include <QPalette>
+#include <QLabel>
+#include <QToolButton>
+#include <QTimeLine>
+#include <QTimer>
+
+#include <KPushButton>
+#include <KIconLoader>
+#include <KLocale>
+#include <KHBox>
+#include <KDebug>
+
+const int DURATION = 750; // ms
+
+PassWidget::PassWidget(QWidget *parent) : QWidget(parent),
+                                          m_mouseIn(false)
 {
-    d->box = new KVBox(this);
+//     setAttribute(Qt::WA_DeleteOnClose);
 
-    QWidget *widget = new QWidget(d->box);
-    widget->setAutoFillBackground(true);
-    QPalette palette = widget->palette();
-    palette.setColor(QPalette::Window, Qt::white);
-    widget->setPalette(palette);
+    m_base = new KHBox(this);
+    m_base->setAutoFillBackground(true);
 
-    QVBoxLayout *layout = new QVBoxLayout(widget);
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
-    //d->toolTip = new QLabel(widget);
-    //d->toolTip->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
-    //QPalette pt = d->toolTip->palette();
-    //pt.setColor(QPalette::WindowText, Qt::black);
-    //d->toolTip->setPalette(pt);
- 
-    QLabel *icon = new QLabel(widget);
-    icon->setPixmap(KIconLoader::global()->loadIcon("dialog-password", KIconLoader::Small));
-    icon->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+    QPalette p = m_base->palette();
+    p.setColor(QPalette::Window, Qt::white);
+    p.setColor(QPalette::WindowText, Qt::black);
+    m_base->setPalette(p);
 
-    QFont font;
-    font.setBold(true);
-    QLabel *label = new QLabel(widget);
-    label->setFont(font);
-    label->setText(i18n("The archive is header password protected"));
+    QLabel *icon = new QLabel(m_base);
+    icon->setPixmap(KIconLoader::global()->loadIcon("dialog-information", KIconLoader::Small));
 
-    d->lineEdit = new KLineEdit(widget);
-    d->lineEdit->setClickMessage(i18n("Enter the password..."));
-    d->lineEdit->setPasswordMode(true);
-    d->lineEdit->setClearButtonShown(true);
+    m_tipLabel = new QLabel(m_base);
+    m_tipLabel->setWordWrap(true);
+    m_tipLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    m_tipLabel->setPalette(p);
 
-    d->checkBox = new QCheckBox(i18n("Hidden"), widget);
-    d->checkBox->setChecked(true);
-    connect(d->checkBox, SIGNAL(clicked(bool)), d->lineEdit, SLOT(setPasswordMode(bool)));
+    m_closeButton = new QToolButton(m_base);
+    m_closeButton->setIcon(KIcon("dialog-close"));
+    m_closeButton->setAutoRaise(true);
+    connect(m_closeButton, SIGNAL(clicked()), this, SLOT(hideTip()));
 
-    d->okButton = new KPushButton(KIcon("dialog-ok-apply"), i18n("Enter"), widget);
-    connect(d->okButton, SIGNAL(clicked()), this, SLOT(buttonPressed()));
-    d->closeButton = new KPushButton(KIcon("dialog-close"), i18n("Abort"), widget);
-    connect(d->closeButton, SIGNAL(clicked()), this, SLOT(buttonPressed()));
+    m_timeLine = new QTimeLine(DURATION, this);
+    connect(m_timeLine, SIGNAL(frameChanged(int)), this, SLOT(animate(int)));
+    connect(m_timeLine, SIGNAL(finished()), this, SLOT(slotFinish()));
 
-    QLabel *warning = new QLabel(widget);
-    warning->setPixmap(KIconLoader::global()->loadIcon("emblem-important", KIconLoader::Small));
-    warning->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
-
-    font.setBold(false);
-    font.setUnderline(true);
-    QLabel *labelWarning = new QLabel(widget);
-    labelWarning->setFont(font);
-    labelWarning->setText(i18n("The password is not correct. Try again"));
-
-    QHBoxLayout *hline1 = new QHBoxLayout;
-    layout->addLayout(hline1);
-    hline1->setSpacing(10);
-    hline1->addSpacing(10);
-    hline1->addWidget(icon);
-    hline1->addWidget(label);
-    hline1->addSpacerItem(new QSpacerItem(10, 10, QSizePolicy::Expanding, QSizePolicy::Fixed));
-
-    QHBoxLayout *hline2 = new QHBoxLayout;
-    layout->addLayout(hline2);
-    hline2->setSpacing(10);
-    hline2->addSpacing(30);
-    hline2->addWidget(d->lineEdit);
-    hline2->addWidget(d->checkBox);
-    hline2->addSpacerItem(new QSpacerItem(30, 10, QSizePolicy::Fixed, QSizePolicy::Fixed));
-    hline2->addWidget(d->okButton);
-    hline2->addWidget(d->closeButton);
-
-    QHBoxLayout *hline3 = new QHBoxLayout;
-    layout->addLayout(hline3);
-    hline3->setSpacing(10);
-    hline3->addSpacing(10);
-    hline3->addWidget(warning);
-    hline3->addWidget(labelWarning);
-    hline3->addSpacerItem(new QSpacerItem(10, 10, QSizePolicy::Expanding, QSizePolicy::Fixed));
-
-    QHBoxLayout *baseLayout = new QHBoxLayout(this);
-    baseLayout->addWidget(d->box);
-
-    //d->actionTip = new KAction(this);
-    //d->actionTip -> setIcon(KIcon("lastmoves"));
-    //d->actionTip -> setText(i18n("Last tip"));
-    //d->actionTip -> setEnabled(false);
-
-    setVisible(false);
+    m_base->setGeometry(0, -height(), width(), height());
+    hide();
 }
 
 PassWidget::~PassWidget()
 {
 }
 
-KAction* PassWidget::actionTip()
+void PassWidget::animate(int y)
 {
-    return d->actionTip;
+    m_base->setGeometry(0, y, width(), height());
 }
 
-void PassWidget::setTip(const QString& tip)
+void PassWidget::showTip()
 {
-    //d->toolTip->setText(tip);
-    //d->actionTip->setEnabled(true);
+    show();
+    m_hiding = false;
+
+    if (m_timeLine->state() == QTimeLine::Running) {
+        m_timeLine->stop();
+    }
+
+    m_timeLine->setFrameRange(-height(), 0);
+    m_timeLine->start();
 }
 
-void PassWidget::show()
+void PassWidget::hideTip()
 {
-    if(!isVisible()) {
-        setVisible(true);
-        QTimer *timer = new QTimer();
-        connect(timer, SIGNAL(timeout()), this, SLOT(gradualShow()));
-        timer->start(10);
-        //d->closeTimer = new QTimer();
-        //connect(d->closeTimer, SIGNAL(timeout()), this, SLOT(startHide()));
-        //d->closeTimer->start(6000);
+    bool fromButton = false;
+    if (sender() == m_closeButton) {
+        fromButton = true;
+    }
+
+    if (m_mouseIn && !fromButton) {
+        return;
+    }
+
+    m_hiding = true;
+    m_timeLine->setFrameRange(0, -height());
+    m_timeLine->start();
+}
+
+void PassWidget::slotFinish()
+{
+    if (m_hiding) {
+        hide();
+        //emit tooltipClosed(this);
     } else {
-        setVisible(true);
-        d->box->resize(d->box->size().width(), height());
-        d->closeTimer->stop();
-        d->closeTimer->start(6000);
-        connect(d->closeTimer, SIGNAL(timeout()), this, SLOT(startHide()));
-        //disconnect(d->closeTimer,0,this,0);
-        //setVisible(true);
+        QTimer::singleShot(5000, this, SLOT(hideTip()));
     }
 }
 
-void PassWidget::gradualShow()
+void PassWidget::enterEvent(QEvent *event)
 {
-    if(d->count <=100) {
-        d->box->resize(d->box->size().width(), (d->count/100.0)*height());
-        d->count++;
-    } else {
-        d->box->resize(d->box->size().width(), height());
-        disconnect(sender(), 0, this, 0);
-        //connect(d->close, SIGNAL(clicked()), this, SLOT(startHide()));
-        delete sender();
-    }
+    m_mouseIn = true;
+    QWidget::enterEvent(event);
 }
 
-void PassWidget::startHide()
+void PassWidget::leaveEvent(QEvent *event)
 {
-    disconnect(sender(),0,this,0);
-    QTimer *t = new QTimer();
-    connect(t, SIGNAL(timeout()), this, SLOT(gradualHide()));
-    t->start(10);
+    m_mouseIn = false;
+    slotFinish();
+    QWidget::leaveEvent(event);
 }
 
-void PassWidget::gradualHide()
+void PassWidget::resizeEvent(QResizeEvent *event)
 {
-    if (d->count >= 0) {
-        d->box->resize(d->box->size().width(), (d->count/100.0)*height());
-        d->count--;
-    } else {
-        disconnect(sender(), 0, this, 0);
-        delete sender();
-        setVisible(false);
-    }
+    Q_UNUSED(event)
+    m_base->resize(size());
+}
+
+void PassWidget::setTooltip(const QString &tip)
+{
+    m_tipLabel->setText(tip);
+    setMinimumSize(m_base->sizeHint());
 }
 
 QSize PassWidget::sizeHint() const
 {
-    return d->size;
-}
-
-void PassWidget::buttonPressed()
-{
-    //startHide();
-    setVisible(false);
-    // return the password or abort
+    return m_base->sizeHint();
 }

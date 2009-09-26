@@ -58,7 +58,7 @@ class ZipPlugin : public AkuPlugin
 
     private:
         KZip *m_archive;
-        QVector<QStringList> m_entries;
+        AkuData m_akudata;
         QString m_currentPath;
         int m_currentExtracting;
         int m_filesCount;
