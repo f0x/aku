@@ -33,6 +33,7 @@
 
 #include <QDockWidget>
 #include <QListView>
+#include <QHBoxLayout>
 
 #include <KVBox>
 #include <KStandardAction>
@@ -64,11 +65,6 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
 
     m_filterWidget = new FilterWidget(baseWidget, m_sortFilterModel);
 
-    m_passwordWidget = new PassWidget(baseWidget);
-    m_passwordWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    //m_passwordWidget->show();
-    m_passwordWidget->setTooltip("ciao");
-
     m_treeView = new AkuTreeView(baseWidget);
     m_treeView->setModel(m_sortFilterModel);
 
@@ -90,6 +86,14 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
           this, SLOT(addPlugins(AkuPlugin*, const KPluginInfo &)));
     pluginLoader->loadPlugins();
     //
+
+    QHBoxLayout *bottomLayout = new QHBoxLayout(baseWidget);
+    QPushButton *mainButton = new QPushButton("a");
+    QPushButton *errorButton = new QPushButton("b");
+    QPushButton *commentButton = new QPushButton("c");
+    bottomLayout->addWidget(mainButton);
+    bottomLayout->addWidget(errorButton);
+    bottomLayout->addWidget(commentButton);
 
 }
 
@@ -217,7 +221,10 @@ void MainWindow::showArchiveContent(const AkuData &akudata)
     // if this condition is true, we need to ask for the header
     // password and reload the archive
     if (akudata.headerprotected) {
-        m_passwordWidget->show();
+        //PassWidget *passwordWidget = new PassWidget(baseWidget);
+        //passwordWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+        //passwordWidget->setTooltip("ciao");
+        //passwordWidget->show();
     }
 
     if (akudata.paths.isEmpty()) {

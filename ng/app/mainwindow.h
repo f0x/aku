@@ -34,7 +34,6 @@ class KRecentFilesAction;
 class MetaWidget;
 class QDockWidget;
 class QModelIndex;
-class PassWidget;
 class SortFilterModel;
 
 class MainWindow : public KXmlGuiWindow
@@ -59,7 +58,6 @@ class MainWindow : public KXmlGuiWindow
     FilterWidget *m_filterWidget;
     MetaWidget *m_metaWidget;
     SortFilterModel *m_sortFilterModel;
-    PassWidget *m_passwordWidget;
 
     KRecentFilesAction *m_recentFilesAction;
     KUrl m_currentUrl;

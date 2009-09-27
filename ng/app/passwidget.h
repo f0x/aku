@@ -30,38 +30,39 @@ class QTimeLine;
 class PassWidget : public QWidget
 {
     Q_OBJECT
-    public:
-        PassWidget(QWidget *parent);
-        ~PassWidget();
 
-        QSize sizeHint() const;
+public:
+    PassWidget(QWidget *parent);
+    ~PassWidget();
 
-    public slots:
-        void setTooltip(const QString &);
+    QSize sizeHint() const;
 
-    private slots:
-        void showTip();
-        void hideTip();
+public slots:
+    void setTooltip(const QString &);
 
-    private:
-        QWidget *m_base;
-        QLabel *m_tipLabel;
-        //QToolButton *m_closeButton;
-        QTimeLine *m_timeLine;
-        bool m_hiding;
-        bool m_mouseIn;
+private slots:
+    void showTip();
+    void hideTip();
 
-    //signals:
-    //    void tooltipClosed(PassWidget *);
+private:
+    QWidget *m_base;
+    QLabel *m_tipLabel;
+    QToolButton *m_closeButton;
+    QTimeLine *m_timeLine;
+    bool m_hiding;
+    bool m_mouseIn;
 
-    protected slots:
-        void animate(int);
-        void slotFinish();
+//signals:
+//    void tooltipClosed(AkuTooltip *);
 
-    protected:
-        void resizeEvent(QResizeEvent*);
-      //  void enterEvent(QEvent *event);
-      //  void leaveEvent(QEvent *event);
+protected slots:
+    void animate(int);
+    void slotFinish();
+
+protected:
+    void resizeEvent(QResizeEvent*);
+    void enterEvent(QEvent *event);
+    void leaveEvent(QEvent *event);
 
 };
 
