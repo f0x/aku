@@ -25,22 +25,20 @@
 #include <QToolButton>
 #include <QTimeLine>
 #include <QTimer>
+#include <QHBoxLayout>
 
 #include <KPushButton>
 #include <KIconLoader>
 #include <KLocale>
-#include <KHBox>
+#include <KVBox>
 #include <KDebug>
 
-const int DURATION = 750; // ms
+const int DURATION = 500; // ms
 
-PassWidget::PassWidget(QWidget *parent) : QWidget(parent),
-                                          m_mouseIn(false)
+PassWidget::PassWidget(QWidget *parent) : QWidget(parent)
 {
-//     setAttribute(Qt::WA_DeleteOnClose);
-
-    m_base = new KHBox(this);
-    m_base->setAutoFillBackground(true);
+    m_base = new KVBox(this);
+    m_base->setAutoFillBackground(true);   
 
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
@@ -49,18 +47,41 @@ PassWidget::PassWidget(QWidget *parent) : QWidget(parent),
     p.setColor(QPalette::WindowText, Qt::black);
     m_base->setPalette(p);
 
-    QLabel *icon = new QLabel(m_base);
-    icon->setPixmap(KIconLoader::global()->loadIcon("dialog-information", KIconLoader::Small));
+    // TOP Layout
+    QLabel *passwordIcon = new QLabel(this);
+    passwordIcon->setPixmap(KIconLoader::global()->loadIcon("dialog-password", KIconLoader::Small));
+    passwordIcon->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
 
-    m_tipLabel = new QLabel(m_base);
-    m_tipLabel->setWordWrap(true);
-    m_tipLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-    m_tipLabel->setPalette(p);
+    QFont font;
+    font.setBold(true);
+    QLabel *topLabel = new QLabel(this);
+    topLabel->setFont(font);
+    topLabel->setText(i18n("The archive is header password protected"));
 
-    m_closeButton = new QToolButton(m_base);
-    m_closeButton->setIcon(KIcon("dialog-close"));
-    m_closeButton->setAutoRaise(true);
-    connect(m_closeButton, SIGNAL(clicked()), this, SLOT(hideTip()));
+    QHBoxLayout *topLayout = new QHBoxLayout;
+    topLayout->setSpacing(10);
+    topLayout->addSpacing(10);
+    topLayout->addWidget(passwordIcon);
+    topLayout->addWidget(topLabel);
+    topLayout->addSpacerItem(new QSpacerItem(10, 10, QSizePolicy::Expanding, QSizePolicy::Fixed));
+
+    QHBoxLayout *baseLayout = new QHBoxLayout(this);
+    baseLayout->addWidget(m_base);
+
+    //
+
+    //QLabel *icon = new QLabel(m_base);
+    //icon->setPixmap(KIconLoader::global()->loadIcon("dialog-information", KIconLoader::Small));
+
+    //m_tipLabel = new QLabel(m_base);
+    //m_tipLabel->setWordWrap(true);
+    //m_tipLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    //m_tipLabel->setPalette(p);
+
+    //m_closeButton = new QToolButton(m_base);
+    //m_closeButton->setIcon(KIcon("dialog-close"));
+    //m_closeButton->setAutoRaise(true);
+    //connect(m_closeButton, SIGNAL(clicked()), this, SLOT(hideTip()));
 
     m_timeLine = new QTimeLine(DURATION, this);
     connect(m_timeLine, SIGNAL(frameChanged(int)), this, SLOT(animate(int)));
@@ -95,9 +116,9 @@ void PassWidget::showTip()
 void PassWidget::hideTip()
 {
     bool fromButton = false;
-    if (sender() == m_closeButton) {
-        fromButton = true;
-    }
+    //if (sender() == m_closeButton) {
+    //    fromButton = true;
+    //}
 
     if (m_mouseIn && !fromButton) {
         return;
@@ -118,24 +139,24 @@ void PassWidget::slotFinish()
     }
 }
 
-void PassWidget::enterEvent(QEvent *event)
-{
-    m_mouseIn = true;
-    QWidget::enterEvent(event);
-}
-
-void PassWidget::leaveEvent(QEvent *event)
-{
-    m_mouseIn = false;
-    slotFinish();
-    QWidget::leaveEvent(event);
-}
-
-void PassWidget::resizeEvent(QResizeEvent *event)
-{
-    Q_UNUSED(event)
-    m_base->resize(size());
-}
+//void PassWidget::enterEvent(QEvent *event)
+//{
+//    m_mouseIn = true;
+//    QWidget::enterEvent(event);
+//}
+//
+//void PassWidget::leaveEvent(QEvent *event)
+//{
+//    m_mouseIn = false;
+//    slotFinish();
+//    QWidget::leaveEvent(event);
+//}
+//
+//void PassWidget::resizeEvent(QResizeEvent *event)
+//{
+//    Q_UNUSED(event)
+//    m_base->resize(size());
+//}
 
 void PassWidget::setTooltip(const QString &tip)
 {

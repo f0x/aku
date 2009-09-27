@@ -133,9 +133,12 @@ void RarPlugin::init(const KUrl &fileName)
 
 void RarPlugin::loadArchive()
 {
+    AkuData akudata;
     // we start a first archive list to check if the archive is locked
     // or header password protected
     QProcess process;
+    process.setProcessChannelMode(QProcess::MergedChannels);
+
     QString output;
     QStringList options;
 
@@ -149,7 +152,10 @@ void RarPlugin::loadArchive()
     output = process.readAllStandardOutput();
 
     if (output.contains("CRC failed in")) {
+        puts("HELLO");
         kDebug() << "The archive is HEADER PROTECTED";
+        akudata.headerprotected = true;
+        onArchiveLoaded(akudata);
         return;
     } else if (output.contains("Lock is present")) {
         kDebug() << "The archive is LOCKED";
@@ -188,7 +194,6 @@ void RarPlugin::loadArchive()
 
     QTextStream stream(&output);
     QString line;
-    AkuData akudata;
     QStringList file;
     int i = 0;
 

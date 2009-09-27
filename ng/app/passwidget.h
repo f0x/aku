@@ -46,7 +46,7 @@ class PassWidget : public QWidget
     private:
         QWidget *m_base;
         QLabel *m_tipLabel;
-        QToolButton *m_closeButton;
+        //QToolButton *m_closeButton;
         QTimeLine *m_timeLine;
         bool m_hiding;
         bool m_mouseIn;
@@ -60,8 +60,8 @@ class PassWidget : public QWidget
 
     protected:
         void resizeEvent(QResizeEvent*);
-        void enterEvent(QEvent *event);
-        void leaveEvent(QEvent *event);
+      //  void enterEvent(QEvent *event);
+      //  void leaveEvent(QEvent *event);
 
 };
 

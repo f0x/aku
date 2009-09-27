@@ -20,7 +20,6 @@
 
 #include "mainwindow.h"
 #include "pluginloader.h"
-//#include "akuplugin.h"
 #include "akutreeview.h"
 #include "akutreemodel.h"
 //#include "infodialog.h"
@@ -67,6 +66,8 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
 
     m_passwordWidget = new PassWidget(baseWidget);
     m_passwordWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    //m_passwordWidget->show();
+    m_passwordWidget->setTooltip("ciao");
 
     m_treeView = new AkuTreeView(baseWidget);
     m_treeView->setModel(m_sortFilterModel);
@@ -213,6 +214,12 @@ void MainWindow::showPluginsInfo()
 
 void MainWindow::showArchiveContent(const AkuData &akudata)
 {
+    // if this condition is true, we need to ask for the header
+    // password and reload the archive
+    if (akudata.headerprotected) {
+        m_passwordWidget->show();
+    }
+
     if (akudata.paths.isEmpty()) {
         return;
     }
