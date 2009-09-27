@@ -48,6 +48,9 @@ class MainWindow : public KXmlGuiWindow
     void setupActions();
     void setupConnections();
 
+    QAction *actionMain;
+    QAction *actionError;
+    QAction *actionComment;
     QString m_currentPlugin;
     QStringList m_mimeTypeNames;
     QMap<QString, AkuPlugin*> m_plugins;
@@ -73,6 +76,7 @@ class MainWindow : public KXmlGuiWindow
     void showArchiveContent(const AkuData &akudata);
     void dataMetaWidget(QModelIndex);
     void selectionChanged(const QModelIndex &current, const QModelIndex &previous);
+    void tabChanged(QAction *);
 };
 
 #endif

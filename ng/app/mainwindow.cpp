@@ -87,13 +87,35 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
     pluginLoader->loadPlugins();
     //
 
-    QHBoxLayout *bottomLayout = new QHBoxLayout(baseWidget);
-    QPushButton *mainButton = new QPushButton("a");
-    QPushButton *errorButton = new QPushButton("b");
-    QPushButton *commentButton = new QPushButton("c");
+    // Bottom Widget
+    QWidget *bottomWidget = new QWidget(baseWidget);
+    QHBoxLayout *bottomLayout = new QHBoxLayout;
+    QToolButton *mainButton = new QToolButton;
+    mainButton->setAutoRaise(true);
+    QToolButton *errorButton = new QToolButton;
+    errorButton->setAutoRaise(true);
+    QToolButton *commentButton = new QToolButton;
+    commentButton->setAutoRaise(true);
+    QSpacerItem *spacer = new QSpacerItem(10, 10, QSizePolicy::Expanding, QSizePolicy::Minimum);
     bottomLayout->addWidget(mainButton);
     bottomLayout->addWidget(errorButton);
     bottomLayout->addWidget(commentButton);
+    bottomLayout->addSpacerItem(spacer);
+    bottomWidget->setLayout(bottomLayout);
+    QActionGroup *grp = new QActionGroup(this);
+    actionMain = new QAction(i18n("Main Aku"), grp);
+    actionMain->setCheckable(true);
+    actionError = new QAction(i18n("Errors Console"), grp);
+    actionError->setCheckable(true);
+    actionComment = new QAction(i18n("Comment"), grp);
+    actionComment->setCheckable(true);
+    mainButton->setDefaultAction(actionMain);
+    errorButton->setDefaultAction(actionError);
+    commentButton->setDefaultAction(actionComment);
+
+    actionMain->setChecked(true);
+    connect(grp, SIGNAL(triggered(QAction *)), this, SLOT(tabChanged(QAction *)));
+    //
 
 }
 
@@ -227,6 +249,10 @@ void MainWindow::showArchiveContent(const AkuData &akudata)
         //passwordWidget->show();
     }
 
+    if (!akudata.comment.isEmpty()) {
+        KMessageBox::about(this, akudata.comment, "comment");
+    }
+
     if (akudata.paths.isEmpty()) {
         return;
     }
@@ -263,4 +289,14 @@ void MainWindow::selectionChanged(const QModelIndex &current, const QModelIndex 
     Q_UNUSED(previous);
 
     dataMetaWidget(current);
+}
+
+void MainWindow::tabChanged(QAction *action)
+{
+    if (action == actionComment) {
+    }
+    else if (action == actionError) {
+    }
+    else if (action == actionMain) {
+    }
 }

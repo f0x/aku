@@ -178,6 +178,7 @@ void RarPlugin::loadArchive()
         comment.remove("Comment: ");
         comment.remove(comment.indexOf("Pathname"), comment.length());
         comment = comment.trimmed();
+        akudata.comment = comment;
         kDebug() << "COMMENT: " << comment;
     }
 

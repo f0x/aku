@@ -29,6 +29,7 @@
 typedef struct {
     QVector<QStringList> paths;
     bool headerprotected;
+    QString comment;
 } AkuData;
 
 /** \class AkuPlugin akuplugin.h
