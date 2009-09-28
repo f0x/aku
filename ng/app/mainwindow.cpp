@@ -35,21 +35,23 @@
 #include <QListView>
 #include <QHBoxLayout>
 
-#include <KVBox>
-#include <KStandardAction>
-#include <KApplication>
 #include <KActionCollection>
+#include <KActionMenu>
+#include <KApplication>
 #include <KConfigDialog>
-#include <KLocale>
-#include <KRecentFilesAction>
-#include <KFileDialog>
 #include <KConfigSkeleton>
-#include <KPluginInfo>
-#include <KPluginSelector>
-#include <KServiceTypeTrader>
+#include <KFileDialog>
+#include <KFileItem>
+#include <KLocale>
 #include <KMessageBox>
 #include <KMenuBar>
-#include <KFileItem>
+#include <KPluginInfo>
+#include <KPluginSelector>
+#include <KRecentFilesAction>
+#include <KServiceTypeTrader>
+#include <KStandardAction>
+#include <KVBox>
+
 #include <KDebug>
 
 MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
@@ -103,20 +105,21 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
     bottomLayout->addSpacerItem(spacer);
     bottomWidget->setLayout(bottomLayout);
     QActionGroup *grp = new QActionGroup(this);
-    actionMain = new QAction(i18n("Main Aku"), grp);
-    actionMain->setCheckable(true);
-    actionError = new QAction(i18n("Errors Console"), grp);
-    actionError->setCheckable(true);
-    actionComment = new QAction(i18n("Comment"), grp);
-    actionComment->setCheckable(true);
-    mainButton->setDefaultAction(actionMain);
-    errorButton->setDefaultAction(actionError);
-    commentButton->setDefaultAction(actionComment);
+    m_actionMain = new QAction(i18n("Main Aku"), grp);
+    m_actionMain->setCheckable(true);
+    m_actionError = new QAction(i18n("Errors Console"), grp);
+    m_actionError->setCheckable(true);
+    m_actionComment = new QAction(i18n("Comment"), grp);
+    m_actionComment->setCheckable(true);
+    mainButton->setDefaultAction(m_actionMain);
+    errorButton->setDefaultAction(m_actionError);
+    commentButton->setDefaultAction(m_actionComment);
 
-    actionMain->setChecked(true);
+    m_actionMain->setChecked(true);
     connect(grp, SIGNAL(triggered(QAction *)), this, SLOT(tabChanged(QAction *)));
     //
 
+    loadSettings();
 }
 
 MainWindow::~MainWindow()
@@ -136,6 +139,12 @@ void MainWindow::setupActions()
     m_recentFilesAction->setToolButtonPopupMode(QToolButton::DelayedPopup);
     m_recentFilesAction->loadEntries(KGlobal::config()->group("Recent Files"));
     //
+
+    m_actionExtract = new KActionMenu(this);
+    m_actionExtract->setIcon(KIcon("archive-extract.png"));
+    m_actionExtract->setText(i18n("Extract"));
+    actionCollection()->addAction("extract", m_actionExtract);
+    connect(m_actionExtract, SIGNAL(triggered()), this, SLOT(extractDialog()));
 
     KAction* pluginsInfoAction = new KAction(this);
     pluginsInfoAction->setText(i18n("Show Plugins Information"));
@@ -293,10 +302,88 @@ void MainWindow::selectionChanged(const QModelIndex &current, const QModelIndex 
 
 void MainWindow::tabChanged(QAction *action)
 {
-    if (action == actionComment) {
+    if (action == m_actionComment) {
     }
-    else if (action == actionError) {
+    else if (action == m_actionError) {
     }
-    else if (action == actionMain) {
+    else if (action == m_actionMain) {
     }
 }
+
+void MainWindow::extractDialog()
+{
+    ExtractionDialog *extractionDialog = new ExtractionDialog(this);
+    connect(extractionDialog, SIGNAL(extractionClicked(const KUrl &)), this, SLOT(doExtraction(const KUrl &)));
+    extractionDialog->setAdvancedWidget(m_plugins[m_currentPlugin]->extractionWidget());
+    extractionDialog->exec();
+}
+
+void MainWindow::loadSettings()
+{
+    QAction *actionHome = new QAction(QDir::homePath(), this);
+    QAction *actionDesktop = new QAction(KGlobalSettings::desktopPath(), this);
+
+    actionHome->setIcon(KIcon("user-home"));
+    actionDesktop->setIcon(KIcon("user-desktop"));
+
+    actionHome->setData(QDir::homePath());
+    actionDesktop->setData(KGlobalSettings::desktopPath());
+
+    KAction *actionLabel = new KAction(this);
+    actionLabel->setText(i18n("Quick extracto to"));
+    actionLabel->setIcon(KIcon("archive-extract"));
+    actionLabel->setEnabled(false);
+
+    m_actionExtract->addAction(actionLabel);
+    m_actionExtract->addSeparator();
+    m_actionExtract->addAction(actionHome);
+    m_actionExtract->addAction(actionDesktop);
+
+    connect(actionHome, SIGNAL(triggered()), this, SLOT(recentDir()));
+    connect(actionDesktop, SIGNAL(triggered()), this, SLOT(recentDir()));
+
+    QStringList pathsList;
+    pathsList = KConfigGroup(KGlobal::config(), "Favourite Dirs").readEntry("destinationDirs", QStringList());
+    foreach (const KUrl &path, pathsList) {
+        KAction *recentDir = new KAction(this);
+        recentDir->setData(QVariant(path.pathOrUrl()));
+        //kDebug() << recentDir->data().toString();
+        recentDir->setText(path.pathOrUrl());
+        recentDir->setIcon(KIcon("inode-directory"));
+        m_actionExtract->addAction(recentDir);
+        connect(recentDir, SIGNAL(triggered()), this, SLOT(recentDir()));
+    }
+}
+
+void MainWindow::recentDir()
+{
+    KAction *sender = static_cast<KAction*>(this->sender());
+    KUrl url(sender->data().toString());
+    kDebug() << url;
+    kDebug() << sender->data().toString();
+    extract(url);
+}
+
+void MainWindow::extract(const KUrl &destination)
+{
+    // TODO: retrieve selected files to extract
+    kDebug() << "extracting to" << destination;
+    QStringList files = m_treeView->selectedPaths();
+
+    m_plugins[m_currentPlugin]->extract(m_currentUrl, destination, files);
+
+    KConfigGroup options(KGlobal::config()->group("Favourite Dirs"));
+    QStringList urlList = options.readEntry("destinationDirs", QStringList());
+
+    if (urlList.contains(destination.pathOrUrl()) ||
+        destination == KUrl(KGlobalSettings::desktopPath()) ||
+        destination == KUrl(QDir::homePath())) {
+        kDebug() << destination.pathOrUrl();
+        return;
+    }
+
+    urlList.prepend(destination.path());
+    kDebug() << urlList;
+    options.writeEntry("destinationDirs", urlList);
+}
+

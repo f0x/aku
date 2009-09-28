@@ -64,7 +64,7 @@ ExtractionDialog::ExtractionDialog(QWidget *parent) : KDialog(parent),
                          m_dirView->columnWidth(1) +
                          m_dirView->columnWidth(2);
 
-//     kDebug() << minWidth << sizeHint().width();
+    // kDebug() << minWidth << sizeHint().width();
 
     m_dirView->setMinimumSize(minWidth, 0);
     
@@ -80,12 +80,7 @@ ExtractionDialog::ExtractionDialog(QWidget *parent) : KDialog(parent),
     connect(this, SIGNAL(okClicked()), this, SLOT(slotExtraction()));
     connect(m_dirView, SIGNAL(currentChanged(const KUrl &)), this, SLOT(updateCombo(const KUrl &)));
 
-    //AkuTooltip *tip = new AkuTooltip(this);
-    //ui.verticalLayout->insertWidget(0, tip);
-    //tip->setTooltip(i18n("The destination path will be created if necessary"));
-    //AkuTooltipManager::instance()->showTip(tip);
-
-    resize(400, height());
+    resize(450, height());
     //connect(ui.buttonNewDir, SIGNAL(clicked()), this, SLOT(createNewDir()));
 }
 
@@ -106,7 +101,6 @@ void ExtractionDialog::slotExtraction()
         KMessageBox::error(this, i18n("The specified url is not valid. Cannot extract."), i18n("Invalid destination url"));
         return;
     }
-
 
     if (!QDir(url.pathOrUrl()).exists()) {     
         KIO::mkdir(url);

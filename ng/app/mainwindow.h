@@ -29,6 +29,7 @@
 class AkuTreeModel;
 class AkuTreeView;
 class FilterWidget;
+class KActionMenu;
 class KPluginInfo;
 class KRecentFilesAction;
 class MetaWidget;
@@ -48,9 +49,9 @@ class MainWindow : public KXmlGuiWindow
     void setupActions();
     void setupConnections();
 
-    QAction *actionMain;
-    QAction *actionError;
-    QAction *actionComment;
+    QAction *m_actionMain;
+    QAction *m_actionError;
+    QAction *m_actionComment;
     QString m_currentPlugin;
     QStringList m_mimeTypeNames;
     QMap<QString, AkuPlugin*> m_plugins;
@@ -62,6 +63,7 @@ class MainWindow : public KXmlGuiWindow
     MetaWidget *m_metaWidget;
     SortFilterModel *m_sortFilterModel;
 
+    KActionMenu *m_actionExtract;
     KRecentFilesAction *m_recentFilesAction;
     KUrl m_currentUrl;
 
@@ -77,6 +79,10 @@ class MainWindow : public KXmlGuiWindow
     void dataMetaWidget(QModelIndex);
     void selectionChanged(const QModelIndex &current, const QModelIndex &previous);
     void tabChanged(QAction *);
+    void extractDialog();
+    void loadSettings();
+    void recentDir();
+    void extract(const KUrl &destination);
 };
 
 #endif

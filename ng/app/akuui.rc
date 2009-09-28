@@ -17,6 +17,7 @@
   </MenuBar>
 
   <ToolBar name="mainToolBar" >
+      <Action name="extract" />
   </ToolBar>
 
 </gui>
