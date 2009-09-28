@@ -24,8 +24,9 @@
 #include <QWidget>
 
 class QLabel;
-class QToolButton;
 class QTimeLine;
+
+class KHBox;
 
 class PassWidget : public QWidget
 {
@@ -37,23 +38,21 @@ public:
 
     QSize sizeHint() const;
 
+    void setArchiveName(QString);
+
 public slots:
-    void setTooltip(const QString &);
+    void askPassword();
 
 private slots:
-    void showTip();
-    void hideTip();
+    void hideWidget();
+    void buttonPressed();
 
 private:
-    QWidget *m_base;
-    QLabel *m_tipLabel;
-    QToolButton *m_closeButton;
+    KHBox *m_base;
     QTimeLine *m_timeLine;
-    bool m_hiding;
-    bool m_mouseIn;
+    QLabel *m_filenameLabel;
 
-//signals:
-//    void tooltipClosed(AkuTooltip *);
+    bool m_hiding;
 
 protected slots:
     void animate(int);

@@ -69,6 +69,8 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
 
     m_filterWidget = new FilterWidget(baseWidget, m_sortFilterModel);
 
+    m_passwordWidget = new PassWidget(baseWidget);
+
     m_treeView = new AkuTreeView(baseWidget);
     m_treeView->setModel(m_sortFilterModel);
 
@@ -192,6 +194,7 @@ void MainWindow::addPlugins(AkuPlugin *plugin, const KPluginInfo &info)
     //connect(plugin, SIGNAL(operationCompleted()), this, SLOT(completeOperations()));
     //connect(plugin, SIGNAL(notifyExtractionComplete()), this, SLOT(extractionCompleteSlot()));
     connect(plugin, SIGNAL(error(const QString &)), this, SLOT(handleError(const QString &)));
+    connect(plugin, SIGNAL(stateChanged()), this, SLOT(pluginStateChanged()));
 
     foreach (const QString &mimeName, plugin->mimeTypeNames()) {
         KMimeType::Ptr mime = KMimeType::mimeType(mimeName);
@@ -261,10 +264,8 @@ void MainWindow::showArchiveContent(const AkuData &akudata)
     // if this condition is true, we need to ask for the header
     // password and reload the archive
     if (akudata.headerprotected) {
-        //PassWidget *passwordWidget = new PassWidget(baseWidget);
-        //passwordWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-        //passwordWidget->setTooltip("ciao");
-        //passwordWidget->show();
+        m_passwordWidget->setArchiveName(m_currentUrl.prettyUrl());
+        m_passwordWidget->askPassword();
     }
 
     if (!akudata.comment.isEmpty()) {
@@ -415,4 +416,17 @@ void MainWindow::handleError(const QString &error)
 {
     AkuPlugin *sender = static_cast<AkuPlugin *>(this->sender());
     KMessageBox::error(this, error, i18n("Plugin error"));
+}
+
+void MainWindow::pluginStateChanged()
+{
+    kDebug() << "state changed";
+    AkuPlugin *sender = static_cast<AkuPlugin *>(this->sender());
+    switch (sender->currentOperation()) {
+        case AkuPlugin::Extracting :
+            break;
+        case AkuPlugin::Loading :
+            break;
+        default: ;
+    }
 }

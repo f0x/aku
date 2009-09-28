@@ -33,7 +33,9 @@ class FilterWidget;
 class KActionMenu;
 class KPluginInfo;
 class KRecentFilesAction;
+class KVBox;
 class MetaWidget;
+class PassWidget;
 class QDockWidget;
 class QModelIndex;
 class SortFilterModel;
@@ -63,6 +65,7 @@ class MainWindow : public KXmlGuiWindow
     CommentWidget *m_commentWidget;
     FilterWidget *m_filterWidget;
     MetaWidget *m_metaWidget;
+    PassWidget *m_passwordWidget;
     SortFilterModel *m_sortFilterModel;
 
     KActionMenu *m_actionExtract;
@@ -88,6 +91,7 @@ class MainWindow : public KXmlGuiWindow
     void showArchiveContent(const AkuData &akudata);
     void showPluginsInfo();
     void tabChanged(QAction *);
+    void pluginStateChanged();
 };
 
 #endif

@@ -36,6 +36,7 @@ public:
 private:
     KTextEdit *m_textEdit;
     QLabel *m_label;
+    QLabel *m_size;
 
 private slots:
     void loadFromFile();

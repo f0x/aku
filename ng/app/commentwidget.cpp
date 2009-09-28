@@ -60,8 +60,17 @@ CommentWidget::CommentWidget(QWidget *parent) : QWidget(parent)
     hlayout->addWidget(loadButton);
     hlayout->addWidget(saveButton);
 
+    QHBoxLayout *hlayout2 = new QHBoxLayout;
+    QLabel *labelSize = new QLabel(i18n("byte(s)"));
+    m_size = new QLabel;
+    hlayout2->addSpacerItem(new QSpacerItem(10, 10, QSizePolicy::Expanding, QSizePolicy::Minimum));
+    hlayout2->addWidget(m_size);
+    hlayout2->addWidget(labelSize);
+    hlayout2->addSpacing(10);
+
     layout->addLayout(hlayout);
     layout->addWidget(m_textEdit);
+    layout->addLayout(hlayout2);
     setLayout(layout);
 
     hide();
@@ -74,6 +83,7 @@ CommentWidget::~CommentWidget()
 void CommentWidget::setComment(QString comment)
 {
     m_textEdit->setText(comment);
+    m_label->clear();
 }
 
 void CommentWidget::loadFromFile()
@@ -96,6 +106,8 @@ void CommentWidget::saveComment()
 void CommentWidget::commentChanged()
 {
     m_label->setText(i18n("The comment has changed"));
+    QByteArray text = m_textEdit->toPlainText().toLocal8Bit();
+    m_size->setText(QString::number(text.size()));
 }
 
 void CommentWidget::clearComment()

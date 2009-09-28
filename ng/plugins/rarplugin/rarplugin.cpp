@@ -152,7 +152,6 @@ void RarPlugin::loadArchive()
     output = process.readAllStandardOutput();
 
     if (output.contains("CRC failed in")) {
-        puts("HELLO");
         kDebug() << "The archive is HEADER PROTECTED";
         akudata.headerprotected = true;
         onArchiveLoaded(akudata);
