@@ -125,7 +125,7 @@ void AkuPlugin::load(const KUrl &fileName)
     if (!d->helper) {
         d->helper = new AkuJobs::AkuHelper(this);
     }
-    //connect (d->helper, SIGNAL(error(const QString &)), this, SIGNAL(error(const QString &)));
+    connect (d->helper, SIGNAL(error(const QString &)), this, SIGNAL(error(const QString &)));
     connect (d->helper, SIGNAL(archiveLoaded(AkuData)), this, SIGNAL(archiveLoaded(AkuData)));
     //connect (d->helper, SIGNAL(progressUpdate(double, double)), this, SIGNAL(progressUpdate(double, double)));
 

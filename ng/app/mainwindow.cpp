@@ -19,17 +19,19 @@
  ***************************************************************************/
 
 #include "mainwindow.h"
-#include "pluginloader.h"
-#include "akutreeview.h"
+
 #include "akutreemodel.h"
-//#include "infodialog.h"
-#include "pluginsmodel.h"
-#include "filterwidget.h"
-#include "sortfiltermodel.h"
-#include "metawidget.h"
 #include "akutreenode.h"
-#include "passwidget.h"
+#include "akutreeview.h"
+#include "commentwidget.h"
 #include "extractiondialog.h"
+#include "filterwidget.h"
+//#include "infodialog.h"
+#include "metawidget.h"
+#include "passwidget.h"
+#include "pluginloader.h"
+#include "pluginsmodel.h"
+#include "sortfiltermodel.h"
 
 #include <QDockWidget>
 #include <QListView>
@@ -88,6 +90,10 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
           this, SLOT(addPlugins(AkuPlugin*, const KPluginInfo &)));
     pluginLoader->loadPlugins();
     //
+
+    // Comment Widget
+    m_commentWidget = new CommentWidget(baseWidget);
+    ///
 
     // Bottom Widget
     QWidget *bottomWidget = new QWidget(baseWidget);
@@ -183,6 +189,9 @@ void MainWindow::addPlugins(AkuPlugin *plugin, const KPluginInfo &info)
 {
     connect(plugin, SIGNAL(archiveLoaded(const AkuData &)),
             this, SLOT(showArchiveContent(const AkuData &)));
+    //connect(plugin, SIGNAL(operationCompleted()), this, SLOT(completeOperations()));
+    //connect(plugin, SIGNAL(notifyExtractionComplete()), this, SLOT(extractionCompleteSlot()));
+    connect(plugin, SIGNAL(error(const QString &)), this, SLOT(handleError(const QString &)));
 
     foreach (const QString &mimeName, plugin->mimeTypeNames()) {
         KMimeType::Ptr mime = KMimeType::mimeType(mimeName);
@@ -259,7 +268,10 @@ void MainWindow::showArchiveContent(const AkuData &akudata)
     }
 
     if (!akudata.comment.isEmpty()) {
-        KMessageBox::about(this, akudata.comment, "comment");
+        //KMessageBox::about(this, akudata.comment, "comment");
+        m_commentWidget->setComment(akudata.comment);
+    } else {
+        m_commentWidget->clearComment();
     }
 
     if (akudata.paths.isEmpty()) {
@@ -302,11 +314,23 @@ void MainWindow::selectionChanged(const QModelIndex &current, const QModelIndex 
 
 void MainWindow::tabChanged(QAction *action)
 {
+
     if (action == m_actionComment) {
+        m_treeView->hide();
+        m_commentWidget->show();
+
+        filterWidgetIsVisible = m_filterWidget->isVisible();
+        m_filterWidget->setVisible(false);
+        m_filterWidget->action()->setEnabled(false);
     }
     else if (action == m_actionError) {
     }
     else if (action == m_actionMain) {
+        m_commentWidget->hide();
+        m_treeView->show();
+
+        m_filterWidget->action()->setEnabled(true);
+        m_filterWidget->setVisible(filterWidgetIsVisible);
     }
 }
 
@@ -339,8 +363,8 @@ void MainWindow::loadSettings()
     m_actionExtract->addAction(actionHome);
     m_actionExtract->addAction(actionDesktop);
 
-    connect(actionHome, SIGNAL(triggered()), this, SLOT(recentDir()));
-    connect(actionDesktop, SIGNAL(triggered()), this, SLOT(recentDir()));
+    connect(actionHome, SIGNAL(triggered()), this, SLOT(recentDirData()));
+    connect(actionDesktop, SIGNAL(triggered()), this, SLOT(recentDirData()));
 
     QStringList pathsList;
     pathsList = KConfigGroup(KGlobal::config(), "Favourite Dirs").readEntry("destinationDirs", QStringList());
@@ -351,11 +375,11 @@ void MainWindow::loadSettings()
         recentDir->setText(path.pathOrUrl());
         recentDir->setIcon(KIcon("inode-directory"));
         m_actionExtract->addAction(recentDir);
-        connect(recentDir, SIGNAL(triggered()), this, SLOT(recentDir()));
+        connect(recentDir, SIGNAL(triggered()), this, SLOT(recentDirData()));
     }
 }
 
-void MainWindow::recentDir()
+void MainWindow::recentDirData()
 {
     KAction *sender = static_cast<KAction*>(this->sender());
     KUrl url(sender->data().toString());
@@ -387,3 +411,8 @@ void MainWindow::extract(const KUrl &destination)
     options.writeEntry("destinationDirs", urlList);
 }
 
+void MainWindow::handleError(const QString &error)
+{
+    AkuPlugin *sender = static_cast<AkuPlugin *>(this->sender());
+    KMessageBox::error(this, error, i18n("Plugin error"));
+}

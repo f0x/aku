@@ -15,6 +15,7 @@ set( aku_SRCS
      metawidget.cpp
      passwidget.cpp
      extractiondialog.cpp
+     commentwidget.cpp
    )
 
 kde4_add_ui_files(aku_SRCS extractiondialog.ui)

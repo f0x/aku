@@ -28,6 +28,7 @@
 
 class AkuTreeModel;
 class AkuTreeView;
+class CommentWidget;
 class FilterWidget;
 class KActionMenu;
 class KPluginInfo;
@@ -59,6 +60,7 @@ class MainWindow : public KXmlGuiWindow
 
     AkuTreeModel *m_model;
     AkuTreeView *m_treeView;
+    CommentWidget *m_commentWidget;
     FilterWidget *m_filterWidget;
     MetaWidget *m_metaWidget;
     SortFilterModel *m_sortFilterModel;
@@ -67,22 +69,25 @@ class MainWindow : public KXmlGuiWindow
     KRecentFilesAction *m_recentFilesAction;
     KUrl m_currentUrl;
 
+    bool filterWidgetIsVisible;
+
   public slots:
     void load(const KUrl);
 
   private slots:
-    void openDialog();
     void addPlugins(AkuPlugin*, const KPluginInfo &);
-    void showPluginsInfo();
     void configureAku();
-    void showArchiveContent(const AkuData &akudata);
     void dataMetaWidget(QModelIndex);
-    void selectionChanged(const QModelIndex &current, const QModelIndex &previous);
-    void tabChanged(QAction *);
-    void extractDialog();
-    void loadSettings();
-    void recentDir();
     void extract(const KUrl &destination);
+    void extractDialog();
+    void handleError(const QString &);
+    void loadSettings();
+    void openDialog();
+    void recentDirData();
+    void selectionChanged(const QModelIndex &current, const QModelIndex &previous);
+    void showArchiveContent(const AkuData &akudata);
+    void showPluginsInfo();
+    void tabChanged(QAction *);
 };
 
 #endif
