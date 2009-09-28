@@ -39,6 +39,7 @@ class PassWidget;
 class QDockWidget;
 class QModelIndex;
 class SortFilterModel;
+class StatusBar;
 
 class MainWindow : public KXmlGuiWindow
 {
@@ -67,6 +68,7 @@ class MainWindow : public KXmlGuiWindow
     MetaWidget *m_metaWidget;
     PassWidget *m_passwordWidget;
     SortFilterModel *m_sortFilterModel;
+    StatusBar *m_statusBar;
 
     KActionMenu *m_actionExtract;
     KRecentFilesAction *m_recentFilesAction;

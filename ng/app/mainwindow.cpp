@@ -32,6 +32,7 @@
 #include "pluginloader.h"
 #include "pluginsmodel.h"
 #include "sortfiltermodel.h"
+#include "statusbar.h"
 
 #include <QDockWidget>
 #include <QListView>
@@ -97,6 +98,10 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
     m_commentWidget = new CommentWidget(baseWidget);
     ///
 
+    // Status Bar
+    m_statusBar = new StatusBar;
+    //
+
     // Bottom Widget
     QWidget *bottomWidget = new QWidget(baseWidget);
     QHBoxLayout *bottomLayout = new QHBoxLayout;
@@ -126,6 +131,8 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
     m_actionMain->setChecked(true);
     connect(grp, SIGNAL(triggered(QAction *)), this, SLOT(tabChanged(QAction *)));
     //
+
+
 
     loadSettings();
 }
