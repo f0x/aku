@@ -88,13 +88,14 @@ PassWidget::PassWidget(QWidget *parent) : QWidget(parent)
     m_lineEdit->setClickMessage(i18n("Enter the password..."));
     m_lineEdit->setPasswordMode(true);
     m_lineEdit->setClearButtonShown(true);
+    connect(m_lineEdit, SIGNAL(returnPressed()), this, SLOT(buttonOkPressed()));
 
     QCheckBox *checkBox = new QCheckBox(i18n("Hidden"), widget);
     checkBox->setChecked(true);
     connect(checkBox, SIGNAL(clicked(bool)), m_lineEdit, SLOT(setPasswordMode(bool)));
 
     KPushButton *okButton = new KPushButton(KIcon("dialog-ok-apply"), i18n("Enter"), widget);
-    connect(okButton, SIGNAL(clicked()), this, SLOT(buttonPressed()));
+    connect(okButton, SIGNAL(clicked()), this, SLOT(buttonOkPressed()));
     KPushButton *closeButton = new KPushButton(KIcon("dialog-close"), i18n("Abort"), widget);
     connect(closeButton, SIGNAL(clicked()), this, SLOT(hideWidget()));
 
@@ -203,7 +204,7 @@ void PassWidget::setArchiveName(QString name)
     m_filenameLabel->setText(file.fileName());
 }
 
-void PassWidget::buttonPressed()
+void PassWidget::buttonOkPressed()
 {
     emit password(m_lineEdit->text());
     m_password = m_lineEdit->text();

@@ -47,7 +47,7 @@ public slots:
 
 private slots:
     void hideWidget();
-    void buttonPressed();
+    void buttonOkPressed();
 
 private:
     KHBox *m_base;
