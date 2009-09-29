@@ -26,6 +26,7 @@
 #include <KXmlGuiWindow>
 #include <KUrl>
 
+class AkuStatusBar;
 class AkuTreeModel;
 class AkuTreeView;
 class CommentWidget;
@@ -39,7 +40,6 @@ class PassWidget;
 class QDockWidget;
 class QModelIndex;
 class SortFilterModel;
-class StatusBar;
 
 class MainWindow : public KXmlGuiWindow
 {
@@ -68,7 +68,7 @@ class MainWindow : public KXmlGuiWindow
     MetaWidget *m_metaWidget;
     PassWidget *m_passwordWidget;
     SortFilterModel *m_sortFilterModel;
-    StatusBar *m_statusBar;
+    AkuStatusBar *m_statusBar;
 
     KActionMenu *m_actionExtract;
     KRecentFilesAction *m_recentFilesAction;

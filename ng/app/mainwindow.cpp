@@ -32,7 +32,7 @@
 #include "pluginloader.h"
 #include "pluginsmodel.h"
 #include "sortfiltermodel.h"
-#include "statusbar.h"
+#include "akustatusbar.h"
 
 #include <QDockWidget>
 #include <QListView>
@@ -99,7 +99,7 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
     ///
 
     // Status Bar
-    m_statusBar = new StatusBar;
+    m_statusBar = new AkuStatusBar(this);
     //
 
     // Bottom Widget

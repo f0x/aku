@@ -17,18 +17,12 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#ifndef STATUSBAR_H
-#define STATUSBAR_H
+#include "akustatusbar.h"
 
-#include <KStatusBar>
-
-class StatusBar : public KStatusBar
+AkuStatusBar::AkuStatusBar(QWidget *parent) : KStatusBar(parent)
 {
-    Q_OBJECT
+}
 
-public:
-    StatusBar(QWidget *parent = 0);
-    ~StatusBar();
-};
-
-#endif // STATUSBAR_H
+AkuStatusBar::~AkuStatusBar()
+{
+}

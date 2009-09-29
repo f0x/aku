@@ -26,7 +26,8 @@
 #include <aku_macros.h>
 
 // AkuData
-typedef struct {
+typedef struct AkuData {
+    AkuData() : headerprotected(false) {}
     QVector<QStringList> paths;
     bool headerprotected;
     QString comment;
