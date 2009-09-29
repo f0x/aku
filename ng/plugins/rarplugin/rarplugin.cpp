@@ -126,9 +126,10 @@ bool RarPlugin::canLock()
     return rarLock;
 }
 
-void RarPlugin::init(const KUrl &fileName)
+void RarPlugin::init(const KUrl &fileName, const QString &password)
 {
     m_fileName = fileName;
+    m_password = password;
 }
 
 void RarPlugin::loadArchive()
@@ -144,7 +145,14 @@ void RarPlugin::loadArchive()
 
     // v[t,b]        Verbosely list archive [technical,bare]
     // -p-            Do not query password
-    options << "vt" << "-p-" << m_fileName.pathOrUrl();
+    options << "vt" << "-p-";
+
+    if (!m_password.isEmpty()) {
+        options << "-p" + m_password;
+        kDebug() << options;
+    }
+
+    options << m_fileName.pathOrUrl();
 
     process.start(exeName, options);
     process.waitForFinished();
@@ -163,7 +171,15 @@ void RarPlugin::loadArchive()
     options.clear();
 
     // we start the real archive list
-    options << "v" << m_fileName.pathOrUrl();
+    options << "v";
+
+    if (!m_password.isEmpty()) {
+        options << "-p" + m_password;
+        kDebug() << options;
+    }
+
+    options << m_fileName.pathOrUrl();
+
 
     process.start(exeName, options);
     process.waitForFinished();

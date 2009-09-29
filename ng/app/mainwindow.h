@@ -57,6 +57,7 @@ class MainWindow : public KXmlGuiWindow
     QAction *m_actionError;
     QAction *m_actionComment;
     QString m_currentPlugin;
+    QString m_password;
     QStringList m_mimeTypeNames;
     QMap<QString, AkuPlugin*> m_plugins;
     QDockWidget *m_infoDock;
@@ -94,6 +95,7 @@ class MainWindow : public KXmlGuiWindow
     void showPluginsInfo();
     void tabChanged(QAction *);
     void pluginStateChanged();
+    void getPassword(const QString &);
 };
 
 #endif

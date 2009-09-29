@@ -113,11 +113,11 @@ QWidget* AkuPlugin::extractionWidget()
     return 0;
 }
 
-void AkuPlugin::load(const KUrl &fileName)
+void AkuPlugin::load(const KUrl &fileName, const QString &password)
 {
-    if (d->currentFile != fileName) {
-        init(fileName);
-    }
+    //if (d->currentFile != fileName) {
+    init(fileName, password);
+    //}
 
     setCurrentOperation(Loading);
 
@@ -181,9 +181,10 @@ void AkuPlugin::completeOperations()
 {
 }
 
-void AkuPlugin::init(const KUrl &fileName)
+void AkuPlugin::init(const KUrl &fileName, const QString &password)
 {
     Q_UNUSED(fileName)
+    Q_UNUSED(password)
 }
 
 void AkuPlugin::extractArchive(const KUrl &destination, const QStringList &files)

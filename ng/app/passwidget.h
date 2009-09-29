@@ -25,8 +25,9 @@
 
 class QLabel;
 class QTimeLine;
-
+class QVBoxLayout;
 class KHBox;
+class KLineEdit;
 
 class PassWidget : public QWidget
 {
@@ -42,6 +43,7 @@ public:
 
 public slots:
     void askPassword();
+    void clearPassword();
 
 private slots:
     void hideWidget();
@@ -49,8 +51,14 @@ private slots:
 
 private:
     KHBox *m_base;
+    KLineEdit *m_lineEdit;
+
     QTimeLine *m_timeLine;
     QLabel *m_filenameLabel;
+    QLabel *m_warningIcon;
+    QLabel *m_warningLabel;
+    QString m_password;
+    QVBoxLayout *m_layout;
 
     bool m_hiding;
 
@@ -63,6 +71,8 @@ protected:
     void enterEvent(QEvent *event);
     void leaveEvent(QEvent *event);
 
+signals:
+    void password(const QString &);
 };
 
 #endif

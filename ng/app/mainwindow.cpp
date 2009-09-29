@@ -100,6 +100,7 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
 
     // Status Bar
     m_statusBar = new AkuStatusBar(this);
+    setStatusBar(m_statusBar);
     //
 
     // Bottom Widget
@@ -175,6 +176,9 @@ void MainWindow::setupActions()
     actionCollection()->addAction("infopanel", infoDockAction);
 
     actionCollection()->addAction("filter", m_filterWidget->action());
+
+    connect(m_passwordWidget, SIGNAL(password(const QString &)), this, SLOT(getPassword(const QString &)));
+
 
 }
 
@@ -273,6 +277,8 @@ void MainWindow::showArchiveContent(const AkuData &akudata)
     if (akudata.headerprotected) {
         m_passwordWidget->setArchiveName(m_currentUrl.prettyUrl());
         m_passwordWidget->askPassword();
+    } else {
+        m_passwordWidget->clearPassword();
     }
 
     if (!akudata.comment.isEmpty()) {
@@ -433,6 +439,22 @@ void MainWindow::pluginStateChanged()
         case AkuPlugin::Extracting :
             break;
         case AkuPlugin::Loading :
+            break;
+        default: ;
+    }
+}
+
+// get the password from the PassWidget
+void MainWindow::getPassword(const QString &password)
+{
+    m_password = password;
+    kDebug() << password;
+    switch (m_plugins[m_currentPlugin]->currentOperation()) {
+        case AkuPlugin::Extracting :
+            break;
+        case AkuPlugin::Loading :
+            m_plugins[m_currentPlugin]->load(m_currentUrl, m_password);
+            m_passwordWidget->hide();
             break;
         default: ;
     }

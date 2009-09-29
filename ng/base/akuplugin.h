@@ -129,12 +129,12 @@ class AKU_EXPORT AkuPlugin : public QObject
          * of datas for every-time access. This method is called whenever a new archive needs
          * to be loaded.
          */
-        virtual void init(const KUrl &fileName);
+        virtual void init(const KUrl &fileName, const QString &password = 0);
 
         /**
          * @internal used to load the archive in a threading way.
          */
-        void load(const KUrl &fileName);
+        void load(const KUrl &fileName, const QString &password = 0);
 
         /**
          * @internal used to extract the archive.

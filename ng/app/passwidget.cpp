@@ -53,9 +53,9 @@ PassWidget::PassWidget(QWidget *parent) : QWidget(parent)
 
     QWidget *widget = new QWidget(m_base);
 
-    QVBoxLayout *layout = new QVBoxLayout;
-    layout->setSpacing(5);
-    widget->setLayout(layout);
+    m_layout = new QVBoxLayout;
+    m_layout->setSpacing(5);
+    widget->setLayout(m_layout);
 
     QLabel *passwordIcon = new QLabel;
     passwordIcon->setPixmap(KIconLoader::global()->loadIcon("dialog-password", KIconLoader::Small));
@@ -67,7 +67,7 @@ PassWidget::PassWidget(QWidget *parent) : QWidget(parent)
     m_filenameLabel->setFont(font);
 
     QHBoxLayout *hlayout1 = new QHBoxLayout;
-    layout->addLayout(hlayout1);
+    m_layout->addLayout(hlayout1);
     hlayout1->addSpacing(10);
     hlayout1->addWidget(passwordIcon);
     hlayout1->addWidget(m_filenameLabel);
@@ -78,73 +78,61 @@ PassWidget::PassWidget(QWidget *parent) : QWidget(parent)
     infoLabel->setText(i18n("The archive is header password protected"));
 
     QHBoxLayout *hlayout2 = new QHBoxLayout;
-    layout->addLayout(hlayout2);
+    m_layout->addLayout(hlayout2);
     hlayout2->addSpacing(10);
     hlayout2->addWidget(infoLabel);
     hlayout2->addSpacerItem(new QSpacerItem(10, 10, QSizePolicy::Expanding, QSizePolicy::Fixed));
     hlayout2->setSpacing(10);
 
-    KLineEdit *lineEdit = new KLineEdit(widget);
-    lineEdit->setClickMessage(i18n("Enter the password..."));
-    lineEdit->setPasswordMode(true);
-    lineEdit->setClearButtonShown(true);
+    m_lineEdit = new KLineEdit(widget);
+    m_lineEdit->setClickMessage(i18n("Enter the password..."));
+    m_lineEdit->setPasswordMode(true);
+    m_lineEdit->setClearButtonShown(true);
 
     QCheckBox *checkBox = new QCheckBox(i18n("Hidden"), widget);
     checkBox->setChecked(true);
-    connect(checkBox, SIGNAL(clicked(bool)), lineEdit, SLOT(setPasswordMode(bool)));
+    connect(checkBox, SIGNAL(clicked(bool)), m_lineEdit, SLOT(setPasswordMode(bool)));
 
     KPushButton *okButton = new KPushButton(KIcon("dialog-ok-apply"), i18n("Enter"), widget);
     connect(okButton, SIGNAL(clicked()), this, SLOT(buttonPressed()));
     KPushButton *closeButton = new KPushButton(KIcon("dialog-close"), i18n("Abort"), widget);
-    connect(closeButton, SIGNAL(clicked()), this, SLOT(buttonPressed()));
+    connect(closeButton, SIGNAL(clicked()), this, SLOT(hideWidget()));
 
     QHBoxLayout *hlayout3 = new QHBoxLayout;
-    layout->addLayout(hlayout3);
+    m_layout->addLayout(hlayout3);
     hlayout3->addSpacing(10);
-    hlayout3->addWidget(lineEdit);
+    hlayout3->addWidget(m_lineEdit);
     hlayout3->addWidget(checkBox);
     hlayout3->addSpacerItem(new QSpacerItem(30, 10, QSizePolicy::Fixed, QSizePolicy::Fixed));
     hlayout3->addWidget(okButton);
     hlayout3->addWidget(closeButton);
     hlayout3->setSpacing(10);
 
-    QLabel *warningIcon = new QLabel(widget);
-    warningIcon->setPixmap(KIconLoader::global()->loadIcon("emblem-important", KIconLoader::Small));
-    warningIcon->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+    m_warningIcon = new QLabel(widget);
+    m_warningIcon->setPixmap(KIconLoader::global()->loadIcon("emblem-important", KIconLoader::Small));
+    m_warningIcon->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+    //m_warningIcon->setVisible(true);
 
-    font.setBold(false);
     font.setUnderline(true);
-    QLabel *warningLabel = new QLabel(widget);
-    warningLabel->setFont(font);
-    warningLabel->setText(i18n("The password is not correct. Try again"));
+    m_warningLabel = new QLabel(widget);
+    m_warningLabel->setFont(font);
+    m_warningLabel->setText(i18n("The password is not correct. Try again"));
+    //m_warningLabel->setVisible(false);
 
-    QHBoxLayout *hlayout4 = new QHBoxLayout;
-    layout->addLayout(hlayout4);
-    hlayout4->setSpacing(10);
-    hlayout4->addSpacing(10);
-    hlayout4->addWidget(warningIcon);
-    hlayout4->addWidget(warningLabel);
-    hlayout4->addSpacerItem(new QSpacerItem(10, 10, QSizePolicy::Expanding, QSizePolicy::Fixed));
-
-   // QLabel *icon = new QLabel(m_base);
-   // icon->setPixmap(KIconLoader::global()->loadIcon("dialog-information", KIconLoader::Small));
-
-   // m_tipLabel = new QLabel(m_base);
-   // m_tipLabel->setWordWrap(true);
-   // m_tipLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-   // m_tipLabel->setPalette(p);
-
-   // m_closeButton = new QToolButton(m_base);
-   // m_closeButton->setIcon(KIcon("dialog-close"));
-   // m_closeButton->setAutoRaise(true);
-   // connect(m_closeButton, SIGNAL(clicked()), this, SLOT(hideTip()));
+    QHBoxLayout *badPassLayout = new QHBoxLayout;
+    m_layout->addLayout(badPassLayout);
+    badPassLayout->setSpacing(10);
+    badPassLayout->addSpacing(10);
+    badPassLayout->addWidget(m_warningIcon);
+    badPassLayout->addWidget(m_warningLabel);
+    badPassLayout->addSpacerItem(new QSpacerItem(10, 10, QSizePolicy::Expanding, QSizePolicy::Fixed));
 
     m_timeLine = new QTimeLine(DURATION, this);
     connect(m_timeLine, SIGNAL(frameChanged(int)), this, SLOT(animate(int)));
     connect(m_timeLine, SIGNAL(finished()), this, SLOT(slotFinish()));
 
     m_base->setGeometry(0, -height(), width(), height());
-    
+
     hide();
 }
 
@@ -159,6 +147,9 @@ void PassWidget::animate(int y)
 
 void PassWidget::askPassword()
 {
+    m_warningIcon->setVisible(!m_password.isEmpty());
+    m_warningLabel->setVisible(!m_password.isEmpty());
+
     show();
     m_hiding = false;
 
@@ -172,11 +163,6 @@ void PassWidget::askPassword()
 
 void PassWidget::hideWidget()
 {
-    //bool fromButton = false;
-    //if (sender() == m_closeButton) {
-    //    fromButton = true;
-    //}
-
     m_hiding = true;
     m_timeLine->setFrameRange(0, -height());
     m_timeLine->start();
@@ -185,22 +171,17 @@ void PassWidget::hideWidget()
 void PassWidget::slotFinish()
 {
     if (m_hiding) {
-        hide();
-        //emit tooltipClosed(this);
-    } //else {
-      //  QTimer::singleShot(5000, this, SLOT(hideTip()));
-    //}
+        hide();  
+    }
 }
 
 void PassWidget::enterEvent(QEvent *event)
 {
-    //m_mouseIn = true;
     QWidget::enterEvent(event);
 }
 
 void PassWidget::leaveEvent(QEvent *event)
 {
-    //m_mouseIn = false;
     slotFinish();
     QWidget::leaveEvent(event);
 }
@@ -224,5 +205,12 @@ void PassWidget::setArchiveName(QString name)
 
 void PassWidget::buttonPressed()
 {
-    hideWidget();
+    emit password(m_lineEdit->text());
+    m_password = m_lineEdit->text();
+}
+
+void PassWidget::clearPassword()
+{
+    m_lineEdit->clear();
+    m_password.clear();
 }
