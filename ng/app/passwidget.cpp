@@ -196,10 +196,12 @@ QSize PassWidget::sizeHint() const
     return m_base->sizeHint();
 }
 
-void PassWidget::setArchiveName(QString name)
+void PassWidget::setPasswordType(QString archiveName, PasswordType passwordType)
 {
-    QFileInfo file(name);
+    QFileInfo file(archiveName);
     m_filenameLabel->setText(file.fileName());
+
+    m_passwordType = passwordType;
 }
 
 void PassWidget::buttonOkPressed()
@@ -212,4 +214,8 @@ void PassWidget::clearPassword()
 {
     m_lineEdit->clear();
     m_password.clear();
+}
+
+PassWidget::PasswordType PassWidget::currentPasswordType() {
+    return m_passwordType;
 }

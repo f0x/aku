@@ -18,6 +18,10 @@
  ***************************************************************************/
 
 #include "akustatusbar.h"
+#include "akuplugin.h"
+
+#include <KLocale>
+#include <KDebug>
 
 AkuStatusBar::AkuStatusBar(QWidget *parent) : KStatusBar(parent)
 {
@@ -25,4 +29,23 @@ AkuStatusBar::AkuStatusBar(QWidget *parent) : KStatusBar(parent)
 
 AkuStatusBar::~AkuStatusBar()
 {
+}
+
+void AkuStatusBar::stateChanged(AkuPlugin *plugin)
+{
+    switch (plugin->currentOperation()) {
+        case AkuPlugin::Extracting :
+            showMessage(i18n("Extraction in progress..."));
+            break;
+        case AkuPlugin::Loading :
+            showMessage(i18n("Loading archive..."));
+            break;
+        default: ;
+    }
+}
+
+void AkuStatusBar::operationCompleted()
+{
+    kDebug() << "Operation Completed";
+    clearMessage();
 }

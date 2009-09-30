@@ -37,19 +37,26 @@ public:
     PassWidget(QWidget *parent);
     ~PassWidget();
 
-    QSize sizeHint() const;
+    enum PasswordType {
+                        Header,
+                        Files
+                      };
 
-    void setArchiveName(QString);
+    QSize sizeHint() const;
 
 public slots:
     void askPassword();
     void clearPassword();
+    void setPasswordType(QString, PasswordType);
+    PasswordType currentPasswordType();
 
 private slots:
     void hideWidget();
     void buttonOkPressed();
 
 private:
+    PasswordType m_passwordType;
+
     KHBox *m_base;
     KLineEdit *m_lineEdit;
 

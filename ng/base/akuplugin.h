@@ -174,22 +174,22 @@ class AKU_EXPORT AkuPlugin : public QObject
          */
         void progressUpdate(double processed, double total);
 
-         /**
-          * @internal nobody should never care of this signal. 
-          * It is emitted automatically at the end of each operation.
-          */
-         void operationCompleted();
+        /**
+         * @internal nobody should never care of this signal.
+         * It is emitted automatically at the end of each operation.
+         */
+        void operationCompleted();
 
-         /**
-          * @internal notifies the end of the extraction process.
-          */
-         void notifyExtractionComplete();
+        /**
+         * @internal notifies the end of the extraction process.
+         */
+        void notifyExtractionComplete();
 
-         /**
-          * this signal is emitted each time the state changes. No need to 
-          * manually emit this signal. The state can be retrieved using currentOperation().
-          */
-         void stateChanged();
+        /**
+         * this signal is emitted each time the state changes. No need to
+         * manually emit this signal. The state can be retrieved using currentOperation().
+         */
+        void stateChanged();
 
     public slots:
         /**
@@ -210,7 +210,7 @@ class AKU_EXPORT AkuPlugin : public QObject
 
     protected slots:
         /// @internal
-        void completeOperations();
+        void updatePluginStatus();
 
     protected:
         /// @internal

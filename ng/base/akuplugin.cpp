@@ -44,8 +44,8 @@ AkuPlugin::AkuPlugin(QObject *parent) : QObject(parent),
                                         d(new AkuPluginPrivate(this))
 {
     qRegisterMetaType<AkuData>("AkuData");
-    connect (this, SIGNAL(archiveLoaded(AkuData)), this, SIGNAL(operationCompleted()));
-    connect (this, SIGNAL(operationCompleted()), this, SLOT(completeOperations()));
+    //connect (this, SIGNAL(archiveLoaded(AkuData)), this, SIGNAL(operationCompleted()));
+    //connect (this, SIGNAL(operationCompleted()), this, SLOT(completeOperations()));
 }
 
 AkuPlugin::~AkuPlugin()
@@ -130,7 +130,9 @@ void AkuPlugin::load(const KUrl &fileName, const QString &password)
     //connect (d->helper, SIGNAL(progressUpdate(double, double)), this, SIGNAL(progressUpdate(double, double)));
 
     KJob *job = new AkuJobs::LoadJob(this, this);
-    //connect(job, SIGNAL(operationCompleted()), this, SIGNAL(operationCompleted()));
+    connect(job, SIGNAL(operationCompleted()), this, SIGNAL(operationCompleted()));
+    connect(job, SIGNAL(operationCompleted()), this, SLOT(updatePluginStatus()));
+
     job->start();
 }
 
@@ -177,9 +179,9 @@ void AkuPlugin::lock(const KUrl &fileName)
     job->start();
 }
 
-void AkuPlugin::completeOperations()
-{
-}
+//void AkuPlugin::completeOperations()
+//{
+//}
 
 void AkuPlugin::init(const KUrl &fileName, const QString &password)
 {
@@ -237,4 +239,9 @@ void AkuPlugin::onProgressUpdate(double current, double total)
     }
 
     d->helper->onProgressUpdate(current, total);
+}
+
+void AkuPlugin::updatePluginStatus()
+{
+    setCurrentOperation(NoOperation);
 }

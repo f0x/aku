@@ -22,6 +22,8 @@
 
 #include <KStatusBar>
 
+class AkuPlugin;
+
 class AkuStatusBar : public KStatusBar
 {
     Q_OBJECT
@@ -29,6 +31,10 @@ class AkuStatusBar : public KStatusBar
 public:
     AkuStatusBar(QWidget *parent = 0);
     ~AkuStatusBar();
+
+public slots:
+    void stateChanged(AkuPlugin *);
+    void operationCompleted();
 };
 
 #endif

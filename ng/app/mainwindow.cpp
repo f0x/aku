@@ -87,6 +87,11 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
     setupConnections();
     setupGUI(QSize(650,460));
 
+    // Status Bar
+    m_statusBar = new AkuStatusBar(this);
+    setStatusBar(m_statusBar);
+    //
+
     // connection for pluginloader
     PluginLoader *pluginLoader = new PluginLoader(this);
     connect(pluginLoader, SIGNAL(pluginsLoaded(AkuPlugin*, const KPluginInfo &)),
@@ -97,11 +102,6 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
     // Comment Widget
     m_commentWidget = new CommentWidget(baseWidget);
     ///
-
-    // Status Bar
-    m_statusBar = new AkuStatusBar(this);
-    setStatusBar(m_statusBar);
-    //
 
     // Bottom Widget
     QWidget *bottomWidget = new QWidget(baseWidget);
@@ -203,7 +203,7 @@ void MainWindow::addPlugins(AkuPlugin *plugin, const KPluginInfo &info)
 {
     connect(plugin, SIGNAL(archiveLoaded(const AkuData &)),
             this, SLOT(showArchiveContent(const AkuData &)));
-    //connect(plugin, SIGNAL(operationCompleted()), this, SLOT(completeOperations()));
+    connect(plugin, SIGNAL(operationCompleted()), m_statusBar, SLOT(operationCompleted()));
     //connect(plugin, SIGNAL(notifyExtractionComplete()), this, SLOT(extractionCompleteSlot()));
     connect(plugin, SIGNAL(error(const QString &)), this, SLOT(handleError(const QString &)));
     connect(plugin, SIGNAL(stateChanged()), this, SLOT(pluginStateChanged()));
@@ -276,7 +276,7 @@ void MainWindow::showArchiveContent(const AkuData &akudata)
     // if this condition is true, we need to ask for the header
     // password and reload the archive
     if (akudata.headerprotected) {
-        m_passwordWidget->setArchiveName(m_currentUrl.prettyUrl());
+        m_passwordWidget->setPasswordType(m_currentUrl.prettyUrl(), PassWidget::Header);
         m_passwordWidget->askPassword();
     } else {
         m_passwordWidget->clearPassword();
@@ -434,15 +434,15 @@ void MainWindow::handleError(const QString &error)
 
 void MainWindow::pluginStateChanged()
 {
-    kDebug() << "state changed";
     AkuPlugin *sender = static_cast<AkuPlugin *>(this->sender());
-    switch (sender->currentOperation()) {
-        case AkuPlugin::Extracting :
-            break;
-        case AkuPlugin::Loading :
-            break;
-        default: ;
-    }
+    m_statusBar->stateChanged(sender);
+    //switch (sender->currentOperation()) {
+    //    case AkuPlugin::Extracting :
+    //        break;
+    //    case AkuPlugin::Loading :
+    //        break;
+    //    default: ;
+    //}
 }
 
 // get the password from the PassWidget
@@ -450,10 +450,10 @@ void MainWindow::getPassword(const QString &password)
 {
     m_password = password;
     kDebug() << password;
-    switch (m_plugins[m_currentPlugin]->currentOperation()) {
-        case AkuPlugin::Extracting :
+    switch (m_passwordWidget->currentPasswordType()) {
+        case PassWidget::Files :
             break;
-        case AkuPlugin::Loading :
+        case PassWidget::Header :
             m_plugins[m_currentPlugin]->load(m_currentUrl, m_password);
             m_passwordWidget->hide();
             break;
