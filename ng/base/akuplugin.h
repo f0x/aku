@@ -119,6 +119,8 @@ class AKU_EXPORT AkuPlugin : public QObject
         virtual void extractArchive(const KUrl &destination, const QStringList &files);
 
         /**
+          * This method is useful only for the rar archive.
+          * Locking does not permit writing operation on the archive.
          */
         virtual void lockArchive();
 

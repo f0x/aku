@@ -40,6 +40,9 @@ void AkuStatusBar::stateChanged(AkuPlugin *plugin)
         case AkuPlugin::Loading :
             showMessage(i18n("Loading archive..."));
             break;
+        case AkuPlugin::Locking :
+            showMessage(i18n("Locking archive..."));
+            break;
         default: ;
     }
 }

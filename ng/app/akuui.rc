@@ -7,6 +7,9 @@
                          http://www.kde.org/standards/kxmlgui/1.0/kxmlgui.xsd" >
 
   <MenuBar>
+   <Menu name="commands"><text>Commands</text>
+      <Action name="lock" />
+   </Menu>
    <Menu name="view" >
       <Action name="infopanel" />
       <Action name="filter" />

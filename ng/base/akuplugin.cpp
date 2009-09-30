@@ -170,18 +170,12 @@ void AkuPlugin::lock(const KUrl &fileName)
         d->helper = new AkuJobs::AkuHelper(this);
     }
     connect (d->helper, SIGNAL(error(const QString &)), this, SIGNAL(error(const QString &)));
-    connect (d->helper, SIGNAL(archiveLoaded(AkuData)), this, SIGNAL(archiveLoaded(AkuData)));
-    connect (d->helper, SIGNAL(progressUpdate(double, double)), this, SIGNAL(progressUpdate(double, double)));
 
     KJob *job = new AkuJobs::LockJob(this, this);
     connect(job, SIGNAL(operationCompleted()), this, SIGNAL(operationCompleted()));
 
     job->start();
 }
-
-//void AkuPlugin::completeOperations()
-//{
-//}
 
 void AkuPlugin::init(const KUrl &fileName, const QString &password)
 {

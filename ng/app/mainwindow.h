@@ -31,6 +31,7 @@ class AkuTreeModel;
 class AkuTreeView;
 class CommentWidget;
 class FilterWidget;
+class KAction;
 class KActionMenu;
 class KPluginInfo;
 class KRecentFilesAction;
@@ -72,6 +73,7 @@ class MainWindow : public KXmlGuiWindow
     AkuStatusBar *m_statusBar;
 
     KActionMenu *m_actionExtract;
+    KAction *m_actionLock;
     KRecentFilesAction *m_recentFilesAction;
     KUrl m_currentUrl;
 
@@ -96,6 +98,7 @@ class MainWindow : public KXmlGuiWindow
     void tabChanged(QAction *);
     void pluginStateChanged();
     void getPassword(const QString &);
+    void lockArchive();
 };
 
 #endif

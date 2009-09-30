@@ -156,6 +156,12 @@ void MainWindow::setupActions()
     m_recentFilesAction->loadEntries(KGlobal::config()->group("Recent Files"));
     //
 
+    // Lock
+    m_actionLock = new KAction(this);
+    m_actionLock->setText(i18n("Lock Archive"));
+    m_actionLock->setIcon(KIcon("document-encrypt"));
+    actionCollection()->addAction("lock", m_actionLock);
+
     // Extraction
     m_actionExtract = new KActionMenu(this);
     m_actionExtract->setIcon(KIcon("archive-extract.png"));
@@ -188,6 +194,7 @@ void MainWindow::setupConnections()
     connect(m_treeView, SIGNAL(activated(QModelIndex)), this, SLOT(dataMetaWidget(QModelIndex)));
     connect(m_treeView->selectionModel(), SIGNAL(currentChanged(QModelIndex, QModelIndex)),
             this, SLOT(selectionChanged(QModelIndex, QModelIndex)));
+    connect(m_actionLock, SIGNAL(triggered()), this, SLOT(lockArchive()));
 }
 
 void MainWindow::openDialog()
@@ -459,4 +466,9 @@ void MainWindow::getPassword(const QString &password)
             break;
         default: ;
     }
+}
+
+void MainWindow::lockArchive()
+{
+    m_plugins[m_currentPlugin]->lock(m_currentUrl);
 }
