@@ -127,14 +127,16 @@ void SzipPlugin::loadArchive()
         if (line.startsWith("Size =")) {
            //file << line.mid(7);
            size = line.mid(7);
-           file << KGlobal::locale()->formatByteSize(size.toDouble());
-           //kDebug() << file;
+           //file << KGlobal::locale()->formatByteSize(size.toDouble());
+           file << size;
+           //kDebug() << KGlobal::locale()->formatByteSize(size.toDouble());
            continue;
        }
        if (line.startsWith("Packed Size =")) {
            packed = line.mid(14);
-           file << KGlobal::locale()->formatByteSize(packed.toDouble());
-           //file << line.mid(14);
+           //kDebug() << packed;
+           //file << KGlobal::locale()->formatByteSize(packed.toDouble());
+           file << packed;
            // add the ratio value
            if (size.toInt() != 0) {
                ratio = 100 * packed.toInt() / size.toInt();
@@ -191,9 +193,10 @@ bool SzipPlugin::isInstalled()
     return false;
 }
 
-void SzipPlugin::init(const KUrl &fileName)
+void SzipPlugin::init(const KUrl &fileName, const QString &password)
 {
     m_fileName = fileName;
+    m_password = password;
 }
 
 QStringList SzipPlugin::additionalHeaderStrings()

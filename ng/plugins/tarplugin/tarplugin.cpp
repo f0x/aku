@@ -72,13 +72,15 @@ bool TarPlugin::isInstalled()
     return true;
 }
 
-void TarPlugin::init(const KUrl &fileName)
+void TarPlugin::init(const KUrl &fileName, const QString &password)
 {
     m_archive = new KTar(fileName.pathOrUrl());
 
     QFile file(fileName.pathOrUrl());
 
     size = (double)(file.size() * 1.7); // NOTE: absolutely arbitrary calculation of generic gzip compression ratio
+
+    Q_UNUSED(password)
 }
 
 void TarPlugin::loadArchive()
@@ -107,7 +109,8 @@ void TarPlugin::getEntries(const KArchiveEntry *rootEntry)
         const KArchiveFile *fileEntry = static_cast<const KArchiveFile*>(rootEntry);
 
         m_akudata.paths << (QStringList() << m_currentPath + fileEntry->name()  // file name
-                                    << KGlobal::locale()->formatByteSize(fileEntry->size()) // file size
+                                    // << KGlobal::locale()->formatByteSize(fileEntry->size()) // file size
+                                    << QString::number(fileEntry->size())
                                     << QString() // compressed size WARNING: not supported by KTar
                                     << fileEntry->user() // owner
                                     << fileEntry->group() // group

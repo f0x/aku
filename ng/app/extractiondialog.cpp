@@ -71,7 +71,6 @@ ExtractionDialog::ExtractionDialog(QWidget *parent) : KDialog(parent),
     setButtons(KDialog::Ok | KDialog::Cancel | KDialog::Default);
     setCaption(i18n("Extraction path and options"));
 
-    //ui.buttonNewDir->setIcon(KIcon("folder-new"));
     KUrlCompletion *urlCompletion = new KUrlCompletion(KUrlCompletion::DirCompletion);
     ui.comboHistoryBox->setCompletionObject(urlCompletion);
     ui.comboHistoryBox->setAutoDeleteCompletionObject(true);
@@ -81,7 +80,6 @@ ExtractionDialog::ExtractionDialog(QWidget *parent) : KDialog(parent),
     connect(m_dirView, SIGNAL(currentChanged(const KUrl &)), this, SLOT(updateCombo(const KUrl &)));
 
     resize(450, height());
-    //connect(ui.buttonNewDir, SIGNAL(clicked()), this, SLOT(createNewDir()));
 }
 
 ExtractionDialog::~ExtractionDialog()

@@ -112,9 +112,10 @@ bool AcePlugin::isInstalled()
     }
 }
 
-void AcePlugin::init(const KUrl &fileName)
+void AcePlugin::init(const KUrl &fileName, const QString &password)
 {    
     m_fileName = fileName;
+    Q_UNUSED(password)
 }
 
 void AcePlugin::loadArchive()

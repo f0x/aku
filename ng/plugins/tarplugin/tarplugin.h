@@ -50,7 +50,7 @@ class TarPlugin : public AkuPlugin
         bool isInstalled();
 
         void loadArchive();
-        void init(const KUrl &fileName);
+        void init(const KUrl &fileName, const QString &password = 0);
 
         void extractArchive(const KUrl &destination, const QStringList &files);
 

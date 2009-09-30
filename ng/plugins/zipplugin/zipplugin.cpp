@@ -74,9 +74,10 @@ bool ZipPlugin::isInstalled()
     return true;
 }
 
-void ZipPlugin::init(const KUrl &fileName)
+void ZipPlugin::init(const KUrl &fileName, const QString &password)
 {
     m_archive = new KZip(fileName.pathOrUrl());
+    Q_UNUSED(password)
 }
 
 void ZipPlugin::loadArchive()
@@ -106,8 +107,10 @@ void ZipPlugin::getEntries(const KArchiveEntry *rootEntry)
         const KZipFileEntry *fileEntry = static_cast<const KZipFileEntry*>(rootEntry);
 
         m_akudata.paths << (QStringList() << m_currentPath + fileEntry->name()  // file name
-                                    << KGlobal::locale()->formatByteSize(fileEntry->size()) // file size
-                                    << KGlobal::locale()->formatByteSize(fileEntry->compressedSize()) // compressed size
+                                    //<< KGlobal::locale()->formatByteSize(fileEntry->size()) // file size
+                                    << QString::number(fileEntry->size())
+                                    //<< KGlobal::locale()->formatByteSize(fileEntry->compressedSize()) // compressed size
+                                    << QString::number(fileEntry->compressedSize())
                                     << QString::number(fileEntry->crc32(), 16) // crc
                                     << QString::number(fileEntry->encoding()) // method
                                     << fileEntry->user() // owner

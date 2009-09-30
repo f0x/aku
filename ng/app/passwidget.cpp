@@ -112,13 +112,11 @@ PassWidget::PassWidget(QWidget *parent) : QWidget(parent)
     m_warningIcon = new QLabel(widget);
     m_warningIcon->setPixmap(KIconLoader::global()->loadIcon("emblem-important", KIconLoader::Small));
     m_warningIcon->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
-    //m_warningIcon->setVisible(true);
 
     font.setUnderline(true);
     m_warningLabel = new QLabel(widget);
     m_warningLabel->setFont(font);
-    m_warningLabel->setText(i18n("The password is not correct. Try again"));
-    //m_warningLabel->setVisible(false);
+    m_warningLabel->setText(i18n("The password is NOT CORRECT. Try again"));
 
     QHBoxLayout *badPassLayout = new QHBoxLayout;
     m_layout->addLayout(badPassLayout);

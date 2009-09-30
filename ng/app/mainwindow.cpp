@@ -156,6 +156,7 @@ void MainWindow::setupActions()
     m_recentFilesAction->loadEntries(KGlobal::config()->group("Recent Files"));
     //
 
+    // Extraction
     m_actionExtract = new KActionMenu(this);
     m_actionExtract->setIcon(KIcon("archive-extract.png"));
     m_actionExtract->setText(i18n("Extract"));
@@ -351,7 +352,7 @@ void MainWindow::tabChanged(QAction *action)
 void MainWindow::extractDialog()
 {
     ExtractionDialog *extractionDialog = new ExtractionDialog(this);
-    connect(extractionDialog, SIGNAL(extractionClicked(const KUrl &)), this, SLOT(doExtraction(const KUrl &)));
+    connect(extractionDialog, SIGNAL(extractionClicked(const KUrl &)), this, SLOT(extract(const KUrl &)));
     extractionDialog->setAdvancedWidget(m_plugins[m_currentPlugin]->extractionWidget());
     extractionDialog->exec();
 }
@@ -405,24 +406,24 @@ void MainWindow::recentDirData()
 void MainWindow::extract(const KUrl &destination)
 {
     // TODO: retrieve selected files to extract
-    kDebug() << "extracting to" << destination;
     QStringList files = m_treeView->selectedPaths();
+    kDebug() << files;
 
-    m_plugins[m_currentPlugin]->extract(m_currentUrl, destination, files);
+    //m_plugins[m_currentPlugin]->extract(m_currentUrl, destination, files);
 
+    // update the favourite extraction dirs
     KConfigGroup options(KGlobal::config()->group("Favourite Dirs"));
     QStringList urlList = options.readEntry("destinationDirs", QStringList());
-
     if (urlList.contains(destination.pathOrUrl()) ||
         destination == KUrl(KGlobalSettings::desktopPath()) ||
         destination == KUrl(QDir::homePath())) {
         kDebug() << destination.pathOrUrl();
         return;
     }
-
     urlList.prepend(destination.path());
-    kDebug() << urlList;
     options.writeEntry("destinationDirs", urlList);
+    //kDebug() << urlList;
+    //
 }
 
 void MainWindow::handleError(const QString &error)

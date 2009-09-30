@@ -47,7 +47,7 @@ class SzipPlugin : public AkuPlugin
         bool isInstalled();
 
         void loadArchive();
-        void init(const KUrl &fileName);
+        void init(const KUrl &fileName, const QString &password);
 
         QStringList additionalHeaderStrings();
 
@@ -55,6 +55,7 @@ class SzipPlugin : public AkuPlugin
 
      private:
         KUrl m_fileName;
+        QString m_password;
 
 };
 
