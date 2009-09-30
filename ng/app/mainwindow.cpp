@@ -33,6 +33,7 @@
 #include "pluginsmodel.h"
 #include "sortfiltermodel.h"
 #include "akustatusbar.h"
+#include "errorwidget.h"
 
 #include <QDockWidget>
 #include <QListView>
@@ -101,7 +102,13 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
 
     // Comment Widget
     m_commentWidget = new CommentWidget(baseWidget);
+    m_commentWidget->hide();
     ///
+
+    // Error Widget
+    m_errorWidget = new ErrorWidget(baseWidget);
+    m_errorWidget->hide();
+    //
 
     // Bottom Widget
     QWidget *bottomWidget = new QWidget(baseWidget);
@@ -336,23 +343,26 @@ void MainWindow::selectionChanged(const QModelIndex &current, const QModelIndex 
 
 void MainWindow::tabChanged(QAction *action)
 {
-
     if (action == m_actionComment) {
         m_treeView->hide();
+        m_errorWidget->hide();
         m_commentWidget->show();
 
-        filterWidgetIsVisible = m_filterWidget->isVisible();
-        m_filterWidget->setVisible(false);
-        m_filterWidget->action()->setEnabled(false);
+        m_filterWidget->setEnabled(false);
     }
     else if (action == m_actionError) {
+        m_commentWidget->hide();
+        m_treeView->hide();
+        m_errorWidget->show();
+
+        m_filterWidget->setEnabled(false);
     }
     else if (action == m_actionMain) {
         m_commentWidget->hide();
+        m_errorWidget->hide();
         m_treeView->show();
 
-        m_filterWidget->action()->setEnabled(true);
-        m_filterWidget->setVisible(filterWidgetIsVisible);
+        m_filterWidget->setEnabled(true);
     }
 }
 

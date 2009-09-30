@@ -28,36 +28,41 @@
 
 #include <KUrl>
 
+class QProcess;
+
 class RarPlugin : public AkuPlugin
 {
     Q_OBJECT
-    public:
-        RarPlugin(QObject *parent, const QVariantList &args);
-        ~RarPlugin();
 
-        QStringList mimeTypeNames();
-        QStringList additionalHeaderStrings();
+public:
+    RarPlugin(QObject *parent, const QVariantList &args);
+    ~RarPlugin();
 
-        bool canExtract();
-        bool canCreate();
-        bool canRename();
-        bool canDelete();
-        bool canAdd();
-        bool canEncrypt();
-        bool canAddComment();
-        bool canLock();
+    QStringList mimeTypeNames();
+    QStringList additionalHeaderStrings();
 
-        bool isInstalled();
+    bool canExtract();
+    bool canCreate();
+    bool canRename();
+    bool canDelete();
+    bool canAdd();
+    bool canEncrypt();
+    bool canAddComment();
+    bool canLock();
+    bool isInstalled();
 
-        void loadArchive();
-        void init(const KUrl &fileName, const QString &password = 0);
+    void loadArchive();
+    void init(const KUrl &fileName, const QString &password = 0);
 
-        void lockArchive();
-        void extractArchive(const KUrl &destination, const QStringList &files);
+    void lockArchive();
+    void extractArchive(const KUrl &destination, const QStringList &files);
 
-    private:
-        KUrl m_fileName;
-        QString m_password;
+private:
+    KUrl m_fileName;
+    QString m_password;
+
+private slots:
+    void getError();
 
 };
 

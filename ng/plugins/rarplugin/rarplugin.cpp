@@ -135,10 +135,6 @@ void RarPlugin::init(const KUrl &fileName, const QString &password)
 void RarPlugin::loadArchive()
 {
     AkuData akudata;
-    // we start a first archive list to check if the archive is locked
-    // or header password protected
-    QProcess process;
-    process.setProcessChannelMode(QProcess::MergedChannels);
 
     QString output;
     QStringList options;
@@ -154,10 +150,15 @@ void RarPlugin::loadArchive()
 
     options << m_fileName.pathOrUrl();
 
-    process.start(exeName, options);
-    process.waitForFinished();
+    // we start a first archive list to check if the archive is locked
+    // or header password protected
+    QProcess *localProcess = new QProcess;
+    //connect(process, SIGNAL(readyReadStandardError()), this, SLOT(getError()));
+    localProcess->setProcessChannelMode(QProcess::MergedChannels);
+    localProcess->start(exeName, options);
+    localProcess->waitForFinished();
 
-    output = process.readAllStandardOutput();
+    output = localProcess->readAllStandardOutput();
 
     if (output.contains("CRC failed in")) {
         kDebug() << "The archive is HEADER PROTECTED";
@@ -180,11 +181,12 @@ void RarPlugin::loadArchive()
 
     options << m_fileName.pathOrUrl();
 
+    QProcess *process = new QProcess;
+    connect(process, SIGNAL(readyReadStandardError()), this, SLOT(getError()));
+    process->start(exeName, options);
+    process->waitForFinished();
 
-    process.start(exeName, options);
-    process.waitForFinished();
-
-    output = process.readAllStandardOutput();
+    output = process->readAllStandardOutput();
 
     if (output.contains("Comment:")) {
         QString comment = output;
@@ -290,11 +292,19 @@ void RarPlugin::extractArchive(const KUrl &destination, const QStringList &files
 void RarPlugin::lockArchive()
 {  
     kDebug() << "locking archive";
-    QProcess process;
     QStringList options;
     options.insert(0, "k");
     options.insert(1, m_fileName.pathOrUrl());
-    process.start(exeName, options);
-    kDebug() << options;
-    process.waitForFinished();
+
+    QProcess *process = new QProcess;
+    connect(process, SIGNAL(readyReadStandardError()), this, SLOT(getError()));
+    process->start(exeName, options);
+    process->waitForFinished();
+}
+
+void RarPlugin::getError() {
+    QProcess *sender = qobject_cast<QProcess *>(this->sender());
+    QByteArray error = sender->readAllStandardError();
+    kDebug() << error;
+    onError(error);
 }

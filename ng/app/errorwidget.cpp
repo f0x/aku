@@ -17,39 +17,29 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#include <QTextCodec>
+#include "errorwidget.h"
 
-#include <KApplication>
-#include <KAboutData>
-#include <KCmdLineArgs>
+#include <QHeaderView>
+#include <QTableWidget>
+#include <QVBoxLayout>
 
-#include "mainwindow.h"
-
-int main ( int argc, char *argv[] )
+ErrorWidget::ErrorWidget(QWidget *parent) : QWidget(parent)
 {
+    QVBoxLayout *layout = new QVBoxLayout;
 
-  KAboutData aboutData("aku", 0, ki18n("aKu"),
-                       "0.2", ki18n("An archiving application for KDE4"), KAboutData::License_GPL_V3,
-                       ki18n("Copyright (c) 2009"));
+    m_tableWidget = new QTableWidget(this);
+    m_tableWidget->setColumnCount(4);
+    m_tableWidget->horizontalHeader()->setVisible(false);
 
-  aboutData.addAuthor(ki18n("Francesco Grieco"),
-                      ki18n("Main Developer"),
-                            "fgrieco@gmail.com");
 
-  aboutData.addAuthor(ki18n("Alessandro Diaferia"),
-                      ki18n("Main Developer"),
-                            "alediaferia@gmail.com");
+    layout->addWidget(m_tableWidget);
+    setLayout(layout);
+}
 
-  aboutData.setBugAddress("fgrieco@gmail.com");
-   
-  KCmdLineArgs::init(argc, argv, &aboutData);
+ErrorWidget::~ErrorWidget()
+{
+}
 
-  QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
-
-  KApplication app;
-
-  MainWindow *mainwindow = new MainWindow();
-  mainwindow -> show();  
-
-  return app.exec();
+void ErrorWidget::addNewRow(QString &error) {
+    m_tableWidget->insertRow(0);
 }

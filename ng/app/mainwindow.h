@@ -30,6 +30,7 @@ class AkuStatusBar;
 class AkuTreeModel;
 class AkuTreeView;
 class CommentWidget;
+class ErrorWidget;
 class FilterWidget;
 class KAction;
 class KActionMenu;
@@ -63,21 +64,20 @@ class MainWindow : public KXmlGuiWindow
     QMap<QString, AkuPlugin*> m_plugins;
     QDockWidget *m_infoDock;
 
+    AkuStatusBar *m_statusBar;
     AkuTreeModel *m_model;
     AkuTreeView *m_treeView;
     CommentWidget *m_commentWidget;
+    ErrorWidget *m_errorWidget;
     FilterWidget *m_filterWidget;
     MetaWidget *m_metaWidget;
     PassWidget *m_passwordWidget;
     SortFilterModel *m_sortFilterModel;
-    AkuStatusBar *m_statusBar;
 
     KActionMenu *m_actionExtract;
     KAction *m_actionLock;
     KRecentFilesAction *m_recentFilesAction;
     KUrl m_currentUrl;
-
-    bool filterWidgetIsVisible;
 
   public slots:
     void load(const KUrl);

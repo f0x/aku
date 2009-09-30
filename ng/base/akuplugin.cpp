@@ -169,7 +169,7 @@ void AkuPlugin::lock(const KUrl &fileName)
     if (!d->helper) {
         d->helper = new AkuJobs::AkuHelper(this);
     }
-    connect (d->helper, SIGNAL(error(const QString &)), this, SIGNAL(error(const QString &)));
+    //connect (d->helper, SIGNAL(error(const QString &)), this, SIGNAL(error(const QString &)));
 
     KJob *job = new AkuJobs::LockJob(this, this);
     connect(job, SIGNAL(operationCompleted()), this, SIGNAL(operationCompleted()));

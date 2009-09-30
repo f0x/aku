@@ -17,39 +17,26 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#include <QTextCodec>
+#ifndef ERRORWIDGET_H
+#define ERRORWIDGET_H
 
-#include <KApplication>
-#include <KAboutData>
-#include <KCmdLineArgs>
+#include <QWidget>
 
-#include "mainwindow.h"
+class QTableWidget;
 
-int main ( int argc, char *argv[] )
+class ErrorWidget : public QWidget
 {
+    Q_OBJECT
 
-  KAboutData aboutData("aku", 0, ki18n("aKu"),
-                       "0.2", ki18n("An archiving application for KDE4"), KAboutData::License_GPL_V3,
-                       ki18n("Copyright (c) 2009"));
+public:
+    ErrorWidget(QWidget *parent);
+    ~ErrorWidget();
 
-  aboutData.addAuthor(ki18n("Francesco Grieco"),
-                      ki18n("Main Developer"),
-                            "fgrieco@gmail.com");
+private:
+    QTableWidget *m_tableWidget;
 
-  aboutData.addAuthor(ki18n("Alessandro Diaferia"),
-                      ki18n("Main Developer"),
-                            "alediaferia@gmail.com");
+public slots:
+    void addNewRow(QString &);
+};
 
-  aboutData.setBugAddress("fgrieco@gmail.com");
-   
-  KCmdLineArgs::init(argc, argv, &aboutData);
-
-  QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
-
-  KApplication app;
-
-  MainWindow *mainwindow = new MainWindow();
-  mainwindow -> show();  
-
-  return app.exec();
-}
+#endif // ERRORWIDGET_H
