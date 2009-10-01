@@ -171,7 +171,7 @@ void MainWindow::setupActions()
 
     // Extraction
     m_actionExtract = new KActionMenu(this);
-    m_actionExtract->setIcon(KIcon("archive-extract.png"));
+    m_actionExtract->setIcon(KIcon("archive-extract"));
     m_actionExtract->setText(i18n("Extract"));
     actionCollection()->addAction("extract", m_actionExtract);
     connect(m_actionExtract, SIGNAL(triggered()), this, SLOT(extractDialog()));
@@ -238,19 +238,23 @@ void MainWindow::addPlugins(AkuPlugin *plugin, const KPluginInfo &info)
 void MainWindow::load(const KUrl url)
 {
     if (!QFile(url.pathOrUrl()).open(QIODevice::ReadOnly)) {
-        KMessageBox::error(this, i18n("Could not open") + " %1.<br>" + i18n("Check your file permissions",
-                                      url.prettyUrl()), i18n("Load error"));
+        // hack to show the filename in the error widget
+        KUrl tmpUrl = m_currentUrl;
+        m_currentUrl = url;
+        handleError(i18n("Could not open this file. Check the file permissions."));
+        m_currentUrl = tmpUrl;
         return;
     }
 
-    KMimeType::Ptr mimetype = KMimeType::findByUrl(url);
-    kDebug() << mimetype -> name();
+    KMimeType::Ptr mimetype = KMimeType::findByFileContent(url.pathOrUrl());
 
     if (!m_plugins.contains(mimetype->name())) {
-        KMessageBox::detailedSorry(this, i18n("Sorry, no available plugin to open") +  " <b>" + url.pathOrUrl() + "</b>",
-                           i18n("Install a plugin for") + " <b>" + mimetype->name() + "</b> " +
-                                 i18n("mimetype in order to load the archive."),
-                           i18n("Unable to load the archive"));
+        // hack to show the filename in the error widget
+        KUrl tmpUrl = m_currentUrl;
+        m_currentUrl = url;
+        handleError(i18n("Sorry, no available plugin to open this file. The selected file type is") +
+                    " "  + mimetype->name());
+        m_currentUrl = tmpUrl;
         return;
     }
 
@@ -446,7 +450,9 @@ void MainWindow::extract(const KUrl &destination)
 void MainWindow::handleError(const QString &error)
 {
     AkuPlugin *sender = static_cast<AkuPlugin *>(this->sender());
-    KMessageBox::error(this, error, i18n("Plugin error"));
+    m_errorWidget->sendData(error, m_currentUrl.pathOrUrl(), sender->currentOperation());
+    tabChanged(m_actionError);
+    m_actionError->trigger();
 }
 
 void MainWindow::pluginStateChanged()

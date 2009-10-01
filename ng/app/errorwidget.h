@@ -20,9 +20,12 @@
 #ifndef ERRORWIDGET_H
 #define ERRORWIDGET_H
 
+#include "akuplugin.h"
+
 #include <QWidget>
 
-class QTableWidget;
+class QTreeWidget;
+class KUrl;
 
 class ErrorWidget : public QWidget
 {
@@ -33,10 +36,10 @@ public:
     ~ErrorWidget();
 
 private:
-    QTableWidget *m_tableWidget;
+    QTreeWidget *m_treeWidget;
 
 public slots:
-    void addNewRow(QString &);
+    void sendData(const QString &, QString, AkuPlugin::CurrentOperation);
 };
 
 #endif // ERRORWIDGET_H
