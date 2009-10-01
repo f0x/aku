@@ -40,6 +40,9 @@ private:
 
 public slots:
     void sendData(const QString &, QString, AkuPlugin::CurrentOperation);
+
+protected:
+    void contextMenuEvent(QContextMenuEvent *event);
 };
 
 #endif // ERRORWIDGET_H

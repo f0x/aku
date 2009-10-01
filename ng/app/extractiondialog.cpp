@@ -58,7 +58,8 @@ ExtractionDialog::ExtractionDialog(QWidget *parent) : KDialog(parent),
     m_dirView->resizeColumnToContents(2);
 
     m_dirView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    m_dirView->setCurrentUrl(KUrl(QDir::homePath()));
+    m_dirView->setCurrentUrl(QDir::homePath());
+    //m_dirView->setRootUrl(QDir::rootPath());
 
     const int minWidth = m_dirView->columnWidth(0) +
                          m_dirView->columnWidth(1) +
@@ -68,7 +69,11 @@ ExtractionDialog::ExtractionDialog(QWidget *parent) : KDialog(parent),
 
     m_dirView->setMinimumSize(minWidth, 0);
     
-    setButtons(KDialog::Ok | KDialog::Cancel | KDialog::Default);
+    setButtons(KDialog::User1 | KDialog::Cancel | KDialog::Default);
+    KPushButton *okButton = button(KDialog::User1);
+    okButton->setText(i18n("Ok"));
+    okButton->setIcon(KIcon("dialog-ok"));
+
     setCaption(i18n("Extraction path and options"));
 
     KUrlCompletion *urlCompletion = new KUrlCompletion(KUrlCompletion::DirCompletion);
@@ -76,7 +81,7 @@ ExtractionDialog::ExtractionDialog(QWidget *parent) : KDialog(parent),
     ui.comboHistoryBox->setAutoDeleteCompletionObject(true);
     ui.comboHistoryBox->setCompletionMode(KGlobalSettings::CompletionPopupAuto);
 
-    connect(this, SIGNAL(okClicked()), this, SLOT(slotExtraction()));
+    connect(okButton, SIGNAL(clicked()), this, SLOT(slotExtraction()));
     connect(m_dirView, SIGNAL(currentChanged(const KUrl &)), this, SLOT(updateCombo(const KUrl &)));
 
     resize(450, height());
@@ -96,16 +101,29 @@ void ExtractionDialog::slotExtraction()
 
     const KUrl url(ui.comboHistoryBox->currentText());
     if (!url.isValid()) {
-        KMessageBox::error(this, i18n("The specified url is not valid. Cannot extract."), i18n("Invalid destination url"));
+        KMessageBox::error(this, i18n("The specified url is not valid. Cannot extract."),
+                           i18n("Invalid destination url"));
         return;
     }
 
-    if (!QDir(url.pathOrUrl()).exists()) {     
-        KIO::mkdir(url);
+    QFileInfo dirInfo(url.pathOrUrl());
+    kDebug() << dirInfo.absolutePath();
+    if (dirInfo.permission(QFile::WriteUser)) {
+        KMessageBox::error(this, i18n("The specified directory is not writable. Cannot extract."),
+                           i18n("Invalid destination url"));
+        return;
+    }
+
+    if (!QDir(url.pathOrUrl()).exists() && !QDir().mkpath(url.pathOrUrl())) {
+        //if (!(KIO::mkdir(url))->error()) {
+            KMessageBox::error(this, i18n("Can't create this directory. Cannot extract."),
+                               i18n("Invalid destination url"));
+        //}
     }
     
     kDebug() << "extracting in" << url;
     emit extractionClicked(url);
+    accept();
 }
 
 void ExtractionDialog::updateCombo(const KUrl localPath)

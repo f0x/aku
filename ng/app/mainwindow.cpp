@@ -47,7 +47,6 @@
 #include <KFileDialog>
 #include <KFileItem>
 #include <KLocale>
-#include <KMessageBox>
 #include <KMenuBar>
 #include <KPluginInfo>
 #include <KPluginSelector>
@@ -140,8 +139,6 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
     connect(grp, SIGNAL(triggered(QAction *)), this, SLOT(tabChanged(QAction *)));
     //
 
-
-
     loadSettings();
 }
 
@@ -191,9 +188,6 @@ void MainWindow::setupActions()
 
     actionCollection()->addAction("filter", m_filterWidget->action());
 
-    connect(m_passwordWidget, SIGNAL(password(const QString &)), this, SLOT(getPassword(const QString &)));
-
-
 }
 
 void MainWindow::setupConnections()
@@ -201,6 +195,7 @@ void MainWindow::setupConnections()
     connect(m_treeView, SIGNAL(activated(QModelIndex)), this, SLOT(dataMetaWidget(QModelIndex)));
     connect(m_treeView->selectionModel(), SIGNAL(currentChanged(QModelIndex, QModelIndex)),
             this, SLOT(selectionChanged(QModelIndex, QModelIndex)));
+    connect(m_passwordWidget, SIGNAL(password(const QString &)), this, SLOT(getPassword(const QString &)));
     connect(m_actionLock, SIGNAL(triggered()), this, SLOT(lockArchive()));
 }
 
@@ -301,7 +296,6 @@ void MainWindow::showArchiveContent(const AkuData &akudata)
     }
 
     if (!akudata.comment.isEmpty()) {
-        //KMessageBox::about(this, akudata.comment, "comment");
         m_commentWidget->setComment(akudata.comment);
     } else {
         m_commentWidget->clearComment();
@@ -320,6 +314,7 @@ void MainWindow::showArchiveContent(const AkuData &akudata)
     m_model->setSourceData(akudata.paths);
     m_treeView->setSortingEnabled(true);
     m_treeView->expandAll();
+    tabChanged(m_actionMain);
 }
 
 void MainWindow::dataMetaWidget(QModelIndex index)
@@ -430,7 +425,7 @@ void MainWindow::extract(const KUrl &destination)
     QStringList files = m_treeView->selectedPaths();
     kDebug() << files;
 
-    //m_plugins[m_currentPlugin]->extract(m_currentUrl, destination, files);
+    m_plugins[m_currentPlugin]->extract(m_currentUrl, destination, files);
 
     // update the favourite extraction dirs
     KConfigGroup options(KGlobal::config()->group("Favourite Dirs"));
@@ -459,13 +454,6 @@ void MainWindow::pluginStateChanged()
 {
     AkuPlugin *sender = static_cast<AkuPlugin *>(this->sender());
     m_statusBar->stateChanged(sender);
-    //switch (sender->currentOperation()) {
-    //    case AkuPlugin::Extracting :
-    //        break;
-    //    case AkuPlugin::Loading :
-    //        break;
-    //    default: ;
-    //}
 }
 
 // get the password from the PassWidget

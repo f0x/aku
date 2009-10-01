@@ -38,7 +38,6 @@ private:
     AkuTreeModel *m_model;
 
 protected:
-
     void contextMenuEvent(QContextMenuEvent *event);
 
 private slots:

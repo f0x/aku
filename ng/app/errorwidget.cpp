@@ -20,12 +20,15 @@
 #include "errorwidget.h"
 
 #include <QFileInfo>
+#include <QContextMenuEvent>
 #include <QTime>
 #include <QTreeWidget>
 #include <QVBoxLayout>
 
+#include <KAction>
 #include <KIcon>
 #include <KLocale>
+#include <KMenu>
 #include <KDebug>
 
 ErrorWidget::ErrorWidget(QWidget *parent) : QWidget(parent)
@@ -69,7 +72,7 @@ void ErrorWidget::sendData(const QString &error, QString filename, AkuPlugin::Cu
         default:
             kDebug() << "NO OPERATION";
             tooltip.append(i18n("Generic error"));
-            kdeIcon = "system-help";
+            kdeIcon = "dialog-warning";
         ;
     }
 
@@ -89,4 +92,23 @@ void ErrorWidget::sendData(const QString &error, QString filename, AkuPlugin::Cu
     m_treeWidget->insertTopLevelItem(0, iconItem);
     m_treeWidget->resizeColumnToContents(0);
     m_treeWidget->resizeColumnToContents(2);
+
+    m_treeWidget->setWordWrap(true);
+}
+
+void ErrorWidget::contextMenuEvent(QContextMenuEvent *event)
+ {
+    KAction *actionCopy = new KAction(i18n("Copy"),this);
+    KAction *actionClear = new KAction(i18n("Clear"),this);
+
+    connect(actionCopy, SIGNAL(triggered()), this, SLOT(selectAll()));
+    connect(actionClear, SIGNAL(triggered()), m_treeWidget, SLOT(clear()));
+
+    KMenu menu(this);
+    //menu.addTitle(i18n("Quick actions"));
+    menu.addAction(actionCopy);
+    menu.addSeparator();
+    menu.addAction(actionClear);
+
+    menu.exec(event->globalPos());
 }

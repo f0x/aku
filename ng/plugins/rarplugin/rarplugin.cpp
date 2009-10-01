@@ -278,15 +278,17 @@ void RarPlugin::extractArchive(const KUrl &destination, const QStringList &files
 {
 //    Usage:     unrar <command> -<switch 1> -<switch N> <archive> <files...>
 //               <@listfiles...> <path_to_extract\> 
-    QProcess process;
     QStringList options;
     options = files;
     options.insert(options.size(), destination.pathOrUrl());
     options.insert(0, "x");
     options.insert(1, m_fileName.pathOrUrl());
-    process.start(exeName, options);
     kDebug() << options;
-    process.waitForFinished();
+
+    QProcess *process;
+    connect(process, SIGNAL(readyReadStandardError()), this, SLOT(getError()));
+    process->start(exeName, options);
+    process->waitForFinished();
 }
 
 void RarPlugin::lockArchive()
