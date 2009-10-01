@@ -274,21 +274,44 @@ QStringList RarPlugin::additionalHeaderStrings()
                          << i18n("Method") << i18n("Version");
 }
 
-void RarPlugin::extractArchive(const KUrl &destination, const QStringList &files)
+void RarPlugin::extractArchive(AkuPlugin::ExtractionOptions &extractionOptions)
 {
 //    Usage:     unrar <command> -<switch 1> -<switch N> <archive> <files...>
 //               <@listfiles...> <path_to_extract\> 
     QStringList options;
-    options = files;
-    options.insert(options.size(), destination.pathOrUrl());
-    options.insert(0, "x");
-    options.insert(1, m_fileName.pathOrUrl());
-    kDebug() << options;
+    if (extractionOptions &= AkuPlugin::ExctractFullPaths) {
+        options << "x";   // x     Extract files with full path
+    }
+    else {
+        options << "e";  //  e     Extract files to current directory
+    }
+
+    options << m_fileName.pathOrUrl();
+
+    if (extractionOptions &= AkuPlugin::AskBeforeOverwrite) {
+    }
+    if (extractionOptions &= AkuPlugin::OverwriteWithoutPrompt) {
+    }
+    if (extractionOptions &= AkuPlugin::SkipExistingFiles) {
+    }
+    if (extractionOptions &= AkuPlugin::RenameAutomatically) {
+    }
+    if (extractionOptions &= AkuPlugin::OpenDestinationPath) {
+    }
+
+
+    //options = files;
+    //options.insert(options.size(), destination.pathOrUrl());
+    //options.insert(0, "x");
+    //options.insert(1, m_fileName.pathOrUrl());
+    //kDebug() << options;
 
     QProcess *process;
-    connect(process, SIGNAL(readyReadStandardError()), this, SLOT(getError()));
+    //connect(process, SIGNAL(readyReadStandardError()), this, SLOT(getError()));
     process->start(exeName, options);
     process->waitForFinished();
+    kDebug() << process->readAllStandardOutput();
+    kDebug() << "ERROREEEEEEEEEEEE" + process->readAllStandardError();
 }
 
 void RarPlugin::lockArchive()

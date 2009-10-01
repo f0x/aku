@@ -86,7 +86,7 @@ class MainWindow : public KXmlGuiWindow
     void addPlugins(AkuPlugin*, const KPluginInfo &);
     void configureAku();
     void dataMetaWidget(QModelIndex);
-    void extract(const KUrl &destination);
+    void extract(const KUrl &, AkuPlugin::ExtractionOptions);
     void extractDialog();
     void handleError(const QString &);
     void loadSettings();

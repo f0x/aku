@@ -368,7 +368,8 @@ void MainWindow::tabChanged(QAction *action)
 void MainWindow::extractDialog()
 {
     ExtractionDialog *extractionDialog = new ExtractionDialog(this);
-    connect(extractionDialog, SIGNAL(extractionClicked(const KUrl &)), this, SLOT(extract(const KUrl &)));
+    connect(extractionDialog, SIGNAL(extractionClicked(const KUrl &, AkuPlugin::ExtractionOptions)),
+            this, SLOT(extract(const KUrl &, AkuPlugin::ExtractionOptions)));
     extractionDialog->setAdvancedWidget(m_plugins[m_currentPlugin]->extractionWidget());
     extractionDialog->exec();
 }
@@ -416,16 +417,25 @@ void MainWindow::recentDirData()
     KUrl url(sender->data().toString());
     kDebug() << url;
     kDebug() << sender->data().toString();
-    extract(url);
+
+    AkuPlugin::ExtractionOptions eOptions;
+    // WARNING: define standard extracting options for recentDirData (FIXME!)
+
+    extract(url, eOptions);
 }
 
-void MainWindow::extract(const KUrl &destination)
+void MainWindow::extract(const KUrl &destination, AkuPlugin::ExtractionOptions extractionOptions)
 {
     // TODO: retrieve selected files to extract
     QStringList files = m_treeView->selectedPaths();
     kDebug() << files;
 
-    m_plugins[m_currentPlugin]->extract(m_currentUrl, destination, files);
+    AkuExtractInfo extractInfo;
+    extractInfo.fileName = m_currentUrl;
+    extractInfo.destination = destination;
+    extractInfo.files = files;
+
+    m_plugins[m_currentPlugin]->extract(extractInfo, extractionOptions);
 
     // update the favourite extraction dirs
     KConfigGroup options(KGlobal::config()->group("Favourite Dirs"));

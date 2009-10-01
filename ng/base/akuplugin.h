@@ -23,15 +23,24 @@
 #include <QObject>
 #include <QVector>
 
+#include <KUrl>
+
 #include <aku_macros.h>
 
-// AkuData
+// AkuData -- For Loading Process
 typedef struct AkuData {
     AkuData() : headerprotected(false) {}
     QVector<QStringList> paths;
     bool headerprotected;
     QString comment;
 } AkuData;
+
+// AkuExtractInfo -- For Extracting Process
+typedef struct AkuExtractInfo {
+    KUrl fileName;
+    KUrl destination;
+    QStringList files;
+} AkuExtractInfo;
 
 /** \class AkuPlugin akuplugin.h
   * \brief Aku's Base Plugin Class for archive management
@@ -61,6 +70,18 @@ class AKU_EXPORT AkuPlugin : public QObject
                                 Encrypting,
                                 Locking
                                };
+
+        enum ExtractionOption {
+                              // overwrite mode
+                                AskBeforeOverwrite = 0x0,
+                                OverwriteWithoutPrompt = 0x1,
+                                SkipExistingFiles = 0x2,
+                                RenameAutomatically = 0x4,
+                              //
+                                ExctractFullPaths = 0x8,
+                                OpenDestinationPath = 0x16
+                              };
+        Q_DECLARE_FLAGS(ExtractionOptions, ExtractionOption)
 
         AkuPlugin(QObject *parent);
         virtual ~AkuPlugin();
@@ -116,7 +137,7 @@ class AKU_EXPORT AkuPlugin : public QObject
          * This method should be reimplemented in order to allow archive extraction.
          * If @param files is empty then the whole archive should be extracted.
          */
-        virtual void extractArchive(const KUrl &destination, const QStringList &files);
+        virtual void extractArchive(AkuPlugin::ExtractionOptions &extractionOptions);
 
         /**
           * This method is useful only for the rar archive.
@@ -141,7 +162,7 @@ class AKU_EXPORT AkuPlugin : public QObject
         /**
          * @internal used to extract the archive.
          */
-        void extract(const KUrl &fileName, const KUrl &destination, const QStringList &files = QStringList());
+        void extract(AkuExtractInfo, AkuPlugin::ExtractionOptions options);
 
         /**
          * @internal
@@ -223,5 +244,7 @@ class AKU_EXPORT AkuPlugin : public QObject
         AkuPluginPrivate *d;
 
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(AkuPlugin::ExtractionOptions)
 
 #endif 

@@ -24,6 +24,7 @@
 #include <KDialog>
 
 #include "ui_extractiondialog.h"
+#include "akuplugin.h"
 
 class KFileTreeView;
 
@@ -45,7 +46,7 @@ private:
     QWidget *m_awidget;
 
 signals:
-    void extractionClicked(const KUrl &destination);
+    void extractionClicked(const KUrl &destination, AkuPlugin::ExtractionOptions);
 
 private slots:
     void slotExtraction();

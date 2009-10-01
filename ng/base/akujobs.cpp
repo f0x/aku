@@ -46,8 +46,8 @@ void LoadJob::doWork()
 
 }
 
-ExtractJob::ExtractJob(AkuPlugin *plugin, const KUrl &destination, QStringList files, QObject *parent) :
-                  AkuJob(parent), m_plugin(plugin), m_destination(destination), m_files(files)
+ExtractJob::ExtractJob(AkuPlugin *plugin, const AkuPlugin::ExtractionOptions &extractingOptions, QObject *parent) :
+                  AkuJob(parent), m_plugin(plugin), m_extractingOptions(extractingOptions)
 {}
 
 ExtractJob::~ExtractJob()
@@ -55,7 +55,7 @@ ExtractJob::~ExtractJob()
 
 void ExtractJob::doWork()
 {
-    m_plugin->extractArchive(m_destination, m_files);
+    m_plugin->extractArchive(m_extractingOptions);
     emit operationCompleted();
 }
 

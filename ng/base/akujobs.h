@@ -69,15 +69,16 @@ class ExtractJob : public AkuJob
 {
     Q_OBJECT
     public:
-        ExtractJob(AkuPlugin *, const KUrl &destination, QStringList files = QStringList(), QObject *parent = 0);
+        ExtractJob(AkuPlugin *, const AkuPlugin::ExtractionOptions &, QObject *parent = 0);
         ~ExtractJob();
 
         void doWork();
 
     private:
         AkuPlugin *m_plugin;
-        KUrl m_destination;
-        QStringList m_files;
+        AkuPlugin::ExtractionOptions m_extractingOptions;
+        //KUrl m_destination;
+        //QStringList m_files;
 };
 
 class LockJob : public AkuJob

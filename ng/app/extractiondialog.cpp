@@ -106,23 +106,46 @@ void ExtractionDialog::slotExtraction()
         return;
     }
 
-    QFileInfo dirInfo(url.pathOrUrl());
-    kDebug() << dirInfo.absolutePath();
-    if (dirInfo.permission(QFile::WriteUser)) {
-        KMessageBox::error(this, i18n("The specified directory is not writable. Cannot extract."),
-                           i18n("Invalid destination url"));
-        return;
-    }
-
     if (!QDir(url.pathOrUrl()).exists() && !QDir().mkpath(url.pathOrUrl())) {
-        //if (!(KIO::mkdir(url))->error()) {
             KMessageBox::error(this, i18n("Can't create this directory. Cannot extract."),
                                i18n("Invalid destination url"));
-        //}
+            return;
     }
     
+    //QFileInfo dirInfo(url.pathOrUrl());
+    //kDebug() << url.pathOrUrl();
+    //if (!dirInfo.permission(QFile::WriteUser)) {
+    //    KMessageBox::error(this, i18n("The specified directory is not writable. Cannot extract."),
+    //                       i18n("Invalid destination url"));
+    //    return;
+    //}
+    
     kDebug() << "extracting in" << url;
-    emit extractionClicked(url);
+
+    AkuPlugin::ExtractionOptions extractionOptions;
+    switch (ui.overwriteCombo->currentIndex()) {
+        case 0:
+            extractionOptions |= AkuPlugin::AskBeforeOverwrite;
+            break;
+        case 1:
+            extractionOptions |= AkuPlugin::OverwriteWithoutPrompt;
+            break;
+        case 2:
+            extractionOptions |= AkuPlugin::SkipExistingFiles;
+            break;
+        case 3:
+            extractionOptions |= AkuPlugin::RenameAutomatically;
+            break;
+    }
+    if (ui.checkFullPath->isChecked()) {
+        extractionOptions |= AkuPlugin::ExctractFullPaths;
+    }
+    if (ui.checkDestinationPath->isChecked()) {
+        extractionOptions |= AkuPlugin::OpenDestinationPath;
+    }
+
+
+    emit extractionClicked(url, extractionOptions);
     accept();
 }
 
