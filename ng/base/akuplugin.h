@@ -137,7 +137,7 @@ class AKU_EXPORT AkuPlugin : public QObject
          * This method should be reimplemented in order to allow archive extraction.
          * If @param files is empty then the whole archive should be extracted.
          */
-        virtual void extractArchive(AkuPlugin::ExtractionOptions &extractionOptions);
+        virtual void extractArchive(const AkuExtractInfo &extractInfo, const AkuPlugin::ExtractionOptions &extractionOptions);
 
         /**
           * This method is useful only for the rar archive.

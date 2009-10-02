@@ -46,8 +46,9 @@ void LoadJob::doWork()
 
 }
 
-ExtractJob::ExtractJob(AkuPlugin *plugin, const AkuPlugin::ExtractionOptions &extractingOptions, QObject *parent) :
-                  AkuJob(parent), m_plugin(plugin), m_extractingOptions(extractingOptions)
+ExtractJob::ExtractJob(AkuPlugin *plugin, const AkuExtractInfo &extractInfo,
+                       const AkuPlugin::ExtractionOptions &extractingOptions, QObject *parent) :
+                       AkuJob(parent), m_plugin(plugin), m_extractInfo(extractInfo), m_extractingOptions(extractingOptions)
 {}
 
 ExtractJob::~ExtractJob()
@@ -55,7 +56,7 @@ ExtractJob::~ExtractJob()
 
 void ExtractJob::doWork()
 {
-    m_plugin->extractArchive(m_extractingOptions);
+    m_plugin->extractArchive(m_extractInfo, m_extractingOptions);
     emit operationCompleted();
 }
 

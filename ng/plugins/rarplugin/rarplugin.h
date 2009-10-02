@@ -55,7 +55,7 @@ public:
     void init(const KUrl &fileName, const QString &password = 0);
 
     void lockArchive();
-    void extractArchive(AkuPlugin::ExtractionOptions &);
+    void extractArchive(const AkuExtractInfo&, const AkuPlugin::ExtractionOptions &);
 
 private:
     KUrl m_fileName;

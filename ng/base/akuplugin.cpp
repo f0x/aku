@@ -148,10 +148,10 @@ void AkuPlugin::extract(AkuExtractInfo extractInfo, AkuPlugin::ExtractionOptions
         d->helper = new AkuJobs::AkuHelper(this);
     }
     connect (d->helper, SIGNAL(error(const QString &)), this, SIGNAL(error(const QString &)));
-    connect (d->helper, SIGNAL(archiveLoaded(AkuData)), this, SIGNAL(archiveLoaded(AkuData)));
+    //connect (d->helper, SIGNAL(archiveLoaded(AkuData)), this, SIGNAL(archiveLoaded(AkuData)));
     connect (d->helper, SIGNAL(progressUpdate(double, double)), this, SIGNAL(progressUpdate(double, double)));
 
-    KJob *job = new AkuJobs::ExtractJob(this, extractingOptions, this);
+    KJob *job = new AkuJobs::ExtractJob(this, extractInfo, extractingOptions, this);
     connect(job, SIGNAL(operationCompleted()), this, SIGNAL(notifyExtractionComplete()));
     connect(job, SIGNAL(operationCompleted()), this, SIGNAL(operationCompleted()));
 
@@ -183,10 +183,10 @@ void AkuPlugin::init(const KUrl &fileName, const QString &password)
     Q_UNUSED(password)
 }
 
-void AkuPlugin::extractArchive(AkuPlugin::ExtractionOptions &extractionOptions)
+void AkuPlugin::extractArchive(const AkuExtractInfo &extractInfo, const AkuPlugin::ExtractionOptions &extractionOptions)
 {
-    //Q_UNUSED(destination)
-    //Q_UNUSED(files)
+    Q_UNUSED(extractInfo)
+    Q_UNUSED(extractionOptions)
 }
 
 void AkuPlugin::lockArchive()
