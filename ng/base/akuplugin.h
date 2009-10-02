@@ -71,6 +71,11 @@ class AKU_EXPORT AkuPlugin : public QObject
                                 Locking
                                };
 
+        enum ErrorType {
+                         RequestOverwrite,
+                         NormalError
+                       };
+
         enum ExtractionOption {
                               // overwrite mode
                                 AskBeforeOverwrite = 0x0,
@@ -135,7 +140,7 @@ class AKU_EXPORT AkuPlugin : public QObject
 
         /**
          * This method should be reimplemented in order to allow archive extraction.
-         * If @param files is empty then the whole archive should be extracted.
+         *
          */
         virtual void extractArchive(const AkuExtractInfo &extractInfo, const AkuPlugin::ExtractionOptions &extractionOptions);
 
@@ -187,7 +192,7 @@ class AKU_EXPORT AkuPlugin : public QObject
         /**
          * This signal is emitted after calling onError. Never emit this signal directly.
          */
-        void error(const QString&);
+        void error(AkuPlugin::ErrorType, const QString&);
 
         /**
          * this is emitted when the progress status changes.
@@ -224,7 +229,7 @@ class AKU_EXPORT AkuPlugin : public QObject
         /**
          * Call this slot whenever an error occurs and pass the error as QString
          */
-        void onError(const QString &);
+        void onError(ErrorType, const QString &);
 
         /**
          * Call this slot when the archive is correctly loaded.

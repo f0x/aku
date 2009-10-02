@@ -38,6 +38,7 @@ class KPluginInfo;
 class KRecentFilesAction;
 class KVBox;
 class MetaWidget;
+class OverwriteWidget;
 class PassWidget;
 class QDockWidget;
 class QModelIndex;
@@ -71,6 +72,7 @@ class MainWindow : public KXmlGuiWindow
     ErrorWidget *m_errorWidget;
     FilterWidget *m_filterWidget;
     MetaWidget *m_metaWidget;
+    OverwriteWidget *m_overwriteWidget;
     PassWidget *m_passwordWidget;
     SortFilterModel *m_sortFilterModel;
 
@@ -88,7 +90,7 @@ class MainWindow : public KXmlGuiWindow
     void dataMetaWidget(QModelIndex);
     void extract(const KUrl &, AkuPlugin::ExtractionOptions);
     void extractDialog();
-    void handleError(const QString &);
+    void handleError(AkuPlugin::ErrorType, const QString &);
     void loadSettings();
     void openDialog();
     void recentDirData();

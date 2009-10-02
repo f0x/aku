@@ -34,6 +34,7 @@
 #include "sortfiltermodel.h"
 #include "akustatusbar.h"
 #include "errorwidget.h"
+#include "overwritewidget.h"
 
 #include <QDockWidget>
 #include <QListView>
@@ -72,6 +73,10 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
 
     m_passwordWidget = new PassWidget(baseWidget);
 
+    // Overwrite Widget
+    m_overwriteWidget = new OverwriteWidget(baseWidget);
+    //
+
     m_treeView = new AkuTreeView(baseWidget);
     m_treeView->setModel(m_sortFilterModel);
 
@@ -101,12 +106,10 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
 
     // Comment Widget
     m_commentWidget = new CommentWidget(baseWidget);
-    m_commentWidget->hide();
     ///
 
     // Error Widget
     m_errorWidget = new ErrorWidget(baseWidget);
-    m_errorWidget->hide();
     //
 
     // Bottom Widget
@@ -210,11 +213,14 @@ void MainWindow::openDialog()
 
 void MainWindow::addPlugins(AkuPlugin *plugin, const KPluginInfo &info)
 {
+    Q_UNUSED(info)
+
     connect(plugin, SIGNAL(archiveLoaded(const AkuData &)),
             this, SLOT(showArchiveContent(const AkuData &)));
     connect(plugin, SIGNAL(operationCompleted()), m_statusBar, SLOT(operationCompleted()));
     //connect(plugin, SIGNAL(notifyExtractionComplete()), this, SLOT(extractionCompleteSlot()));
-    connect(plugin, SIGNAL(error(const QString &)), this, SLOT(handleError(const QString &)));
+    connect(plugin, SIGNAL(error(AkuPlugin::ErrorType, const QString &)), this,
+            SLOT(handleError(AkuPlugin::ErrorType, const QString &)));
     connect(plugin, SIGNAL(stateChanged()), this, SLOT(pluginStateChanged()));
 
     foreach (const QString &mimeName, plugin->mimeTypeNames()) {
@@ -236,7 +242,7 @@ void MainWindow::load(const KUrl url)
         // hack to show the filename in the error widget
         KUrl tmpUrl = m_currentUrl;
         m_currentUrl = url;
-        handleError(i18n("Could not open this file. Check the file permissions."));
+        handleError(AkuPlugin::NormalError, i18n("Could not open this file. Check the file permissions."));
         m_currentUrl = tmpUrl;
         return;
     }
@@ -247,7 +253,7 @@ void MainWindow::load(const KUrl url)
         // hack to show the filename in the error widget
         KUrl tmpUrl = m_currentUrl;
         m_currentUrl = url;
-        handleError(i18n("Sorry, no available plugin to open this file. The selected file type is") +
+        handleError(AkuPlugin::NormalError, i18n("Sorry, no available plugin to open this file. The selected file type is") +
                     " "  + mimetype->name());
         m_currentUrl = tmpUrl;
         return;
@@ -314,7 +320,8 @@ void MainWindow::showArchiveContent(const AkuData &akudata)
     m_model->setSourceData(akudata.paths);
     m_treeView->setSortingEnabled(true);
     m_treeView->expandAll();
-    tabChanged(m_actionMain);
+    //tabChanged(m_actionMain);
+    m_actionMain->trigger();
 }
 
 void MainWindow::dataMetaWidget(QModelIndex index)
@@ -452,12 +459,23 @@ void MainWindow::extract(const KUrl &destination, AkuPlugin::ExtractionOptions e
     //
 }
 
-void MainWindow::handleError(const QString &error)
+void MainWindow::handleError(AkuPlugin::ErrorType errorType, const QString &error)
 {
     AkuPlugin *sender = static_cast<AkuPlugin *>(this->sender());
-    m_errorWidget->sendData(error, m_currentUrl.pathOrUrl(), sender->currentOperation());
-    tabChanged(m_actionError);
-    m_actionError->trigger();
+
+    switch (errorType) {
+        case AkuPlugin::NormalError :
+            m_errorWidget->sendData(error, m_currentUrl.pathOrUrl(), sender->currentOperation());
+            m_actionError->trigger();
+            break;
+        case AkuPlugin::RequestOverwrite :
+            m_overwriteWidget->setInfo(error);
+            kDebug() << "REQUEST OVERWRITE";
+            m_overwriteWidget->show();
+            break;
+        default: ;
+    }
+
 }
 
 void MainWindow::pluginStateChanged()

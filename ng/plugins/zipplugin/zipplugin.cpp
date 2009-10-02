@@ -85,7 +85,7 @@ void ZipPlugin::loadArchive()
     m_archive->open(QIODevice::ReadOnly);
 
     if (!m_archive->isOpen()) {
-        onError(i18n("An error occurred. Could not open archive <b>%1</b>", m_archive->fileName()));
+        //onError(i18n("An error occurred. Could not open archive <b>%1</b>", m_archive->fileName()));
         return;
     }
 
@@ -144,7 +144,7 @@ QStringList ZipPlugin::additionalHeaderStrings()
 void ZipPlugin::extractArchive(const KUrl &destination, const QStringList &files)
 {
     if (!m_archive->isOpen() && !m_archive->open(QIODevice::ReadOnly)) {
-        onError(i18n("An error occurred. Could not open archive <b>%1</b>", m_archive->fileName()));
+        //onError(i18n("An error occurred. Could not open archive <b>%1</b>", m_archive->fileName()));
         return;
     }
 

@@ -18,7 +18,6 @@
  ***************************************************************************/
 
 #include "akujobs.h"
-//#include "akuplugin.h"
 
 #include <KDebug>
 
@@ -89,9 +88,9 @@ AkuHelper::AkuHelper(AkuPlugin *plugin) : QObject(plugin), m_plugin(plugin)
 AkuHelper::~AkuHelper()
 {}
 
-void AkuHelper::onError(const QString &error)
+void AkuHelper::onError(AkuPlugin::ErrorType errorType, const QString &error)
 {
-    emit this->error(error);
+    emit this->error(errorType, error);
 }
 
 void AkuHelper::onArchiveLoaded(AkuData data)

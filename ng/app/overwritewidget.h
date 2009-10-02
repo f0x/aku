@@ -1,6 +1,5 @@
 /***************************************************************************
  *   Copyright 2009 by Francesco Grieco <fgrieco@gmail.com>                *
- *                     Alessandro Diaferia <alediaferia@gmail.com>         *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,50 +17,28 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#ifndef RARPLUGIN_H
-#define RARPLUGIN_H
+#ifndef OVERWRITEWIDGET_H
+#define OVERWRITEWIDGET_H
 
-#include <akuplugin.h>
-#include <aku_macros.h>
+#include <QWidget>
 
-#include <QVariantList>
+class QLabel;
 
-#include <KUrl>
-
-class RarPlugin : public AkuPlugin
+class OverwriteWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-    RarPlugin(QObject *parent, const QVariantList &args);
-    ~RarPlugin();
-
-    QStringList mimeTypeNames();
-    QStringList additionalHeaderStrings();
-
-    bool canExtract();
-    bool canCreate();
-    bool canRename();
-    bool canDelete();
-    bool canAdd();
-    bool canEncrypt();
-    bool canAddComment();
-    bool canLock();
-    bool isInstalled();
-
-    void loadArchive();
-    void init(const KUrl &fileName, const QString &password = 0);
-
-    void lockArchive();
-    void extractArchive(const AkuExtractInfo&, const AkuPlugin::ExtractionOptions &);
+    OverwriteWidget(QWidget *parent);
+    ~OverwriteWidget();
 
 private:
-    KUrl m_fileName;
-    QString m_password;
+    QLabel *m_fileIcon;
+    QLabel *m_filenameLabel;
+    QLabel *m_pathLabel;
 
-private slots:
-    void getError();
-
+public slots:
+    void setInfo(const QString &);
 };
 
-#endif
+#endif // OVERWRITEWIDGET_H

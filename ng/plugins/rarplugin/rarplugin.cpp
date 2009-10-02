@@ -20,7 +20,7 @@
 
 #include "rarplugin.h"
 
-#include <KProcess>
+#include <QProcess>
 #include <QDir>
 #include <QTextStream>
 
@@ -33,6 +33,7 @@ AKU_PLUGIN_EXPORT(RarPlugin)
 
 // the list of files in the rar archive starts after this line
 const QString headerLine = "-------------------------------------------------------------------------------";
+const QString overwriteRequest = "already exists. Overwrite it ?";
 
 // name of the executable
 QString exeName;
@@ -47,6 +48,8 @@ bool rarAdd = false;
 
 RarPlugin::RarPlugin(QObject *parent, const QVariantList &args) : AkuPlugin(parent)
 {
+    Q_UNUSED(args)
+
     if (!KStandardDirs::findExe("rar").isEmpty()) {
         rarCreate = true;
         rarRename = true;
@@ -153,10 +156,9 @@ void RarPlugin::loadArchive()
 
     // we start a first archive list to check if the archive is locked
     // or header password protected
-    KProcess *localProcess = new KProcess;
-    localProcess->setOutputChannelMode(KProcess::MergedChannels);
-    localProcess->setProgram(exeName, options);
-    localProcess->start();
+    QProcess *localProcess = new QProcess;
+    localProcess->setProcessChannelMode(QProcess::MergedChannels);
+    localProcess->start(exeName, options);
     localProcess->waitForFinished();
 
     output = localProcess->readAllStandardOutput();
@@ -183,12 +185,9 @@ void RarPlugin::loadArchive()
 
     options << m_fileName.pathOrUrl();
 
-    KProcess *process = new KProcess;
+    QProcess *process = new QProcess;
     connect(process, SIGNAL(readyReadStandardError()), this, SLOT(getError()));
-    process->setProgram(exeName, options);
-    process->setOutputChannelMode(KProcess::SeparateChannels);
-    process->start();
-    //process->start(exeName, options);
+    process->start(exeName, options);
     process->waitForFinished();
 
     output = process->readAllStandardOutput();
@@ -319,32 +318,54 @@ void RarPlugin::extractArchive(const AkuExtractInfo &extractInfo, const AkuPlugi
 
     kDebug() << options;
 
-    KProcess *process = new KProcess;
+    QProcess *process = new QProcess;
     connect(process, SIGNAL(readyReadStandardError()), this, SLOT(getError()));
-    process->setProgram(exeName, options);
-    process->start();
+    process->start(exeName, options);
     process->waitForFinished();
-    kDebug() << process->readAllStandardOutput();
+    //kDebug() << process->readAllStandardOutput();
 }
 
 void RarPlugin::lockArchive()
 {  
     kDebug() << "locking archive";
     QStringList options;
-    options.insert(0, "k");
-    options.insert(1, m_fileName.pathOrUrl());
 
-    KProcess *process = new KProcess;
+    options << "k";     //  k    Lock the archive
+    options << m_fileName.pathOrUrl();
+
+    QProcess *process = new QProcess;
     connect(process, SIGNAL(readyReadStandardError()), this, SLOT(getError()));
-    process->setProgram(exeName, options);
-    process->start();
+    process->start(exeName, options);
     process->waitForFinished();
 }
 
 void RarPlugin::getError() {
-    KProcess *sender = qobject_cast<KProcess *>(this->sender());
+    QProcess *sender = qobject_cast<QProcess *>(this->sender());
     QByteArray error = sender->readAllStandardError();
-    kDebug() << error;
+
     QString errorCodec = QString::fromLocal8Bit(error);
-    onError(errorCodec);
+    kDebug() << "ERRORE: " + errorCodec;
+    if (errorCodec.isEmpty()) {
+        return;
+    }
+
+    // overwrite request
+    if (errorCodec.contains(overwriteRequest)) {
+        QTextStream stream(&errorCodec);
+        QString line;
+        do {
+            line = stream.readLine();
+            if (line.contains(overwriteRequest)) {
+                int index = line.indexOf(overwriteRequest);
+                line.remove(index - 1, line.length());
+                // line is the name of the file
+                onError(AkuPlugin::RequestOverwrite, line);
+            }
+
+        } while (!line.isNull());
+
+        return;
+    }
+    //
+    onError(AkuPlugin::NormalError, errorCodec);
 }

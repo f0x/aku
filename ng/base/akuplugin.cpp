@@ -36,8 +36,8 @@ public:
 
     AkuPlugin *q;
     KUrl currentFile;
-    CurrentOperation currentOp;
     AkuJobs::AkuHelper *helper;
+    CurrentOperation currentOp;
 };
 
 AkuPlugin::AkuPlugin(QObject *parent) : QObject(parent),
@@ -124,9 +124,10 @@ void AkuPlugin::load(const KUrl &fileName, const QString &password)
     // TODO: see whether to delete previous one or not
     if (!d->helper) {
         d->helper = new AkuJobs::AkuHelper(this);
+        connect (d->helper, SIGNAL(error(AkuPlugin::ErrorType, const QString &)), this,
+             SIGNAL(error(AkuPlugin::ErrorType, const QString &)));
+        connect (d->helper, SIGNAL(archiveLoaded(AkuData)), this, SIGNAL(archiveLoaded(AkuData)));
     }
-    connect (d->helper, SIGNAL(error(const QString &)), this, SIGNAL(error(const QString &)));
-    connect (d->helper, SIGNAL(archiveLoaded(AkuData)), this, SIGNAL(archiveLoaded(AkuData)));
     //connect (d->helper, SIGNAL(progressUpdate(double, double)), this, SIGNAL(progressUpdate(double, double)));
 
     KJob *job = new AkuJobs::LoadJob(this, this);
@@ -146,10 +147,12 @@ void AkuPlugin::extract(AkuExtractInfo extractInfo, AkuPlugin::ExtractionOptions
 
     if (!d->helper) {
         d->helper = new AkuJobs::AkuHelper(this);
+        connect (d->helper, SIGNAL(error(AkuPlugin::ErrorType, const QString &)), this,
+             SIGNAL(error(AkuPlugin::ErrorType, const QString &)));
+
     }
-    connect (d->helper, SIGNAL(error(const QString &)), this, SIGNAL(error(const QString &)));
     //connect (d->helper, SIGNAL(archiveLoaded(AkuData)), this, SIGNAL(archiveLoaded(AkuData)));
-    connect (d->helper, SIGNAL(progressUpdate(double, double)), this, SIGNAL(progressUpdate(double, double)));
+    //connect (d->helper, SIGNAL(progressUpdate(double, double)), this, SIGNAL(progressUpdate(double, double)));
 
     KJob *job = new AkuJobs::ExtractJob(this, extractInfo, extractingOptions, this);
     connect(job, SIGNAL(operationCompleted()), this, SIGNAL(notifyExtractionComplete()));
@@ -168,6 +171,7 @@ void AkuPlugin::lock(const KUrl &fileName)
 
     if (!d->helper) {
         d->helper = new AkuJobs::AkuHelper(this);
+        connect (d->helper, SIGNAL(error(const QString &)), this, SIGNAL(error(const QString &)));
     }
     //connect (d->helper, SIGNAL(error(const QString &)), this, SIGNAL(error(const QString &)));
 
@@ -208,13 +212,13 @@ void AkuPlugin::setCurrentOperation(CurrentOperation op)
     }
 }
 
-void AkuPlugin::onError(const QString &error)
+void AkuPlugin::onError(ErrorType errorType, const QString &error)
 {
     if (!d->helper) {
         return;
     }
 
-    d->helper->onError(error);
+    d->helper->onError(errorType, error);
 }
 
 void AkuPlugin::onArchiveLoaded(AkuData data)

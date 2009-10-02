@@ -115,12 +115,12 @@ class AkuHelper : public QObject
         AkuPlugin *m_plugin;
 
     signals:
-        void error(const QString &);
+        void error(AkuPlugin::ErrorType, const QString &);
         void archiveLoaded(AkuData);
         void progressUpdate(double, double);
 
     public slots:
-        void onError(const QString &);
+        void onError(AkuPlugin::ErrorType, const QString &);
         void onArchiveLoaded(AkuData);
         void onProgressUpdate(double, double);
 };

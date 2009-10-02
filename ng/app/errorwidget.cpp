@@ -43,6 +43,8 @@ ErrorWidget::ErrorWidget(QWidget *parent) : QWidget(parent)
 
     layout->addWidget(m_treeWidget);
     setLayout(layout);
+
+    hide();
 }
 
 ErrorWidget::~ErrorWidget()
