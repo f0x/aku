@@ -17,8 +17,6 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#include <QTextCodec>
-
 #include <KApplication>
 #include <KAboutData>
 #include <KCmdLineArgs>
@@ -43,8 +41,6 @@ int main ( int argc, char *argv[] )
   aboutData.setBugAddress("fgrieco@gmail.com");
    
   KCmdLineArgs::init(argc, argv, &aboutData);
-
-  QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
 
   KApplication app;
 

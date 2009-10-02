@@ -20,7 +20,7 @@
 
 #include "rarplugin.h"
 
-#include <QProcess>
+#include <KProcess>
 #include <QDir>
 #include <QTextStream>
 
@@ -136,7 +136,8 @@ void RarPlugin::loadArchive()
 {
     AkuData akudata;
 
-    QString output;
+    QByteArray output;
+    QString outputCodec;
     QStringList options;
 
     // v[t,b]        Verbosely list archive [technical,bare]
@@ -152,20 +153,21 @@ void RarPlugin::loadArchive()
 
     // we start a first archive list to check if the archive is locked
     // or header password protected
-    QProcess *localProcess = new QProcess;
-    //connect(process, SIGNAL(readyReadStandardError()), this, SLOT(getError()));
-    localProcess->setProcessChannelMode(QProcess::MergedChannels);
-    localProcess->start(exeName, options);
+    KProcess *localProcess = new KProcess;
+    localProcess->setOutputChannelMode(KProcess::MergedChannels);
+    localProcess->setProgram(exeName, options);
+    localProcess->start();
     localProcess->waitForFinished();
 
     output = localProcess->readAllStandardOutput();
+    outputCodec = QString::fromLocal8Bit(output);
 
-    if (output.contains("CRC failed in")) {
+    if (outputCodec.contains("CRC failed in")) {
         kDebug() << "The archive is HEADER PROTECTED";
         akudata.headerprotected = true;
         onArchiveLoaded(akudata);
         return;
-    } else if (output.contains("Lock is present")) {
+    } else if (outputCodec.contains("Lock is present")) {
         kDebug() << "The archive is LOCKED";
     }
 
@@ -181,14 +183,19 @@ void RarPlugin::loadArchive()
 
     options << m_fileName.pathOrUrl();
 
-    QProcess *process = new QProcess;
+    KProcess *process = new KProcess;
     connect(process, SIGNAL(readyReadStandardError()), this, SLOT(getError()));
-    process->start(exeName, options);
+    process->setProgram(exeName, options);
+    process->setOutputChannelMode(KProcess::SeparateChannels);
+    process->start();
+    //process->start(exeName, options);
     process->waitForFinished();
 
     output = process->readAllStandardOutput();
+    outputCodec = QString::fromLocal8Bit(output);
+    kDebug() << "NEW OUTPUT " + output;
 
-    if (output.contains("Comment:")) {
+    if (outputCodec.contains("Comment:")) {
         QString comment = output;
         int target = comment.indexOf("Comment:");
         comment.remove(0, target);
@@ -200,17 +207,17 @@ void RarPlugin::loadArchive()
     }
 
     int indexOfHeaderLine;
-    indexOfHeaderLine = output.indexOf(headerLine);
+    indexOfHeaderLine = outputCodec.indexOf(headerLine);
 
     // cut the the text until the end of headerLine
-    output.remove(0, indexOfHeaderLine + 79);
+    outputCodec.remove(0, indexOfHeaderLine + 79);
 
     // search for the second headerLine. The list of the file in the archive ends here
-    indexOfHeaderLine = output.indexOf(headerLine);
+    indexOfHeaderLine = outputCodec.indexOf(headerLine);
 
-    output.remove(indexOfHeaderLine, output.length());
+    outputCodec.remove(indexOfHeaderLine, output.length());
 
-    QTextStream stream(&output);
+    QTextStream stream(&outputCodec);
     QString line;
     QStringList file;
     int i = 0;
@@ -312,9 +319,10 @@ void RarPlugin::extractArchive(const AkuExtractInfo &extractInfo, const AkuPlugi
 
     kDebug() << options;
 
-    QProcess *process = new QProcess;
+    KProcess *process = new KProcess;
     connect(process, SIGNAL(readyReadStandardError()), this, SLOT(getError()));
-    process->start(exeName, options);
+    process->setProgram(exeName, options);
+    process->start();
     process->waitForFinished();
     kDebug() << process->readAllStandardOutput();
 }
@@ -326,15 +334,17 @@ void RarPlugin::lockArchive()
     options.insert(0, "k");
     options.insert(1, m_fileName.pathOrUrl());
 
-    QProcess *process = new QProcess;
+    KProcess *process = new KProcess;
     connect(process, SIGNAL(readyReadStandardError()), this, SLOT(getError()));
-    process->start(exeName, options);
+    process->setProgram(exeName, options);
+    process->start();
     process->waitForFinished();
 }
 
 void RarPlugin::getError() {
-    QProcess *sender = qobject_cast<QProcess *>(this->sender());
+    KProcess *sender = qobject_cast<KProcess *>(this->sender());
     QByteArray error = sender->readAllStandardError();
     kDebug() << error;
-    onError(error);
+    QString errorCodec = QString::fromLocal8Bit(error);
+    onError(errorCodec);
 }
