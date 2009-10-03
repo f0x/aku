@@ -21,6 +21,8 @@
 
   <ToolBar name="mainToolBar" >
       <Action name="extract" />
+      <Action name="add" />
+      <Action name="preview" />
   </ToolBar>
 
 </gui>

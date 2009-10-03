@@ -59,7 +59,6 @@ ExtractionDialog::ExtractionDialog(QWidget *parent) : KDialog(parent),
 
     m_dirView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     m_dirView->setCurrentUrl(QDir::homePath());
-    //m_dirView->setRootUrl(QDir::rootPath());
 
     const int minWidth = m_dirView->columnWidth(0) +
                          m_dirView->columnWidth(1) +
@@ -80,11 +79,18 @@ ExtractionDialog::ExtractionDialog(QWidget *parent) : KDialog(parent),
     ui.comboHistoryBox->setCompletionObject(urlCompletion);
     ui.comboHistoryBox->setAutoDeleteCompletionObject(true);
     ui.comboHistoryBox->setCompletionMode(KGlobalSettings::CompletionPopupAuto);
+    updateHistory();
 
+    ui.clearButton->setIcon(KIcon("edit-clear-list"));
+
+    connect(ui.clearButton, SIGNAL(clicked()), this, SLOT(clearHistory()));
     connect(okButton, SIGNAL(clicked()), this, SLOT(slotExtraction()));
     connect(m_dirView, SIGNAL(currentChanged(const KUrl &)), this, SLOT(updateCombo(const KUrl &)));
+    connect(ui.comboHistoryBox, SIGNAL(returnPressed()), this, SLOT(slotExtraction()));
 
     resize(450, height());
+
+
 }
 
 ExtractionDialog::~ExtractionDialog()
@@ -183,6 +189,24 @@ void ExtractionDialog::setAdvancedWidget(QWidget *widget)
     m_wparent = widget->parent();
     m_awidget = widget;
     ui.advancedLayout->addWidget(widget);
+}
+
+void ExtractionDialog::clearHistory()
+{
+    KConfig config;
+    KConfigGroup options(&config, "Favourite Dirs");
+    options.writeEntry("destinationDirs", QStringList());
+    options.sync();
+    updateHistory();
+}
+
+void ExtractionDialog::updateHistory()
+{
+    ui.comboHistoryBox->clearHistory();
+    QStringList pathsList = KConfigGroup(KGlobal::config(), "Favourite Dirs").readEntry("destinationDirs", QStringList());
+    for (int i = 0; i < pathsList.size(); i++) {
+        ui.comboHistoryBox->addUrl(pathsList[i]);
+    }
 }
 
 #include "extractiondialog.moc"

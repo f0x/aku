@@ -97,9 +97,9 @@ OverwriteWidget::OverwriteWidget(QWidget *parent) : QWidget(parent)
 
     // rename
     KPushButton *renameButton = new KPushButton(KIcon("edit-rename"), i18n("Rename"), this);
-    KLineEdit *renameEdit = new KLineEdit(this);
-    renameEdit->setClearButtonShown(true);
-    renameEdit->setClickMessage(i18n("New name..."));
+    m_renameEdit = new KLineEdit(this);
+    m_renameEdit->setClearButtonShown(true);
+    m_renameEdit->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     //
 
     // quit
@@ -111,19 +111,23 @@ OverwriteWidget::OverwriteWidget(QWidget *parent) : QWidget(parent)
     gridLayout->addWidget(allCheck, 0, 2);
     gridLayout->addWidget(noButton, 1, 1);
     gridLayout->addWidget(neverCheck, 1, 2);
-    gridLayout->addWidget(renameButton, 2, 1);
-    gridLayout->addWidget(renameEdit, 2, 2);
-    gridLayout->addItem(new QSpacerItem(10, 10, QSizePolicy::Expanding, QSizePolicy::Minimum), 2, 3);
-    gridLayout->addWidget(quitButton, 3, 1);
+    gridLayout->addWidget(renameButton, 0, 3);
+    gridLayout->addWidget(m_renameEdit, 0, 4);
+    gridLayout->addItem(new QSpacerItem(10, 10, QSizePolicy::Expanding, QSizePolicy::Minimum), 0, 5);
+    gridLayout->addWidget(quitButton, 1, 3);
 
     ///
+    layout->addSpacing(15);
     layout->setSpacing(5);
     layout->addLayout(layoutLine1);
     layout->addLayout(layoutLine2);
     layout->addLayout(layoutLine3);
     layout->addSpacing(15);
     layout->addLayout(gridLayout);
+    layout->addSpacing(15);
     setLayout(layout);
+
+    hide();
 }
 
 OverwriteWidget::~OverwriteWidget()
@@ -139,4 +143,6 @@ void OverwriteWidget::setInfo(const QString &filename)
     m_filenameLabel->setText(fileinfo.fileName());
     m_pathLabel->setText(fileinfo.absolutePath());
     m_pathLabel->setToolTip(fileinfo.absolutePath());
+    m_renameEdit->setText(fileinfo.fileName());
+
 }

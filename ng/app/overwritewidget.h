@@ -23,6 +23,7 @@
 #include <QWidget>
 
 class QLabel;
+class KLineEdit;
 
 class OverwriteWidget : public QWidget
 {
@@ -36,6 +37,7 @@ private:
     QLabel *m_fileIcon;
     QLabel *m_filenameLabel;
     QLabel *m_pathLabel;
+    KLineEdit *m_renameEdit;
 
 public slots:
     void setInfo(const QString &);

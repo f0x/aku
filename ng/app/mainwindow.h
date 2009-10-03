@@ -77,6 +77,7 @@ class MainWindow : public KXmlGuiWindow
     SortFilterModel *m_sortFilterModel;
 
     KActionMenu *m_actionExtract;
+    KActionMenu *m_actionAdd;
     KAction *m_actionLock;
     KRecentFilesAction *m_recentFilesAction;
     KUrl m_currentUrl;
@@ -85,22 +86,25 @@ class MainWindow : public KXmlGuiWindow
     void load(const KUrl);
 
   private slots:
+    void addFile();
     void addPlugins(AkuPlugin*, const KPluginInfo &);
     void configureAku();
     void dataMetaWidget(QModelIndex);
     void extract(const KUrl &, AkuPlugin::ExtractionOptions);
     void extractDialog();
+    void getPassword(const QString &);
     void handleError(AkuPlugin::ErrorType, const QString &);
     void loadSettings();
+    void lockArchive();
     void openDialog();
+    void pluginStateChanged();
+    void preview();
     void recentDirData();
     void selectionChanged(const QModelIndex &current, const QModelIndex &previous);
     void showArchiveContent(const AkuData &akudata);
     void showPluginsInfo();
     void tabChanged(QAction *);
-    void pluginStateChanged();
-    void getPassword(const QString &);
-    void lockArchive();
+
 };
 
 #endif

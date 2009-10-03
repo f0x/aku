@@ -1,6 +1,5 @@
 /***************************************************************************
  *   Copyright 2009 by Francesco Grieco <fgrieco@gmail.com>                *
- *                     Alessandro Diaferia <alediaferia@gmail.com>         *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,42 +17,30 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#ifndef EXTRACTIONDIALOG_H
-#define EXTRACTIONDIALOG_H
+#include "addfiledialog.h"
 
-#include <KDialog>
+#include <QCheckBox>
 
-#include "ui_extractiondialog.h"
-#include "akuplugin.h"
+#include <KLocale>
+#include <KVBox>
+#include <kfilewidget.h>
 
-class KFileTreeView;
-
-class ExtractionDialog : public KDialog
+AddFileDialog::AddFileDialog(QWidget *parent) : KFileDialog(QDir::homePath(), "*.*", parent)
 {
-    Q_OBJECT
+    setOperationMode(KFileDialog::Other);
+    setMode(KFile::Files);
+    setModal(true);
 
-public:
-    ExtractionDialog(QWidget *parent = 0);
-    ~ExtractionDialog();
+    // Here we set the custom widget up (this is used for adding files crypting them with password)
+    KHBox *layout = new KHBox();
+    //layout->setMargin(100);
 
-    void setAdvancedWidget(QWidget *);
+    m_passwordCheck = new QCheckBox(i18n("Add file(s) with a password"), layout);
+    static_cast<KFileWidget*>(fileWidget())->setCustomWidget(QString(), layout);
+    setInitialSize(QSize(300, 250));
 
-private:
-    Ui::ExtractionDialog ui;
-        
-    KFileTreeView *m_dirView;
-    QObject *m_wparent;
-    QWidget *m_awidget;
+}
 
-signals:
-    void extractionClicked(const KUrl &destination, AkuPlugin::ExtractionOptions);
-
-private slots:
-    void slotExtraction();
-    void updateCombo(const KUrl localPath);
-    void createNewDir();
-    void clearHistory();
-    void updateHistory();
-};
-
-#endif
+AddFileDialog::~AddFileDialog()
+{
+}

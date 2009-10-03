@@ -20,21 +20,22 @@
 
 #include "mainwindow.h"
 
+#include "addfiledialog.h"
+#include "akustatusbar.h"
 #include "akutreemodel.h"
 #include "akutreenode.h"
 #include "akutreeview.h"
 #include "commentwidget.h"
+#include "errorwidget.h"
 #include "extractiondialog.h"
 #include "filterwidget.h"
 //#include "infodialog.h"
 #include "metawidget.h"
+#include "overwritewidget.h"
 #include "passwidget.h"
 #include "pluginloader.h"
 #include "pluginsmodel.h"
 #include "sortfiltermodel.h"
-#include "akustatusbar.h"
-#include "errorwidget.h"
-#include "overwritewidget.h"
 
 #include <QDockWidget>
 #include <QListView>
@@ -175,6 +176,30 @@ void MainWindow::setupActions()
     m_actionExtract->setText(i18n("Extract"));
     actionCollection()->addAction("extract", m_actionExtract);
     connect(m_actionExtract, SIGNAL(triggered()), this, SLOT(extractDialog()));
+
+    // Add
+    m_actionAdd = new KActionMenu(this);
+    m_actionAdd->setIcon(KIcon("archive-insert"));
+    m_actionAdd->setText(i18n("Add to archive"));
+    m_actionAdd->setDelayed(false);
+    KAction *actionAddFile = new KAction(i18n("Add file(s)"), this);
+    connect(actionAddFile, SIGNAL(triggered()), this, SLOT(addFile()));
+    actionAddFile->setIcon(KIcon("archive-insert"));
+    KAction *actionAddDir = new KAction(i18n("Add dir"), this);
+    actionAddDir->setIcon(KIcon("archive-insert-directory"));
+    m_actionAdd->addAction(actionAddFile);
+    m_actionAdd->addAction(actionAddDir);
+    actionCollection()->addAction("add", m_actionAdd);
+    actionCollection()->addAction("addDir", actionAddDir);
+    actionCollection()->addAction("addFile", actionAddFile);
+    //
+
+    // Preview
+    KAction *actionPreview = new KAction(this);
+    actionPreview->setIcon(KIcon("document-preview-archive"));
+    actionPreview->setText(i18n("Preview"));
+    actionCollection() -> addAction("preview", actionPreview);
+    connect(actionPreview, SIGNAL(triggered()), this, SLOT(preview()));
 
     KAction* pluginsInfoAction = new KAction(this);
     pluginsInfoAction->setText(i18n("Show Plugins Information"));
@@ -503,4 +528,14 @@ void MainWindow::getPassword(const QString &password)
 void MainWindow::lockArchive()
 {
     m_plugins[m_currentPlugin]->lock(m_currentUrl);
+}
+
+void MainWindow::addFile()
+{
+    AddFileDialog *addFileDialog = new AddFileDialog(this);
+    addFileDialog->show();
+}
+
+void MainWindow::preview()
+{
 }

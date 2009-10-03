@@ -19,6 +19,7 @@ set( aku_SRCS
      akustatusbar.cpp
      errorwidget.cpp
      overwritewidget.cpp
+     addfiledialog.cpp
    )
 
 kde4_add_ui_files(aku_SRCS extractiondialog.ui)

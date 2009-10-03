@@ -40,11 +40,16 @@ int main ( int argc, char *argv[] )
 
   aboutData.setBugAddress("fgrieco@gmail.com");
    
-  KCmdLineArgs::init(argc, argv, &aboutData);
+  KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
   KApplication app;
 
   MainWindow *mainwindow = new MainWindow();
+
+  for (int i = 0; i < args->count(); i++) {
+    mainwindow->load(KUrl(args->arg(i)));
+  }
+
   mainwindow -> show();  
 
   return app.exec();
