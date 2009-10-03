@@ -264,6 +264,7 @@ void MainWindow::addPlugins(AkuPlugin *plugin, const KPluginInfo &info)
 void MainWindow::load(const KUrl url)
 {
     if (!QFile(url.pathOrUrl()).open(QIODevice::ReadOnly)) {
+        kDebug() << url.pathOrUrl();
         // hack to show the filename in the error widget
         KUrl tmpUrl = m_currentUrl;
         m_currentUrl = url;
@@ -286,7 +287,7 @@ void MainWindow::load(const KUrl url)
 
     m_currentPlugin = mimetype->name();
     m_plugins[m_currentPlugin]->load(url);
-    m_recentFilesAction->addUrl(url);
+    m_recentFilesAction->addUrl(QFileInfo(url.pathOrUrl()).absoluteFilePath());
     m_currentUrl = url;
 
     dataMetaWidget(QModelIndex());

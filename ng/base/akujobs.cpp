@@ -28,6 +28,7 @@ namespace AkuJobs
 void AkuJob::start()
 {
     AkuThread *thread = new AkuThread(this);
+    connect(thread, SIGNAL(done(ThreadWeaver::Job*)), this, SIGNAL(operationCompleted()));
     ThreadWeaver::Weaver::instance()->enqueue(thread);
 }
 
@@ -42,7 +43,6 @@ void LoadJob::doWork()
 {
     m_plugin->loadArchive();
     emit operationCompleted();
-
 }
 
 ExtractJob::ExtractJob(AkuPlugin *plugin, const AkuExtractInfo &extractInfo,
@@ -56,7 +56,7 @@ ExtractJob::~ExtractJob()
 void ExtractJob::doWork()
 {
     m_plugin->extractArchive(m_extractInfo, m_extractingOptions);
-    emit operationCompleted();
+    //emit operationCompleted();
 }
 
 LockJob::LockJob(AkuPlugin *plugin, QObject *parent) :
@@ -69,7 +69,7 @@ LockJob::~LockJob()
 void LockJob::doWork()
 {
     m_plugin->lockArchive();
-    emit operationCompleted();
+    //emit operationCompleted();
 }
 
 AkuThread::AkuThread(AkuJob *job) : m_job(job)

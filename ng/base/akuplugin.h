@@ -76,6 +76,15 @@ class AKU_EXPORT AkuPlugin : public QObject
                          NormalError
                        };
 
+        enum OverwriteAnswer {
+                               Yes,
+                               No,
+                               All,
+                               Never,
+                               Rename,
+                               Quit
+                             };
+
         enum ExtractionOption {
                               // overwrite mode
                                 AskBeforeOverwrite = 0x0,
@@ -235,6 +244,12 @@ class AKU_EXPORT AkuPlugin : public QObject
          * Call this slot when the archive is correctly loaded.
          */
         void onArchiveLoaded(AkuData);
+
+        /**
+         * Call this function to handle the answer to the overwrite widget
+         * enum + additional info (ex: to rename a file)
+         */
+        //void setAnswer(OverwriteAnswer, const QString &);
 
     protected slots:
         /// @internal

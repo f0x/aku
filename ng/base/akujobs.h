@@ -49,6 +49,9 @@ class AkuJob : public KJob
 
     signals:
         void operationCompleted();
+
+    private slots:
+        void complete(ThreadWeaver::Job*);
 };
 
 

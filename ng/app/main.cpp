@@ -39,7 +39,11 @@ int main ( int argc, char *argv[] )
                             "alediaferia@gmail.com");
 
   aboutData.setBugAddress("fgrieco@gmail.com");
-   
+
+  KCmdLineOptions options;
+  options.add("+[file]", ki18n("Archive to load"));
+  KCmdLineArgs::init( argc, argv, &aboutData );
+  KCmdLineArgs::addCmdLineOptions( options );   
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
   KApplication app;
