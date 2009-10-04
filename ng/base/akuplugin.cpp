@@ -243,3 +243,7 @@ void AkuPlugin::updatePluginStatus()
 {
     setCurrentOperation(NoOperation);
 }
+
+void AkuPlugin::setAnswer(OverwriteAnswer, const QString &info)
+{
+}

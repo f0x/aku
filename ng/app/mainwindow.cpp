@@ -495,7 +495,7 @@ void MainWindow::handleError(AkuPlugin::ErrorType errorType, const QString &erro
             m_actionError->trigger();
             break;
         case AkuPlugin::RequestOverwrite :
-            m_overwriteWidget->setInfo(error);
+            m_overwriteWidget->setInfo(error, m_plugins[m_currentPlugin]);
             kDebug() << "REQUEST OVERWRITE";
             m_overwriteWidget->show();
             break;

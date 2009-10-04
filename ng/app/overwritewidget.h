@@ -23,7 +23,11 @@
 #include <QWidget>
 
 class QLabel;
+
 class KLineEdit;
+class KPushButton;
+
+class AkuPlugin;
 
 class OverwriteWidget : public QWidget
 {
@@ -37,10 +41,20 @@ private:
     QLabel *m_fileIcon;
     QLabel *m_filenameLabel;
     QLabel *m_pathLabel;
+
     KLineEdit *m_renameEdit;
+    KPushButton *m_yesButton;
+    KPushButton *m_noButton;
+    KPushButton *m_quitButton;
+    KPushButton *m_renameButton;
+
+    AkuPlugin *m_plugin;
 
 public slots:
-    void setInfo(const QString &);
+    void setInfo(const QString &, AkuPlugin *);
+
+private slots:
+    void sendAnswer();
 };
 
 #endif // OVERWRITEWIDGET_H

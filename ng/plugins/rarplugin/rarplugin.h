@@ -28,6 +28,8 @@
 
 #include <KUrl>
 
+class QProcess;
+
 class RarPlugin : public AkuPlugin
 {
     Q_OBJECT
@@ -54,10 +56,13 @@ public:
 
     void lockArchive();
     void extractArchive(const AkuExtractInfo&, const AkuPlugin::ExtractionOptions &);
+    void setAnswer(OverwriteAnswer, const QString &);
 
 private:
     KUrl m_fileName;
+
     QString m_password;
+    QProcess *m_process;
 
 private slots:
     void getError();

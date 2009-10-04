@@ -333,10 +333,10 @@ void RarPlugin::lockArchive()
     options << "k";     //  k    Lock the archive
     options << m_fileName.pathOrUrl();
 
-    QProcess *process = new QProcess;
-    connect(process, SIGNAL(readyReadStandardError()), this, SLOT(getError()));
-    process->start(exeName, options);
-    process->waitForFinished();
+    m_process = new QProcess;
+    connect(m_process, SIGNAL(readyReadStandardError()), this, SLOT(getError()));
+    m_process->start(exeName, options);
+    m_process->waitForFinished();
 }
 
 void RarPlugin::getError() {
@@ -369,3 +369,21 @@ void RarPlugin::getError() {
     //
     onError(AkuPlugin::NormalError, errorCodec);
 }
+
+void RarPlugin::setAnswer(OverwriteAnswer answer, const QString &info)
+{
+    switch (answer) {
+            case (Yes):                
+                break;
+            case (No):
+                break;
+            case (Rename):
+                break;
+            case (Quit):
+                m_process->write("q\n");
+                break;
+            default: ;
+    }
+
+}
+

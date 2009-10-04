@@ -113,6 +113,12 @@ class AKU_EXPORT AkuPlugin : public QObject
          */
         virtual bool canExtract();
 
+        /**
+         * Call this function to handle the answer from the overwrite widget
+         * enum + additional info (ex: to rename a file)
+         */
+        virtual void setAnswer(OverwriteAnswer, const QString &);
+
 // TODO: add docs
         virtual bool canCreate();
         virtual bool canRename();
@@ -244,12 +250,6 @@ class AKU_EXPORT AkuPlugin : public QObject
          * Call this slot when the archive is correctly loaded.
          */
         void onArchiveLoaded(AkuData);
-
-        /**
-         * Call this function to handle the answer to the overwrite widget
-         * enum + additional info (ex: to rename a file)
-         */
-        //void setAnswer(OverwriteAnswer, const QString &);
 
     protected slots:
         /// @internal

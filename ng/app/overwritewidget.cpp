@@ -18,6 +18,7 @@
  ***************************************************************************/
 
 #include "overwritewidget.h"
+#include "akuplugin.h"
 
 #include <QCheckBox>
 #include <QFileInfo>
@@ -29,6 +30,8 @@
 #include <KLocale>
 #include <KMimeType>
 #include <KPushButton>
+
+#include <KDebug>
 
 OverwriteWidget::OverwriteWidget(QWidget *parent) : QWidget(parent)
 {
@@ -86,35 +89,39 @@ OverwriteWidget::OverwriteWidget(QWidget *parent) : QWidget(parent)
     gridLayout->setHorizontalSpacing(20);
 
     // yes
-    KPushButton *yesButton = new KPushButton(KIcon("dialog-ok"), i18n("Yes"), this);
+    m_yesButton = new KPushButton(KIcon("dialog-ok"), i18n("Yes"), this);
+    connect(m_yesButton, SIGNAL(clicked()), this, SLOT(sendAnswer()));
     QCheckBox *allCheck = new QCheckBox(i18n("All"));
     //
 
     // no
-    KPushButton *noButton = new KPushButton(KIcon("dialog-cancel"), i18n("No"), this);
+    m_noButton = new KPushButton(KIcon("dialog-cancel"), i18n("No"), this);
+    connect(m_noButton, SIGNAL(clicked()), this, SLOT(sendAnswer()));
     QCheckBox *neverCheck = new QCheckBox(i18n("Never"));
     //
 
     // rename
-    KPushButton *renameButton = new KPushButton(KIcon("edit-rename"), i18n("Rename"), this);
+    m_renameButton = new KPushButton(KIcon("edit-rename"), i18n("Rename"), this);
+    connect(m_renameButton, SIGNAL(clicked()), this, SLOT(sendAnswer()));
     m_renameEdit = new KLineEdit(this);
     m_renameEdit->setClearButtonShown(true);
     m_renameEdit->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
     //
 
     // quit
-    KPushButton *quitButton = new KPushButton(KIcon("dialog-close"), i18n("Quit"), this);
+    m_quitButton = new KPushButton(KIcon("dialog-close"), i18n("Quit"), this);
+    connect(m_quitButton, SIGNAL(clicked()), this, SLOT(sendAnswer()));
     //
 
     gridLayout->addItem(new QSpacerItem(10, 10, QSizePolicy::Fixed, QSizePolicy::Minimum), 0, 0);
-    gridLayout->addWidget(yesButton, 0, 1);
+    gridLayout->addWidget(m_yesButton, 0, 1);
     gridLayout->addWidget(allCheck, 0, 2);
-    gridLayout->addWidget(noButton, 1, 1);
+    gridLayout->addWidget(m_noButton, 1, 1);
     gridLayout->addWidget(neverCheck, 1, 2);
-    gridLayout->addWidget(renameButton, 0, 3);
+    gridLayout->addWidget(m_renameButton, 0, 3);
     gridLayout->addWidget(m_renameEdit, 0, 4);
     gridLayout->addItem(new QSpacerItem(10, 10, QSizePolicy::Expanding, QSizePolicy::Minimum), 0, 5);
-    gridLayout->addWidget(quitButton, 1, 3);
+    gridLayout->addWidget(m_quitButton, 1, 3);
 
     ///
     layout->addSpacing(15);
@@ -134,7 +141,7 @@ OverwriteWidget::~OverwriteWidget()
 {
 }
 
-void OverwriteWidget::setInfo(const QString &filename)
+void OverwriteWidget::setInfo(const QString &filename, AkuPlugin *plugin)
 {
     KMimeType::Ptr mimetype = KMimeType::findByPath(filename);
     m_fileIcon->setPixmap(KIconLoader::global()->loadMimeTypeIcon(mimetype->iconName(),
@@ -144,5 +151,25 @@ void OverwriteWidget::setInfo(const QString &filename)
     m_pathLabel->setText(fileinfo.absolutePath());
     m_pathLabel->setToolTip(fileinfo.absolutePath());
     m_renameEdit->setText(fileinfo.fileName());
+
+    m_plugin = plugin;
+}
+
+void OverwriteWidget::sendAnswer()
+{
+    KPushButton *sender = qobject_cast<KPushButton *>(this->sender());
+
+    if (sender == m_yesButton) {
+        m_plugin->setAnswer(AkuPlugin::Yes, QString());
+    }
+    else if (sender == m_noButton) {
+        m_plugin->setAnswer(AkuPlugin::No, QString());
+    }
+    else if (sender == m_renameButton) {
+        m_plugin->setAnswer(AkuPlugin::Rename, QString());
+    }
+    else if (sender == m_quitButton) {
+        m_plugin->setAnswer(AkuPlugin::Quit, QString());
+    }
 
 }
