@@ -318,10 +318,10 @@ void RarPlugin::extractArchive(const AkuExtractInfo &extractInfo, const AkuPlugi
 
     kDebug() << options;
 
-    QProcess *process = new QProcess;
-    connect(process, SIGNAL(readyReadStandardError()), this, SLOT(getError()));
-    process->start(exeName, options);
-    process->waitForFinished();
+    m_process = new QProcess;
+    connect(m_process, SIGNAL(readyReadStandardError()), this, SLOT(getError()));
+    m_process->start(exeName, options);
+    m_process->waitForFinished(-1);
     //kDebug() << process->readAllStandardOutput();
 }
 
@@ -333,10 +333,10 @@ void RarPlugin::lockArchive()
     options << "k";     //  k    Lock the archive
     options << m_fileName.pathOrUrl();
 
-    m_process = new QProcess;
+    QProcess *process = new QProcess;
     connect(m_process, SIGNAL(readyReadStandardError()), this, SLOT(getError()));
-    m_process->start(exeName, options);
-    m_process->waitForFinished();
+    process->start(exeName, options);
+    process->waitForFinished();
 }
 
 void RarPlugin::getError() {
@@ -373,14 +373,17 @@ void RarPlugin::getError() {
 void RarPlugin::setAnswer(OverwriteAnswer answer, const QString &info)
 {
     switch (answer) {
-            case (Yes):                
+            case (Yes):
+                kDebug() << QString::number(m_process->write("y\n"));
                 break;
             case (No):
+                kDebug() << QString::number(m_process->write("n\n"));
                 break;
             case (Rename):
                 break;
             case (Quit):
-                m_process->write("q\n");
+                kDebug() << QString::number(m_process->write("q\n"));
+                kDebug() << m_process->readAllStandardError();
                 break;
             default: ;
     }
