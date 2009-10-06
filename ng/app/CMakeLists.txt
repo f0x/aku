@@ -20,6 +20,7 @@ set( aku_SRCS
      errorwidget.cpp
      overwritewidget.cpp
      addfiledialog.cpp
+     previewwidget.cpp
    )
 
 kde4_add_ui_files(aku_SRCS extractiondialog.ui)

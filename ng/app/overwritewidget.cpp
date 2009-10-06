@@ -172,4 +172,6 @@ void OverwriteWidget::sendAnswer()
         m_plugin->setAnswer(AkuPlugin::Quit, QString());
     }
 
+    close();
+
 }

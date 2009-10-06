@@ -35,6 +35,7 @@
 #include "passwidget.h"
 #include "pluginloader.h"
 #include "pluginsmodel.h"
+#include "previewwidget.h"
 #include "sortfiltermodel.h"
 
 #include <QDockWidget>
@@ -467,6 +468,9 @@ void MainWindow::extract(const KUrl &destination, AkuPlugin::ExtractionOptions e
     extractInfo.fileName = m_currentUrl;
     extractInfo.destination = destination;
     extractInfo.files = files;
+    if (!m_password.isEmpty()) {
+        extractInfo.headerpassword = m_password;
+    }
 
     m_plugins[m_currentPlugin]->extract(extractInfo, extractionOptions);
 
@@ -539,4 +543,14 @@ void MainWindow::addFile()
 
 void MainWindow::preview()
 {
+    AkuTreeNode *node = m_treeView->currentIndex().data(AkuTreeModel::NodeRole).value<AkuTreeNode*>();
+    QStringList selectedFile = m_treeView->selectedPaths();
+
+    if (selectedFile.size() != 1 || node->isFolder()) {
+        return;
+    }
+
+    PreviewWidget *previewWidget = new PreviewWidget(this);
+    previewWidget->previewOf(m_currentUrl, selectedFile.first(), m_plugins[m_currentPlugin]);
+    previewWidget->show();
 }

@@ -308,6 +308,12 @@ void RarPlugin::extractArchive(const AkuExtractInfo &extractInfo, const AkuPlugi
     if (extractionOptions & AkuPlugin::OpenDestinationPath) {
     }
 
+    if (extractInfo.headerpassword.isEmpty()) {
+        options << "-p-";    // p-     Do not query password
+    } else {
+        options << "-p" + extractInfo.headerpassword;
+    }
+
     options << m_fileName.pathOrUrl();
 
     options << extractInfo.files;
@@ -320,9 +326,10 @@ void RarPlugin::extractArchive(const AkuExtractInfo &extractInfo, const AkuPlugi
 
     m_process = new QProcess;
     connect(m_process, SIGNAL(readyReadStandardError()), this, SLOT(getError()));
+    //connect(m_process, SIGNAL(readyReadStandardOutput()), this, SLOT(getError()));
     m_process->start(exeName, options);
     m_process->waitForFinished(-1);
-    //kDebug() << process->readAllStandardOutput();
+    //kDebug() << m_process->readAllStandardOutput();
 }
 
 void RarPlugin::lockArchive()
@@ -360,6 +367,7 @@ void RarPlugin::getError() {
                 line.remove(index - 1, line.length());
                 // line is the name of the file
                 onError(AkuPlugin::RequestOverwrite, line);
+                return;
             }
 
         } while (!line.isNull());

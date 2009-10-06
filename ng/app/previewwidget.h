@@ -17,29 +17,29 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .        *
  ***************************************************************************/
 
-#ifndef ADDFILEDIALOG_H
-#define ADDFILEDIALOG_H
+#ifndef PREVIEWWIDGET_H
+#define PREVIEWWIDGET_H
 
-#include <KFileDialog>
+#include <KDialog>
 
-class QCheckBox;
+class AkuPlugin;
+class QLabel;
 
-class KComboBox;
-
-class AddFileDialog : public KFileDialog
+class PreviewWidget : public KDialog
 {
     Q_OBJECT
 
 public:
-    AddFileDialog(QWidget* parent = 0);
-    ~AddFileDialog();
+    PreviewWidget(QWidget *parent = 0);
+    ~PreviewWidget();
 
 private:
-    QCheckBox *m_passwordCheck;
-    KComboBox *m_comboBox;
+    QLabel *m_iconLabel;
+    QLabel *m_filenameLabel;
+    QLabel *m_mimetypeLabel;
 
 public slots:
-
+    void previewOf(const KUrl &, const QString &, AkuPlugin *);
 };
 
-#endif // ADDFILEDIALOG_H
+#endif // PREVIEWWIDGET_H

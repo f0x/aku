@@ -40,6 +40,7 @@ typedef struct AkuExtractInfo {
     KUrl fileName;
     KUrl destination;
     QStringList files;
+    QString headerpassword;
 } AkuExtractInfo;
 
 /** \class AkuPlugin akuplugin.h
