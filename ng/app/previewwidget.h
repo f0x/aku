@@ -23,6 +23,7 @@
 #include <KDialog>
 
 class AkuPlugin;
+class QVBoxLayout;
 class QLabel;
 
 class PreviewWidget : public KDialog
@@ -37,6 +38,9 @@ private:
     QLabel *m_iconLabel;
     QLabel *m_filenameLabel;
     QLabel *m_mimetypeLabel;
+
+    QVBoxLayout *m_layout;
+
 
 public slots:
     void previewOf(const KUrl &, const QString &, AkuPlugin *);

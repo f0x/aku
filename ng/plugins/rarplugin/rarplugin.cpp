@@ -188,7 +188,7 @@ void RarPlugin::loadArchive()
     QProcess *process = new QProcess;
     connect(process, SIGNAL(readyReadStandardError()), this, SLOT(getError()));
     process->start(exeName, options);
-    process->waitForFinished();
+    process->waitForFinished(-1);
 
     output = process->readAllStandardOutput();
     outputCodec = QString::fromLocal8Bit(output);

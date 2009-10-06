@@ -35,10 +35,12 @@ PreviewWidget::PreviewWidget(QWidget *parent) : KDialog(parent)
 {
     setModal(true);
 
-    QHBoxLayout *layout = new QHBoxLayout;
+    QVBoxLayout *m_layout = new QVBoxLayout;
+
+    QHBoxLayout *topLayout = new QHBoxLayout;
 
     m_iconLabel = new QLabel;
-    layout->addWidget(m_iconLabel);
+    topLayout->addWidget(m_iconLabel);
 
     QVBoxLayout *vlayout = new QVBoxLayout;
 
@@ -46,14 +48,18 @@ PreviewWidget::PreviewWidget(QWidget *parent) : KDialog(parent)
     QFont font;
     font.setBold(true);
     m_filenameLabel->setFont(font);
+
     m_mimetypeLabel = new QLabel;
 
     vlayout->addWidget(m_filenameLabel);
     vlayout->addWidget(m_mimetypeLabel);
 
-    layout->addLayout(vlayout);
+    topLayout->addLayout(vlayout);
+    topLayout->addSpacerItem(new QSpacerItem(10, 10, QSizePolicy::Expanding, QSizePolicy::Minimum));
 
-    setLayout(layout);
+    m_layout->addLayout(topLayout);
+    //layout->addLayout(m_bottomLayout);
+    mainWidget()->setLayout(m_layout);
     setButtons(KDialog::Close);
     resize(400, 300);
 
@@ -66,20 +72,13 @@ PreviewWidget::~PreviewWidget()
 void PreviewWidget::previewOf(const KUrl &archive, const QString &filename, AkuPlugin *plugin)
 {   
     QFileInfo fileInfo(filename);
-    setCaption(fileInfo.completeBaseName());
-    m_filenameLabel->setText(filename);
-
-    KMimeType::Ptr mimetype = KMimeType::findByPath(filename);
-    m_iconLabel->setPixmap(KIconLoader::global()->loadMimeTypeIcon(mimetype->iconName(),
-                                                                  KIconLoader::Desktop, KIconLoader::SizeLarge));
-
-    m_mimetypeLabel->setText(mimetype->comment());
-
-    KTempDir tempDir;
+    setCaption(fileInfo.fileName());
+    m_filenameLabel->setText(fileInfo.fileName());
 
     AkuExtractInfo info;
     info.fileName = archive;
     info.files << filename;
+    KTempDir tempDir;
     info.destination = tempDir.name();
 
     AkuPlugin::ExtractionOptions options;
@@ -87,9 +86,23 @@ void PreviewWidget::previewOf(const KUrl &archive, const QString &filename, AkuP
 
     plugin->extract(info, options);
 
+    KUrl filePath = tempDir.name() + fileInfo.fileName();
     kDebug() << tempDir.name();
-    kDebug() << tempDir.name() + fileInfo.completeBaseName();
+    kDebug() << fileInfo.fileName();
+    kDebug() << filePath;
 
-    //KParts::ReadOnlyPart* part = KMimeTypeTrader::createInstanceFromQuery<KParts::ReadOnlyPart>("text/plain",
-    //                                                                                            parentWidget, parentObject);
+    KMimeType::Ptr mimetype = KMimeType::findByUrl(filePath);
+    m_iconLabel->setPixmap(KIconLoader::global()->loadMimeTypeIcon(mimetype->iconName(),
+                                                                  KIconLoader::Desktop, KIconLoader::SizeLarge));
+    m_mimetypeLabel->setText(mimetype->comment());
+
+    QFrame *frame = new QFrame;
+    frame->setLayout(m_layout);
+
+    KParts::ReadOnlyPart *part;
+    part = KMimeTypeTrader::self()->createPartInstanceFromQuery<KParts::ReadOnlyPart>(mimetype->name(),
+             frame, this);
+
+    part->openUrl(filePath);
+    //m_layout->addWidget(frame);
 }
