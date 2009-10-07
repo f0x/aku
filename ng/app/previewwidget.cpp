@@ -28,6 +28,7 @@
 #include <kmimetypetrader.h>
 #include <KMimeType>
 #include <KTempDir>
+#include <KVBox>
 
 #include <KDebug>
 
@@ -35,9 +36,11 @@ PreviewWidget::PreviewWidget(QWidget *parent) : KDialog(parent)
 {
     setModal(true);
 
-    QVBoxLayout *m_layout = new QVBoxLayout;
+    QVBoxLayout *layout = new QVBoxLayout;
 
     QHBoxLayout *topLayout = new QHBoxLayout;
+
+    m_vbox = new KVBox;
 
     m_iconLabel = new QLabel;
     topLayout->addWidget(m_iconLabel);
@@ -57,9 +60,10 @@ PreviewWidget::PreviewWidget(QWidget *parent) : KDialog(parent)
     topLayout->addLayout(vlayout);
     topLayout->addSpacerItem(new QSpacerItem(10, 10, QSizePolicy::Expanding, QSizePolicy::Minimum));
 
-    m_layout->addLayout(topLayout);
-    //layout->addLayout(m_bottomLayout);
-    mainWidget()->setLayout(m_layout);
+    layout->addLayout(topLayout);
+    layout->addWidget(m_vbox);
+    layout->setSpacing(10);
+    mainWidget()->setLayout(layout);
     setButtons(KDialog::Close);
     resize(400, 300);
 
@@ -96,13 +100,10 @@ void PreviewWidget::previewOf(const KUrl &archive, const QString &filename, AkuP
                                                                   KIconLoader::Desktop, KIconLoader::SizeLarge));
     m_mimetypeLabel->setText(mimetype->comment());
 
-    QFrame *frame = new QFrame;
-    frame->setLayout(m_layout);
-
     KParts::ReadOnlyPart *part;
     part = KMimeTypeTrader::self()->createPartInstanceFromQuery<KParts::ReadOnlyPart>(mimetype->name(),
-             frame, this);
+                                                                                      m_vbox, this);
 
     part->openUrl(filePath);
-    //m_layout->addWidget(frame);
+
 }
