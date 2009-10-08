@@ -25,6 +25,7 @@
 class QCheckBox;
 
 class KComboBox;
+class KLineEdit;
 
 class AddFileDialog : public KFileDialog
 {
@@ -37,9 +38,10 @@ public:
 private:
     QCheckBox *m_passwordCheck;
     KComboBox *m_comboBox;
+    KLineEdit *m_lineEdit;
 
 public slots:
-
+    void updateInfo(const QString &, bool);
 };
 
 #endif // ADDFILEDIALOG_H

@@ -552,5 +552,4 @@ void MainWindow::preview()
 
     PreviewWidget *previewWidget = new PreviewWidget(this);
     previewWidget->previewOf(m_currentUrl, selectedFile.first(), m_plugins[m_currentPlugin]);
-    previewWidget->show();
 }

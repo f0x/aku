@@ -219,6 +219,7 @@ void RarPlugin::loadArchive()
     QTextStream stream(&outputCodec);
     QString line;
     QStringList file;
+    QStringList filespasswordprotected;
     int i = 0;
 
     do {
@@ -229,7 +230,12 @@ void RarPlugin::loadArchive()
         }
 
         if ((i % 2) == 0) {
-            file << line.mid(1); // filepath
+            if (line.startsWith('*') && (m_password.isEmpty())) {
+                filespasswordprotected << line.mid(1);
+                file << line.mid(1) + " *";
+            } else {
+                file << line.mid(1); // filepath
+            }
         } else {
             QStringList attributes = (line.split(" ", QString::SkipEmptyParts));
             for (int i = 0; i < attributes.size(); i++) {
@@ -265,6 +271,7 @@ void RarPlugin::loadArchive()
                 file << attributes[i];
             }
             akudata.paths << (QStringList() << file);
+            akudata.passwordprotectedPaths << (QStringList() << filespasswordprotected);
             file.clear();
         }
         i++;

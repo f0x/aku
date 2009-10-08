@@ -150,6 +150,17 @@ double AkuTreeNode::packedSize()
     return *m_packedSize;
 }
 
+int AkuTreeNode::ratio()
+{
+    if (m_itemData.count() < 4) {
+        return 0;
+    }
+
+    QString ratioString = m_itemData.at(3);
+    ratioString.chop(1);
+    return ratioString.toInt();
+}
+
 QString AkuTreeNode::mimeType() const
 {
     if (m_itemData.count() < 1) {

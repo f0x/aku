@@ -24,6 +24,7 @@
 
 class AkuPlugin;
 class QLabel;
+class KTempDir;
 class KVBox;
 
 class PreviewWidget : public KDialog
@@ -41,6 +42,7 @@ private:
 
     KVBox *m_vbox;
 
+    KTempDir *m_tempDir;
 
 public slots:
     void previewOf(const KUrl &, const QString &, AkuPlugin *);

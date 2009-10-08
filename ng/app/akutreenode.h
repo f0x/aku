@@ -41,6 +41,7 @@ class AkuTreeNode
         QString name() const;
         double size();
         double packedSize();
+        int ratio();
         QString mimeType() const;
 
         QString data(int column) const;

@@ -23,6 +23,8 @@
 #include <KStatusBar>
 
 class AkuPlugin;
+class QToolButton;
+class QLabel;
 
 class AkuStatusBar : public KStatusBar
 {
@@ -32,9 +34,27 @@ public:
     AkuStatusBar(QWidget *parent = 0);
     ~AkuStatusBar();
 
+private:
+    AkuPlugin *m_plugin;
+
+    QWidget *statusWidget;
+
+    QToolButton *commentButton;
+    QToolButton *busyButton;
+
+    QLabel *statusLabel;
+    QLabel *statusOkLabel;
+    QLabel *lockLabel;
+    QLabel *headerLabel;
+    QLabel *passwordLabel;
+
 public slots:
     void stateChanged(AkuPlugin *);
     void operationCompleted();
+
+private slots:
+    void abortOperation();
+    void setupConnections();
 };
 
 #endif

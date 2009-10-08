@@ -31,6 +31,7 @@
 typedef struct AkuData {
     AkuData() : headerprotected(false) {}
     QVector<QStringList> paths;
+    QVector<QStringList> passwordprotectedPaths;
     bool headerprotected;
     QString comment;
 } AkuData;
@@ -50,6 +51,7 @@ typedef struct AkuExtractInfo {
   */
 
 class KUrl;
+class KJob;
 
 class AKU_EXPORT AkuPlugin : public QObject
 {
@@ -251,6 +253,8 @@ class AKU_EXPORT AkuPlugin : public QObject
          * Call this slot when the archive is correctly loaded.
          */
         void onArchiveLoaded(AkuData);
+
+        //void abortJob();
 
     protected slots:
         /// @internal

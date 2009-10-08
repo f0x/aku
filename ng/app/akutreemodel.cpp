@@ -20,10 +20,13 @@
 #include "akutreemodel.h"
 #include "akutreenode.h"
 
+#include <QFont>
+#include <QLinearGradient>
 #include <QVector>
 #include <QDir>
 
 #include <KGlobal>
+#include <KGlobalSettings>
 #include <KLocale>
 #include <KIcon>
 #include <KMimeType>
@@ -114,8 +117,14 @@ QVariant AkuTreeModel::data(const QModelIndex &index, int role) const
             //kDebug() << mimeType->iconName();
             return KIcon(mimeType->iconName());
         }
+
     } else if (role == Qt::DisplayRole) {
         AkuTreeNode *node = static_cast<AkuTreeNode*>(index.internalPointer());
+        if (index.column() == 0 && node->name().endsWith('*')) {
+            QString item = node->name();
+            item.chop(2);
+            return item;
+        }
         if (index.column() == 1) {
             if (node->isFolder()) {
                 return QString();
@@ -127,24 +136,56 @@ QVariant AkuTreeModel::data(const QModelIndex &index, int role) const
                 return QString();
             }
             return KGlobal::locale()->formatByteSize(node->packedSize());
-        }
+        }     
         return node->data(index.column());
     } else if (role == NodeRole) {
         return qVariantFromValue(static_cast<AkuTreeNode*>(index.internalPointer()));
     }
 
+    if (role == Qt::FontRole && index.column() == 0) {
+        AkuTreeNode *node = static_cast<AkuTreeNode*>(index.internalPointer());
+        if (node->name().endsWith("*")) {
+            QFont font;
+            font.setItalic(true);
+            return QVariant(QFont(font));
+        }
+    }
+    
+    if (role == Qt::FontRole && index.column() == 3) {
+        QFont font = KGlobalSettings::smallestReadableFont();
+        return QVariant(QFont(font));
+    }
+
+    if (role == Qt::BackgroundRole && index.column() == 3) {
+        AkuTreeNode *node = static_cast<AkuTreeNode*>(index.internalPointer());
+        if (node->isFolder()) {
+            return QVariant();
+        }
+        int ratio = node->ratio();
+        QLinearGradient gradient(0, 5, 15, 25);
+        gradient.setColorAt(1, QColor::fromRgbF(0, 0, 0, 0));
+        if (ratio < 0) {
+            gradient.setColorAt(0, QColor::fromRgbF(0.9, 0.01, 0.4, 1));
+        } else if (ratio < 20) {
+            gradient.setColorAt(0, QColor::fromRgbF(1, 0, 0, 1));
+        } else if (ratio < 40) {
+            gradient.setColorAt(0, QColor::fromRgbF(1, 0.5, 0, 1));
+        } else if (ratio < 60) {
+            gradient.setColorAt(0, QColor::fromRgbF(1, 1, 0, 1));
+        } else if (ratio < 80) {
+            gradient.setColorAt(0, QColor::fromRgbF(0, 1, 0, 1));
+        //} else if (ratio <= 100) {
+        //    gradient.setColorAt(0, QColor::fromRgbF(0, 0, 1, 1));
+        } else {
+            gradient.setColorAt(0, QColor::fromRgbF(0, 0, 1, 1));
+        }
+
+        return QVariant(QBrush(gradient));
+    }
+
     return QVariant();
 
 }
-
-//AkuTreeNode* AkuTreeModel::nodeFromIndex(const QModelIndex &index) const
-//{
-//    if (!index.isValid()) {
-//        return 0;
-//    }
-//
-//    return static_cast<AkuTreeNode*>(index.internalPointer());
-//}
 
 QModelIndex AkuTreeModel::parent(const QModelIndex &index) const
 {
@@ -159,6 +200,7 @@ QModelIndex AkuTreeModel::parent(const QModelIndex &index) const
 
     return QModelIndex();
 }
+
 
 QModelIndex AkuTreeModel::index(int row, int column, const QModelIndex &parent) const
 {

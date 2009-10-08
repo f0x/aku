@@ -20,14 +20,18 @@
 #include "addfiledialog.h"
 
 #include <QCheckBox>
+#include <QLabel>
 
 #include <KComboBox>
+#include <KLineEdit>
 #include <KLocale>
 #include <KVBox>
 #include <kfilewidget.h>
 
 AddFileDialog::AddFileDialog(QWidget *parent) : KFileDialog(QDir::homePath(), "*.*", parent)
 {
+    setCaption(i18n("Add file(s)"));
+
     setOperationMode(KFileDialog::Other);
     setMode(KFile::Files);
     setModal(true);
@@ -35,14 +39,22 @@ AddFileDialog::AddFileDialog(QWidget *parent) : KFileDialog(QDir::homePath(), "*
     // Here we set the custom widget up (this is used for adding files crypting them with password)
     KVBox *layout = new KVBox();
     //layout->setMargin(100);
+    KHBox *hlayout = new KHBox(layout);
+    QLabel *label = new QLabel(i18n("Adding path") + ": ", hlayout);
+    m_lineEdit = new KLineEdit(hlayout);
 
-    m_passwordCheck = new QCheckBox(i18n("Add file(s) with a password"), layout);
     m_comboBox = new KComboBox(layout);
+    m_passwordCheck = new QCheckBox(i18n("Add file(s) with a password"), layout);
+    m_passwordCheck->setVisible(false);
     static_cast<KFileWidget*>(fileWidget())->setCustomWidget(QString(), layout);
     setInitialSize(QSize(300, 250));
 
 }
 
 AddFileDialog::~AddFileDialog()
+{
+}
+
+void AddFileDialog::updateInfo(const QString &path, bool passwordSupport)
 {
 }

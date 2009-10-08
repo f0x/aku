@@ -247,3 +247,8 @@ void AkuPlugin::updatePluginStatus()
 void AkuPlugin::setAnswer(OverwriteAnswer, const QString &info)
 {
 }
+
+//void AkuPlugin::abortJob()
+//{
+//    m_loadJob->kill();
+//}

@@ -20,30 +20,98 @@
 #include "akustatusbar.h"
 #include "akuplugin.h"
 
+#include <QLabel>
+#include <QToolButton>
+#include <QHBoxLayout>
+
+#include <KIcon>
+#include <KIconLoader>
 #include <KLocale>
 #include <KDebug>
 
 AkuStatusBar::AkuStatusBar(QWidget *parent) : KStatusBar(parent)
 {
+    busyButton = new QToolButton;
+    busyButton->setIcon(KIcon("user-away"));
+    busyButton->setAutoRaise(true);
+    busyButton->setToolTip(i18n("Abort the operation"));
+    busyButton->setVisible(false);
+    addWidget(busyButton);
+
+    statusLabel = new QLabel;
+    addWidget(statusLabel);
+
+    statusWidget = new QWidget;
+    addPermanentWidget(statusWidget);
+
+    QHBoxLayout *layout = new QHBoxLayout(statusWidget);
+    commentButton = new QToolButton;
+    commentButton->setIcon(KIcon("edit-paste"));
+    commentButton->setAutoRaise(true);
+
+    statusOkLabel = new QLabel;
+    statusOkLabel->setPixmap(KIconLoader::global()->loadMimeTypeIcon("user-online", KIconLoader::Desktop,
+                                                                     KIconLoader::SizeSmall));
+    statusOkLabel->setToolTip(i18n("This archive has no global restrictions"));
+
+    lockLabel = new QLabel;
+    lockLabel->setPixmap(KIconLoader::global()->loadMimeTypeIcon("object-locked", KIconLoader::Desktop,
+                                                                 KIconLoader::SizeSmall));
+    lockLabel->setToolTip(i18n("Locked archive. Any attempt to modify the archive will be ignored"));
+
+    headerLabel = new QLabel;
+    headerLabel->setPixmap(KIconLoader::global()->loadMimeTypeIcon("security-low", KIconLoader::Desktop,
+                                                                   KIconLoader::SizeSmall));
+    headerLabel->setToolTip(i18n("This archive has a header password protection.") + "<br>" +
+                            i18n("File data, file names, sizes, attributes, comments are encrypted.") +
+                            "<br>" + i18n("Without a password it is impossible to view even the list of files in archive."));
+
+    passwordLabel = new QLabel;
+    passwordLabel->setPixmap(KIconLoader::global()->loadMimeTypeIcon("security-medium", KIconLoader::Desktop,
+                                                                     KIconLoader::SizeSmall));
+    passwordLabel->setToolTip("This archive has one or more password protected file(s)");
+
+    layout->addWidget(commentButton);
+    layout->addWidget(lockLabel);
+    layout->addWidget(headerLabel);
+    layout->addWidget(passwordLabel);
+    layout->addWidget(statusOkLabel);
+
+    setupConnections();
 }
 
 AkuStatusBar::~AkuStatusBar()
 {
 }
 
+void AkuStatusBar::setupConnections()
+{
+
+}
+
 void AkuStatusBar::stateChanged(AkuPlugin *plugin)
 {
+    m_plugin = plugin;
+
     switch (plugin->currentOperation()) {
         case AkuPlugin::Extracting :
-            showMessage(i18n("Extraction in progress..."));
+            busyButton->setVisible(true);
+            statusLabel->setText(i18n("Extraction in progress..."));
+            //showMessage(i18n("Extraction in progress..."));
             break;
         case AkuPlugin::Loading :
-            showMessage(i18n("Loading archive..."));
+            busyButton->setVisible(true);
+            statusLabel->setText(i18n("Loading archive..."));
+            //showMessage(i18n("Loading archive..."));
             break;
         case AkuPlugin::Locking :
-            showMessage(i18n("Locking archive..."));
+            busyButton->setVisible(true);
+            statusLabel->setText(i18n("Locking archive..."));
+            //showMessage(i18n("Locking archive..."));
             break;
         default: ;
+            statusLabel->clear();
+            busyButton->setVisible(false);
     }
 }
 
@@ -51,4 +119,9 @@ void AkuStatusBar::operationCompleted()
 {
     kDebug() << "Operation Completed";
     clearMessage();
+}
+
+void AkuStatusBar::abortOperation()
+{
+    //m_plugin->abortJob();
 }

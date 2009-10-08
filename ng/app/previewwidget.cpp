@@ -24,9 +24,11 @@
 #include <QHBoxLayout>
 #include <QLabel>
 
+#include <KIO/NetAccess>
 #include <KParts/ReadWritePart>
 #include <kmimetypetrader.h>
 #include <KMimeType>
+#include <KRun>
 #include <KTempDir>
 #include <KVBox>
 
@@ -65,12 +67,13 @@ PreviewWidget::PreviewWidget(QWidget *parent) : KDialog(parent)
     layout->setSpacing(10);
     mainWidget()->setLayout(layout);
     setButtons(KDialog::Close);
-    resize(400, 300);
+    //resize(400, 300);
 
 }
 
 PreviewWidget::~PreviewWidget()
 {
+    m_tempDir->unlink();
 }
 
 void PreviewWidget::previewOf(const KUrl &archive, const QString &filename, AkuPlugin *plugin)
@@ -82,16 +85,17 @@ void PreviewWidget::previewOf(const KUrl &archive, const QString &filename, AkuP
     AkuExtractInfo info;
     info.fileName = archive;
     info.files << filename;
-    KTempDir tempDir;
-    info.destination = tempDir.name();
+    m_tempDir = new KTempDir;
+    m_tempDir->setAutoRemove(false);
+    info.destination = m_tempDir->name();
 
     AkuPlugin::ExtractionOptions options;
     options |= AkuPlugin::OverwriteWithoutPrompt;
 
     plugin->extract(info, options);
 
-    KUrl filePath = tempDir.name() + fileInfo.fileName();
-    kDebug() << tempDir.name();
+    KUrl filePath = m_tempDir->name() + fileInfo.fileName();
+    kDebug() << m_tempDir->name();
     kDebug() << fileInfo.fileName();
     kDebug() << filePath;
 
@@ -104,6 +108,12 @@ void PreviewWidget::previewOf(const KUrl &archive, const QString &filename, AkuP
     part = KMimeTypeTrader::self()->createPartInstanceFromQuery<KParts::ReadOnlyPart>(mimetype->name(),
                                                                                       m_vbox, this);
 
-    part->openUrl(filePath);
+    if (part) {
+        part->openUrl(filePath);
+        exec();
+    } else {
+        KRun::runUrl(filePath, mimetype->name(), this);
+        //kDebug() << filePath;
+   }
 
 }
