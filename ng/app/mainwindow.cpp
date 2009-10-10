@@ -189,6 +189,24 @@ void MainWindow::setupActions()
     connect(actionAdd, SIGNAL(triggered()), this, SLOT(addDialog()));
     //
 
+    // Delete
+    KAction *actionDelete = new KAction(this);
+    actionDelete->setIcon(KIcon("archive-remove.png"));
+    actionDelete->setText(i18n("Delete"));
+    actionCollection()->addAction("delete", actionDelete);
+    actionDelete->setShortcut(Qt::Key_Delete);
+    connect(actionDelete, SIGNAL(triggered()), this, SLOT(remove()));
+    //
+
+    // Rename
+    KAction *actionRename = new KAction(this);
+    actionRename->setIcon(KIcon("edit-rename"));
+    actionRename->setText(i18n("Rename"));
+    actionCollection()->addAction("rename", actionRename);
+    actionRename->setShortcut(Qt::Key_F2);
+    connect(actionRename, SIGNAL(triggered()), this, SLOT(rename()));
+    //
+
     // Preview
     KAction *actionPreview = new KAction(this);
     actionPreview->setIcon(KIcon("document-preview-archive"));
@@ -554,4 +572,18 @@ void MainWindow::preview()
 void MainWindow::addFiles(const QStringList &files, const QString &path)
 {
     m_plugins[m_currentPlugin]->add(files, path);
+}
+
+void MainWindow::remove()
+{
+    QStringList files = m_treeView->selectedPaths();
+    if (files.isEmpty()) {
+        return;
+    }
+    kDebug() << files;
+}
+
+void MainWindow::rename()
+{
+    QStringList files = m_treeView->selectedPaths();
 }

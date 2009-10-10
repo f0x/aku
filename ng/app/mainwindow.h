@@ -101,6 +101,8 @@ class MainWindow : public KXmlGuiWindow
     void pluginStateChanged();
     void preview();
     void recentDirData();
+    void remove();
+    void rename();
     void selectionChanged(const QModelIndex &current, const QModelIndex &previous);
     void showArchiveContent(const AkuData &akudata);
     void showPluginsInfo();

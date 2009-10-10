@@ -277,3 +277,41 @@ void AkuPlugin::add(const QStringList &files, const QString &path)
     connect(job, SIGNAL(operationCompleted()), this, SIGNAL(operationCompleted()));
     job->start();
 }
+
+void AkuPlugin::removeFromArchive(const QStringList &files)
+{
+    Q_UNUSED(files)
+}
+
+void AkuPlugin::remove(const QStringList &files)
+{
+    setCurrentOperation(Deleting);
+
+    if (!d->helper) {
+        d->helper = new AkuJobs::AkuHelper(this);
+        connect (d->helper, SIGNAL(error(const QString &)), this, SIGNAL(error(const QString &)));
+    }
+
+    KJob *job = new AkuJobs::RemoveJob(this, files, this);
+    connect(job, SIGNAL(operationCompleted()), this, SIGNAL(operationCompleted()));
+    job->start();
+}
+
+void AkuPlugin::renameFile(const QString &file)
+{
+    Q_UNUSED(file)
+}
+
+void AkuPlugin::rename(const QString &file)
+{
+    setCurrentOperation(Renaming);
+
+    if (!d->helper) {
+        d->helper = new AkuJobs::AkuHelper(this);
+        connect (d->helper, SIGNAL(error(const QString &)), this, SIGNAL(error(const QString &)));
+    }
+
+    KJob *job = new AkuJobs::RenameJob(this, file, this);
+    connect(job, SIGNAL(operationCompleted()), this, SIGNAL(operationCompleted()));
+    job->start();
+}

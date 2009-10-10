@@ -57,6 +57,7 @@ public:
     void lockArchive();
     void addToArchive(const QStringList &, const QString &);
     void extractArchive(const AkuExtractInfo&, const AkuPlugin::ExtractionOptions &);
+    void removeFromArchive(const QStringList &);
     void setAnswer(OverwriteAnswer, const QString &);
 
 private:

@@ -72,6 +72,30 @@ void AddJob::doWork()
     m_plugin->addToArchive(m_files, m_path);
 }
 
+RemoveJob::RemoveJob(AkuPlugin *plugin, const QStringList &files, QObject *parent) :
+                       AkuJob(parent), m_plugin(plugin), m_files(files)
+{}
+
+RemoveJob::~RemoveJob()
+{}
+
+void RemoveJob::doWork()
+{
+    m_plugin->removeFromArchive(m_files);
+}
+
+RenameJob::RenameJob(AkuPlugin *plugin, const QString &file, QObject *parent) :
+                       AkuJob(parent), m_plugin(plugin), m_file(file)
+{}
+
+RenameJob::~RenameJob()
+{}
+
+void RenameJob::doWork()
+{
+    m_plugin->renameFile(m_file);
+}
+
 
 LockJob::LockJob(AkuPlugin *plugin, QObject *parent) :
                   AkuJob(parent), m_plugin(plugin)

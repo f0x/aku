@@ -367,6 +367,10 @@ void RarPlugin::addToArchive(const QStringList &files, const QString &path)
     process->waitForFinished(-1);
 }
 
+void RarPlugin::removeFromArchive(const QStringList &files)
+{
+}
+
 void RarPlugin::lockArchive()
 {  
     kDebug() << "locking archive";

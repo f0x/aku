@@ -168,6 +168,18 @@ class AKU_EXPORT AkuPlugin : public QObject
         virtual void addToArchive(const QStringList &files, const QString &path);
 
         /**
+          * This method should be reimplemented in order to rename a file in archive.
+          *
+         */
+        virtual void renameFile(const QString &file);
+
+        /**
+          * This method should be reimplemented in order to remove file from the archive.
+          *
+         */
+        virtual void removeFromArchive(const QStringList &files);
+
+        /**
           * This method is useful only for the rar archive.
           * Locking does not permit writing operation on the archive.
          */
@@ -196,6 +208,16 @@ class AKU_EXPORT AkuPlugin : public QObject
          * @internal used to add files the archive.
          */
         void add(const QStringList &, const QString &);
+
+         /**
+         * @internal used to remove files from the archive.
+         */
+        void remove(const QStringList &);
+
+        /**
+         * @internal used to rename a file in archive.
+         */
+        void rename(const QString &);
 
         /**
          * @internal used to lock the file (only for rar)

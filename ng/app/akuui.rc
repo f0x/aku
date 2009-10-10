@@ -8,6 +8,11 @@
 
   <MenuBar>
    <Menu name="commands"><text>Commands</text>
+      <Action name="extract" />
+      <Action name="add" />
+      <Action name="delete" />
+      <Action name="rename" />
+      <Separator />
       <Action name="lock" />
    </Menu>
    <Menu name="view" >
@@ -22,6 +27,8 @@
   <ToolBar name="mainToolBar" >
       <Action name="extract" />
       <Action name="add" />
+      <Action name="delete" />
+      <Action name="rename" />
       <Action name="preview" />
   </ToolBar>
 

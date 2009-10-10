@@ -119,6 +119,11 @@ void AkuStatusBar::stateChanged(AkuPlugin *plugin)
         case AkuPlugin::Adding :
             busyButton->setVisible(true);
             statusLabel->setText(i18n("Adding to the archive..."));
+            break;
+        case AkuPlugin::Deleting :
+            busyButton->setVisible(true);
+            statusLabel->setText(i18n("Removing files..."));
+            break;
         default: ;
             statusLabel->clear();
             busyButton->setVisible(false);

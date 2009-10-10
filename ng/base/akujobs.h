@@ -96,6 +96,34 @@ class AddJob : public AkuJob
         QString m_path;
 };
 
+class RemoveJob : public AkuJob
+{
+    Q_OBJECT
+    public:
+        RemoveJob(AkuPlugin *, const QStringList &files, QObject *parent = 0);
+        ~RemoveJob();
+
+        void doWork();
+
+    private:
+        AkuPlugin *m_plugin;
+        QStringList m_files;
+};
+
+class RenameJob : public AkuJob
+{
+    Q_OBJECT
+    public:
+        RenameJob(AkuPlugin *, const QString &file, QObject *parent = 0);
+        ~RenameJob();
+
+        void doWork();
+
+    private:
+        AkuPlugin *m_plugin;
+        QString m_file;
+};
+
 class LockJob : public AkuJob
 {
     Q_OBJECT
