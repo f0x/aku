@@ -91,6 +91,7 @@ class MainWindow : public KXmlGuiWindow
     void addPlugins(AkuPlugin*, const KPluginInfo &);
     void configureAku();
     void dataMetaWidget(QModelIndex);
+    void encrypt();
     void extract(const KUrl &, AkuPlugin::ExtractionOptions);
     void extractDialog();
     void getPassword(const QString &);

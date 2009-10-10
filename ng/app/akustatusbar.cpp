@@ -18,7 +18,6 @@
  ***************************************************************************/
 
 #include "akustatusbar.h"
-#include "akuplugin.h"
 
 #include <QLabel>
 #include <QToolButton>
@@ -31,58 +30,64 @@
 
 AkuStatusBar::AkuStatusBar(QWidget *parent) : KStatusBar(parent)
 {
-    busyButton = new QToolButton;
-    busyButton->setIcon(KIcon("user-away"));
-    busyButton->setAutoRaise(true);
-    busyButton->setToolTip(i18n("Abort the operation"));
-    busyButton->setVisible(false);
-    addWidget(busyButton);
+    m_busyButton = new QToolButton;
+    m_busyButton->setIcon(KIcon("user-away"));
+    m_busyButton->setAutoRaise(true);
+    m_busyButton->setToolTip(i18n("Abort the operation"));
+    m_busyButton->setVisible(false);
+    addWidget(m_busyButton);
 
-    statusLabel = new QLabel;
-    addWidget(statusLabel);
+    m_statusLabel = new QLabel;
+    addWidget(m_statusLabel);
 
-    statusWidget = new QWidget;
-    addPermanentWidget(statusWidget);
+    m_statusWidget = new QWidget;
+    addPermanentWidget(m_statusWidget);
 
-    QHBoxLayout *layout = new QHBoxLayout(statusWidget);
-    commentButton = new QToolButton;
-    commentButton->setIcon(KIcon("edit-paste"));
-    commentButton->setToolTip(i18n("The archive has a comment. Click to read or to modify it"));
-    commentButton->setAutoRaise(true);
+    QHBoxLayout *layout = new QHBoxLayout(m_statusWidget);
+    m_commentButton = new QToolButton;
+    m_commentButton->setIcon(KIcon("edit-paste"));
+    m_commentButton->setToolTip(i18n("The archive has a comment. Click to read or to modify it"));
+    m_commentButton->setAutoRaise(true);
+    m_commentButton->setVisible(false);
 
-    statusOkLabel = new QLabel;
-    statusOkLabel->setPixmap(KIconLoader::global()->loadMimeTypeIcon("user-online", KIconLoader::Desktop,
+    m_statusOkLabel = new QLabel;
+    m_statusOkLabel->setPixmap(KIconLoader::global()->loadMimeTypeIcon("user-online", KIconLoader::Desktop,
                                                                      KIconLoader::SizeSmall));
-    statusOkLabel->setToolTip(i18n("This archive has no global restrictions"));
+    m_statusOkLabel->setToolTip(i18n("This archive has no global restrictions"));
+    m_statusOkLabel->setVisible(false);
 
-    lockLabel = new QLabel;
-    lockLabel->setPixmap(KIconLoader::global()->loadMimeTypeIcon("object-locked", KIconLoader::Desktop,
+    m_lockLabel = new QLabel;
+    m_lockLabel->setPixmap(KIconLoader::global()->loadMimeTypeIcon("object-locked", KIconLoader::Desktop,
                                                                  KIconLoader::SizeSmall));
-    lockLabel->setToolTip(i18n("Locked archive. Any attempt to modify the archive will be ignored"));
+    m_lockLabel->setToolTip(i18n("Locked archive. Any attempt to modify the archive will be ignored"));
+    m_lockLabel->setVisible(false);
 
-    headerLabel = new QLabel;
-    headerLabel->setPixmap(KIconLoader::global()->loadMimeTypeIcon("security-low", KIconLoader::Desktop,
+    m_headerLabel = new QLabel;
+    m_headerLabel->setPixmap(KIconLoader::global()->loadMimeTypeIcon("security-low", KIconLoader::Desktop,
                                                                    KIconLoader::SizeSmall));
-    headerLabel->setToolTip(i18n("This archive has a header password protectio.n") + "<br>" +
+    m_headerLabel->setToolTip(i18n("This archive has a header password protection.") + "<br>" +
                             i18n("File data, file names, sizes, attributes, comments are encrypted.") +
                             "<br>" + i18n("Without a password it is impossible to view even the list of files in archive"));
+    m_headerLabel->setVisible(false);
 
-    passwordLabel = new QLabel;
-    passwordLabel->setPixmap(KIconLoader::global()->loadMimeTypeIcon("dialog-password", KIconLoader::Desktop,
+    m_passwordLabel = new QLabel;
+    m_passwordLabel->setPixmap(KIconLoader::global()->loadMimeTypeIcon("dialog-password", KIconLoader::Desktop,
                                                                      KIconLoader::SizeSmall));
-    passwordLabel->setToolTip("This archive has one or more password protected file(s)");
+    m_passwordLabel->setToolTip("This archive has one or more password protected file(s)");
+    m_passwordLabel->setVisible(false);
 
-    errorButton = new QToolButton;
-    errorButton->setIcon(KIcon("dialog-warning"));
-    errorButton->setAutoRaise(true);
-    errorButton->setToolTip(i18n("Error occured"));
+    m_errorButton = new QToolButton;
+    m_errorButton->setIcon(KIcon("dialog-warning"));
+    m_errorButton->setAutoRaise(true);
+    m_errorButton->setToolTip(i18n("Error occured"));
+    m_errorButton->setVisible(false);
 
-    layout->addWidget(errorButton);
-    layout->addWidget(commentButton);
-    layout->addWidget(lockLabel);
-    layout->addWidget(headerLabel);
-    layout->addWidget(passwordLabel);
-    layout->addWidget(statusOkLabel);
+    layout->addWidget(m_errorButton);
+    layout->addWidget(m_commentButton);
+    layout->addWidget(m_lockLabel);
+    layout->addWidget(m_headerLabel);
+    layout->addWidget(m_passwordLabel);
+    layout->addWidget(m_statusOkLabel);
 
     setupConnections();
 }
@@ -102,41 +107,54 @@ void AkuStatusBar::stateChanged(AkuPlugin *plugin)
 
     switch (plugin->currentOperation()) {
         case AkuPlugin::Extracting :
-            busyButton->setVisible(true);
-            statusLabel->setText(i18n("Extraction in progress..."));
-            //showMessage(i18n("Extraction in progress..."));
+            m_busyButton->setVisible(true);
+            m_statusLabel->setText(i18n("Extraction in progress..."));
             break;
         case AkuPlugin::Loading :
-            busyButton->setVisible(true);
-            statusLabel->setText(i18n("Loading archive..."));
-            //showMessage(i18n("Loading archive..."));
+            m_busyButton->setVisible(true);
+            m_statusLabel->setText(i18n("Loading archive..."));
             break;
         case AkuPlugin::Locking :
-            busyButton->setVisible(true);
-            statusLabel->setText(i18n("Locking archive..."));
-            //showMessage(i18n("Locking archive..."));
+            m_busyButton->setVisible(true);
+            m_statusLabel->setText(i18n("Locking archive..."));
             break;
         case AkuPlugin::Adding :
-            busyButton->setVisible(true);
-            statusLabel->setText(i18n("Adding to the archive..."));
+            m_busyButton->setVisible(true);
+            m_statusLabel->setText(i18n("Adding to the archive..."));
             break;
         case AkuPlugin::Deleting :
-            busyButton->setVisible(true);
-            statusLabel->setText(i18n("Removing files..."));
+            m_busyButton->setVisible(true);
+            m_statusLabel->setText(i18n("Removing file(s)..."));
             break;
         default: ;
-            statusLabel->clear();
-            busyButton->setVisible(false);
+            m_statusLabel->clear();
+            m_busyButton->setVisible(false);
     }
 }
 
 void AkuStatusBar::operationCompleted()
 {
-    kDebug() << "Operation Completed";
-    clearMessage();
+    //kDebug() << "Operation Completed";
+    m_statusLabel->clear();
 }
 
 void AkuStatusBar::abortOperation()
 {
     //m_plugin->abortJob();
+}
+
+void AkuStatusBar::archiveInformation(const AkuData &akudata)
+{
+    m_headerLabel->setVisible(akudata.headerprotected);
+    m_lockLabel->setVisible(akudata.locked);
+    m_commentButton->setVisible(!akudata.comment.isEmpty());
+    m_passwordLabel->setVisible(!akudata.passwordprotectedPaths.isEmpty());
+    kDebug() << QString::number(akudata.passwordprotectedPaths.size());
+    kDebug() << akudata.passwordprotectedPaths;
+
+    if (!akudata.headerprotected && akudata.passwordprotectedPaths.isEmpty() && !akudata.locked) {
+        m_statusOkLabel->setVisible(true);
+    } else {
+        m_statusOkLabel->setVisible(false);
+    }
 }

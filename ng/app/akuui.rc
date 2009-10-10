@@ -14,6 +14,7 @@
       <Action name="rename" />
       <Separator />
       <Action name="lock" />
+      <Action name="encrypt" />
    </Menu>
    <Menu name="view" >
       <Action name="infopanel" />

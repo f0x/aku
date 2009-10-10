@@ -164,13 +164,15 @@ void RarPlugin::loadArchive()
     output = localProcess->readAllStandardOutput();
     outputCodec = QString::fromLocal8Bit(output);
 
+    if (outputCodec.contains("Lock is present")) {
+        akudata.locked = true;
+        kDebug() << "The archive is LOCKED";
+    }
     if (outputCodec.contains("CRC failed in")) {
         kDebug() << "The archive is HEADER PROTECTED";
         akudata.headerprotected = true;
         onArchiveLoaded(akudata);
         return;
-    } else if (outputCodec.contains("Lock is present")) {
-        kDebug() << "The archive is LOCKED";
     }
 
     options.clear();
@@ -219,7 +221,7 @@ void RarPlugin::loadArchive()
     QTextStream stream(&outputCodec);
     QString line;
     QStringList file;
-    QStringList filespasswordprotected;
+    //QStringList filespasswordprotected;
     int i = 0;
 
     do {
@@ -231,7 +233,8 @@ void RarPlugin::loadArchive()
 
         if ((i % 2) == 0) {
             if (line.startsWith('*') && (m_password.isEmpty())) {
-                filespasswordprotected << line.mid(1);
+                //filespasswordprotected << line.mid(1);
+                akudata.passwordprotectedPaths << line.mid(1);
                 file << line.mid(1) + " *";
             } else {
                 file << line.mid(1); // filepath
@@ -271,7 +274,7 @@ void RarPlugin::loadArchive()
                 file << attributes[i];
             }
             akudata.paths << (QStringList() << file);
-            akudata.passwordprotectedPaths << (QStringList() << filespasswordprotected);
+            //akudata.passwordprotectedPaths << (QStringList() << filespasswordprotected);
             file.clear();
         }
         i++;

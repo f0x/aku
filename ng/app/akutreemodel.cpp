@@ -147,6 +147,7 @@ QVariant AkuTreeModel::data(const QModelIndex &index, int role) const
         if (node->name().endsWith("*")) {
             QFont font;
             font.setItalic(true);
+            font.setBold(true);
             return QVariant(QFont(font));
         }
     }

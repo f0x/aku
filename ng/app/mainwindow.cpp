@@ -207,6 +207,14 @@ void MainWindow::setupActions()
     connect(actionRename, SIGNAL(triggered()), this, SLOT(rename()));
     //
 
+    // Encrypt
+    KAction *actionEncrypt = new KAction(this);
+    actionEncrypt->setIcon(KIcon("dialog-password"));
+    actionEncrypt->setText(i18n("Encrypt"));
+    actionCollection()->addAction("encrypt", actionEncrypt);
+    connect(actionEncrypt, SIGNAL(triggered()), this, SLOT(encrypt()));
+    //
+
     // Preview
     KAction *actionPreview = new KAction(this);
     actionPreview->setIcon(KIcon("document-preview-archive"));
@@ -255,6 +263,8 @@ void MainWindow::addPlugins(AkuPlugin *plugin, const KPluginInfo &info)
 
     connect(plugin, SIGNAL(archiveLoaded(const AkuData &)),
             this, SLOT(showArchiveContent(const AkuData &)));
+    connect(plugin, SIGNAL(archiveLoaded(AkuData)), m_statusBar,
+            SLOT(archiveInformation(const AkuData &)));
     connect(plugin, SIGNAL(operationCompleted()), m_statusBar, SLOT(operationCompleted()));
     //connect(plugin, SIGNAL(notifyExtractionComplete()), this, SLOT(extractionCompleteSlot()));
     connect(plugin, SIGNAL(error(AkuPlugin::ErrorType, const QString &)), this,
@@ -359,8 +369,9 @@ void MainWindow::showArchiveContent(const AkuData &akudata)
     m_model->setSourceData(akudata.paths);
     m_treeView->setSortingEnabled(true);
     m_treeView->expandAll();
-    //tabChanged(m_actionMain);
     m_actionMain->trigger();
+
+    // update the status bar
 }
 
 void MainWindow::dataMetaWidget(QModelIndex index)
@@ -586,4 +597,8 @@ void MainWindow::remove()
 void MainWindow::rename()
 {
     QStringList files = m_treeView->selectedPaths();
+}
+
+void MainWindow::encrypt()
+{
 }

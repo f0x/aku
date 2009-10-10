@@ -29,10 +29,11 @@
 
 // AkuData -- For Loading Process
 typedef struct AkuData {
-    AkuData() : headerprotected(false) {}
+    AkuData() : headerprotected(false), locked(false) {}
     QVector<QStringList> paths;
-    QVector<QStringList> passwordprotectedPaths;
+    QStringList passwordprotectedPaths;
     bool headerprotected;
+    bool locked;
     QString comment;
 } AkuData;
 

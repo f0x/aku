@@ -20,9 +20,10 @@
 #ifndef AKUSTATUSBAR_H
 #define AKUSTATUSBAR_H
 
+#include "akuplugin.h"
+
 #include <KStatusBar>
 
-class AkuPlugin;
 class QToolButton;
 class QLabel;
 
@@ -37,17 +38,17 @@ public:
 private:
     AkuPlugin *m_plugin;
 
-    QWidget *statusWidget;
+    QWidget *m_statusWidget;
 
-    QToolButton *commentButton;
-    QToolButton *busyButton;
-    QToolButton *errorButton;
+    QToolButton *m_commentButton;
+    QToolButton *m_busyButton;
+    QToolButton *m_errorButton;
 
-    QLabel *statusLabel;
-    QLabel *statusOkLabel;
-    QLabel *lockLabel;
-    QLabel *headerLabel;
-    QLabel *passwordLabel;
+    QLabel *m_statusLabel;
+    QLabel *m_statusOkLabel;
+    QLabel *m_lockLabel;
+    QLabel *m_headerLabel;
+    QLabel *m_passwordLabel;
 
 public slots:
     void stateChanged(AkuPlugin *);
@@ -56,6 +57,7 @@ public slots:
 private slots:
     void abortOperation();
     void setupConnections();
+    void archiveInformation(const AkuData &);
 };
 
 #endif
