@@ -86,7 +86,8 @@ class MainWindow : public KXmlGuiWindow
     void load(const KUrl);
 
   private slots:
-    void addFile();
+    void addDialog();
+    void addFiles(const QStringList &, const QString &);
     void addPlugins(AkuPlugin*, const KPluginInfo &);
     void configureAku();
     void dataMetaWidget(QModelIndex);

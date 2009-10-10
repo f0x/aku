@@ -59,6 +59,20 @@ void ExtractJob::doWork()
     //emit operationCompleted();
 }
 
+AddJob::AddJob(AkuPlugin *plugin, const QStringList &files,
+                       const QString &path, QObject *parent) :
+                       AkuJob(parent), m_plugin(plugin), m_files(files), m_path(path)
+{}
+
+AddJob::~AddJob()
+{}
+
+void AddJob::doWork()
+{
+    m_plugin->addToArchive(m_files, m_path);
+}
+
+
 LockJob::LockJob(AkuPlugin *plugin, QObject *parent) :
                   AkuJob(parent), m_plugin(plugin)
 {}

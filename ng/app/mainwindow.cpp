@@ -131,10 +131,13 @@ MainWindow::MainWindow (QWidget* parent): KXmlGuiWindow (parent)
     bottomWidget->setLayout(bottomLayout);
     QActionGroup *grp = new QActionGroup(this);
     m_actionMain = new QAction(i18n("Main Aku"), grp);
+    m_actionMain->setFont(KGlobalSettings::smallestReadableFont());
     m_actionMain->setCheckable(true);
     m_actionError = new QAction(i18n("Errors Console"), grp);
+    m_actionError->setFont(KGlobalSettings::smallestReadableFont());
     m_actionError->setCheckable(true);
     m_actionComment = new QAction(i18n("Comment"), grp);
+    m_actionComment->setFont(KGlobalSettings::smallestReadableFont());
     m_actionComment->setCheckable(true);
     mainButton->setDefaultAction(m_actionMain);
     errorButton->setDefaultAction(m_actionError);
@@ -179,20 +182,11 @@ void MainWindow::setupActions()
     connect(m_actionExtract, SIGNAL(triggered()), this, SLOT(extractDialog()));
 
     // Add
-    m_actionAdd = new KActionMenu(this);
-    m_actionAdd->setIcon(KIcon("archive-insert"));
-    m_actionAdd->setText(i18n("Add to archive"));
-    m_actionAdd->setDelayed(false);
-    KAction *actionAddFile = new KAction(i18n("Add file(s)"), this);
-    connect(actionAddFile, SIGNAL(triggered()), this, SLOT(addFile()));
-    actionAddFile->setIcon(KIcon("archive-insert"));
-    KAction *actionAddDir = new KAction(i18n("Add dir"), this);
-    actionAddDir->setIcon(KIcon("archive-insert-directory"));
-    m_actionAdd->addAction(actionAddFile);
-    m_actionAdd->addAction(actionAddDir);
-    actionCollection()->addAction("add", m_actionAdd);
-    actionCollection()->addAction("addDir", actionAddDir);
-    actionCollection()->addAction("addFile", actionAddFile);
+    KAction *actionAdd = new KAction(this);
+    actionAdd->setText(i18n("Add"));
+    actionAdd->setIcon(KIcon("archive-insert"));
+    actionCollection()->addAction("add", actionAdd);
+    connect(actionAdd, SIGNAL(triggered()), this, SLOT(addDialog()));
     //
 
     // Preview
@@ -535,10 +529,13 @@ void MainWindow::lockArchive()
     m_plugins[m_currentPlugin]->lock(m_currentUrl);
 }
 
-void MainWindow::addFile()
+void MainWindow::addDialog()
 {
-    AddFileDialog *addFileDialog = new AddFileDialog(this);
-    addFileDialog->show();
+    AddFileDialog *dialog = new AddFileDialog(this);
+    connect(dialog, SIGNAL(addFiles(const QStringList &, const QString &)), this,
+            SLOT(addFiles(const QStringList &, const QString &)));
+    dialog->updateInfo(m_treeView->currentIndex(), m_plugins[m_currentPlugin]->canEncrypt());
+    dialog->show();
 }
 
 void MainWindow::preview()
@@ -552,4 +549,9 @@ void MainWindow::preview()
 
     PreviewWidget *previewWidget = new PreviewWidget(this);
     previewWidget->previewOf(m_currentUrl, selectedFile.first(), m_plugins[m_currentPlugin]);
+}
+
+void MainWindow::addFiles(const QStringList &files, const QString &path)
+{
+    m_plugins[m_currentPlugin]->add(files, path);
 }

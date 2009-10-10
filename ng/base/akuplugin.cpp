@@ -252,3 +252,28 @@ void AkuPlugin::setAnswer(OverwriteAnswer, const QString &info)
 //{
 //    m_loadJob->kill();
 //}
+
+void AkuPlugin::addToArchive(const QStringList &files, const QString &path)
+{
+    Q_UNUSED(files)
+    Q_UNUSED(path)
+}
+
+void AkuPlugin::add(const QStringList &files, const QString &path)
+{
+    //if (d->currentFile != fileName) {
+    //    init(fileName);
+    //}
+
+    setCurrentOperation(Adding);
+
+    if (!d->helper) {
+        d->helper = new AkuJobs::AkuHelper(this);
+        connect (d->helper, SIGNAL(error(const QString &)), this, SIGNAL(error(const QString &)));
+    }
+    //connect (d->helper, SIGNAL(error(const QString &)), this, SIGNAL(error(const QString &)));
+
+    KJob *job = new AkuJobs::AddJob(this, files, path, this);
+    connect(job, SIGNAL(operationCompleted()), this, SIGNAL(operationCompleted()));
+    job->start();
+}

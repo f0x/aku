@@ -159,7 +159,7 @@ void RarPlugin::loadArchive()
     QProcess *localProcess = new QProcess;
     localProcess->setProcessChannelMode(QProcess::MergedChannels);
     localProcess->start(exeName, options);
-    localProcess->waitForFinished();
+    localProcess->waitForFinished(-1);
 
     output = localProcess->readAllStandardOutput();
     outputCodec = QString::fromLocal8Bit(output);
@@ -339,12 +339,45 @@ void RarPlugin::extractArchive(const AkuExtractInfo &extractInfo, const AkuPlugi
     //kDebug() << m_process->readAllStandardOutput();
 }
 
+void RarPlugin::addToArchive(const QStringList &files, const QString &path)
+{
+    QProcess *process = new QProcess;
+    connect(process, SIGNAL(readyReadStandardError()), this, SLOT(getError()));
+
+    QStringList options;
+    options << "a";   // a    Add files to archive
+    options << "-ep1";  // ep1  Exclude base directory from names or "ep" (verify)
+    if (!path.isEmpty()) {
+        options << "-ap" + path;     // ap<path> Set path inside archive
+    }
+
+    if (!m_password.isEmpty()) {
+        options << "-p" + m_password;
+    }
+
+    options << m_fileName.pathOrUrl();
+
+    kDebug() << options;
+
+    for (int i = 0; i < files.size(); ++i) {
+        options << files[i];
+    }
+
+    process->start(exeName, options);
+    process->waitForFinished(-1);
+}
+
 void RarPlugin::lockArchive()
 {  
     kDebug() << "locking archive";
     QStringList options;
 
     options << "k";     //  k    Lock the archive
+
+    if (!m_password.isEmpty()) {
+        options << "-p" + m_password;
+    }
+
     options << m_fileName.pathOrUrl();
 
     QProcess *process = new QProcess;

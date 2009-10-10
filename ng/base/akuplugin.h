@@ -51,7 +51,6 @@ typedef struct AkuExtractInfo {
   */
 
 class KUrl;
-class KJob;
 
 class AKU_EXPORT AkuPlugin : public QObject
 {
@@ -163,6 +162,12 @@ class AKU_EXPORT AkuPlugin : public QObject
         virtual void extractArchive(const AkuExtractInfo &extractInfo, const AkuPlugin::ExtractionOptions &extractionOptions);
 
         /**
+          * This method should be reimplemented in order to add file to the archive.
+          *
+         */
+        virtual void addToArchive(const QStringList &files, const QString &path);
+
+        /**
           * This method is useful only for the rar archive.
           * Locking does not permit writing operation on the archive.
          */
@@ -188,7 +193,12 @@ class AKU_EXPORT AkuPlugin : public QObject
         void extract(AkuExtractInfo, AkuPlugin::ExtractionOptions options);
 
         /**
-         * @internal
+         * @internal used to add files the archive.
+         */
+        void add(const QStringList &, const QString &);
+
+        /**
+         * @internal used to lock the file (only for rar)
          */
         void lock(const KUrl &fileName);
 

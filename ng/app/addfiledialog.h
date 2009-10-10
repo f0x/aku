@@ -23,6 +23,7 @@
 #include <KFileDialog>
 
 class QCheckBox;
+class QModelIndex;
 
 class KComboBox;
 class KLineEdit;
@@ -41,7 +42,13 @@ private:
     KLineEdit *m_lineEdit;
 
 public slots:
-    void updateInfo(const QString &, bool);
+    void updateInfo(const QModelIndex &, bool);
+
+private slots:
+    void filesToAdd();
+
+signals:
+    void addFiles(const QStringList &, const QString &);
 };
 
 #endif // ADDFILEDIALOG_H

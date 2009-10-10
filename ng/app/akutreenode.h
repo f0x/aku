@@ -32,13 +32,14 @@ class AkuTreeNode
         void appendChild(AkuTreeNode *);
 
         AkuTreeNode* child(int row);
-        AkuTreeNode* parent();
+        AkuTreeNode* parent() const;
 
         int childCount() const;
         int columnCount() const;
         int row() const;
 
         QString name() const;
+        QString path();
         double size();
         double packedSize();
         int ratio();

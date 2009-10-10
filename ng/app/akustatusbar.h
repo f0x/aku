@@ -41,6 +41,7 @@ private:
 
     QToolButton *commentButton;
     QToolButton *busyButton;
+    QToolButton *errorButton;
 
     QLabel *statusLabel;
     QLabel *statusOkLabel;

@@ -19,6 +19,8 @@
 
 #include "akutreenode.h"
 
+#include <QDir>
+
 #include <KMimeType>
 #include <KDebug>
 
@@ -55,7 +57,7 @@ int AkuTreeNode::columnCount() const
     return m_itemData.size();
 }
 
-AkuTreeNode* AkuTreeNode::parent()
+AkuTreeNode* AkuTreeNode::parent() const
 {
     return m_parentNode;
 }
@@ -119,6 +121,19 @@ QString AkuTreeNode::name() const
     }
 
     return m_itemData.at(0);
+}
+
+QString AkuTreeNode::path()
+{
+    QString path = name();
+    AkuTreeNode *node = this;
+    while (node->parent()) {
+        node = node->parent();
+        path.prepend(node->name() + QDir::separator());
+    }
+
+    path = path.mid(path.indexOf(QDir::separator()) + 1);
+    return path;
 }
 
 double AkuTreeNode::size()

@@ -47,6 +47,7 @@ AkuStatusBar::AkuStatusBar(QWidget *parent) : KStatusBar(parent)
     QHBoxLayout *layout = new QHBoxLayout(statusWidget);
     commentButton = new QToolButton;
     commentButton->setIcon(KIcon("edit-paste"));
+    commentButton->setToolTip(i18n("The archive has a comment. Click to read or to modify it"));
     commentButton->setAutoRaise(true);
 
     statusOkLabel = new QLabel;
@@ -62,15 +63,21 @@ AkuStatusBar::AkuStatusBar(QWidget *parent) : KStatusBar(parent)
     headerLabel = new QLabel;
     headerLabel->setPixmap(KIconLoader::global()->loadMimeTypeIcon("security-low", KIconLoader::Desktop,
                                                                    KIconLoader::SizeSmall));
-    headerLabel->setToolTip(i18n("This archive has a header password protection.") + "<br>" +
+    headerLabel->setToolTip(i18n("This archive has a header password protectio.n") + "<br>" +
                             i18n("File data, file names, sizes, attributes, comments are encrypted.") +
-                            "<br>" + i18n("Without a password it is impossible to view even the list of files in archive."));
+                            "<br>" + i18n("Without a password it is impossible to view even the list of files in archive"));
 
     passwordLabel = new QLabel;
-    passwordLabel->setPixmap(KIconLoader::global()->loadMimeTypeIcon("security-medium", KIconLoader::Desktop,
+    passwordLabel->setPixmap(KIconLoader::global()->loadMimeTypeIcon("dialog-password", KIconLoader::Desktop,
                                                                      KIconLoader::SizeSmall));
     passwordLabel->setToolTip("This archive has one or more password protected file(s)");
 
+    errorButton = new QToolButton;
+    errorButton->setIcon(KIcon("dialog-warning"));
+    errorButton->setAutoRaise(true);
+    errorButton->setToolTip(i18n("Error occured"));
+
+    layout->addWidget(errorButton);
     layout->addWidget(commentButton);
     layout->addWidget(lockLabel);
     layout->addWidget(headerLabel);
@@ -109,6 +116,9 @@ void AkuStatusBar::stateChanged(AkuPlugin *plugin)
             statusLabel->setText(i18n("Locking archive..."));
             //showMessage(i18n("Locking archive..."));
             break;
+        case AkuPlugin::Adding :
+            busyButton->setVisible(true);
+            statusLabel->setText(i18n("Adding to the archive..."));
         default: ;
             statusLabel->clear();
             busyButton->setVisible(false);
